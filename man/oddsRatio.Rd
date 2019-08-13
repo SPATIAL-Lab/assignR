@@ -25,7 +25,7 @@ data("naMap")
 data(d2h_world)
 d = subOrigData(taxon = c("Homo sapiens"), mask = naMap)
 # Rescale from environmental isoscape to tissue isoscape (known must be SpatialPointsDataFrame with coordinate reference system )
-r = calRaster(known = dd, isoscape = d2h_world, mask = naMap)
+r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 # four unknown-origin example
 id = c("A", "B", "C", "D")
 d2H = c(-110, -180, -130, -150)
