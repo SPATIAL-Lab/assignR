@@ -18,8 +18,11 @@ plot(d2h_world)
 #### Load hydrogen isotope for human hair in North America ####
 d = subOrigData(taxon = c("Homo sapiens"), mask = naMap)
 
+#### Exclude some outlier. This step is optional, which depends on your data quality.
+dd = d[d@coords[,1] < -80,]
+
 #### Rescale from environmental isoscape to tissue isoscape (known must be SpatialPointsDataFrame with coordinate reference system ) ####
-r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
+r = calRaster(known = dd, isoscape = d2h_world, mask = naMap)
 
 #### 26 unknown-origin examples ####
 id=letters
