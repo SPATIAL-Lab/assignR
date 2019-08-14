@@ -177,7 +177,12 @@ plot.QA = function(obj, savePDF = FALSE){
       for(i in 1:n){
         lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
       }
-      legend(0.01, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")
+      t = par("usr")[4] * 0.6
+      b = par("usr")[3]
+      yp1 = mean(c(t,b))
+      yp = yp1 + (n-1) / 6 * yp1 
+      legend(0, yp, nm, lw=2, col=seq(2,n+1), bty="n")
+      text(0.95, 0.95, "(a)")
       
       plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
            xlab="Probability quantile", 
@@ -185,15 +190,16 @@ plot.QA = function(obj, savePDF = FALSE){
       for(i in 1:n){
         lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
       }
-      legend(0.01, 1, nm, lw=2, col=seq(2,n+1), bty="n")
-      
+      text(0.05, 0.95, "(b)")
+
       plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Area quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
       for(i in 1:n){
         lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
       }
-      legend(0.6, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")        
+      text(0.05, 0.95, "(c)")
+      
       dev.off()
       
       pdf("QA2.pdf", width=8, height=6)     
