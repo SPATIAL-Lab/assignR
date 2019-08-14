@@ -13,14 +13,14 @@ plot.QA = function(obj, savePDF = FALSE){
     stop("obj must be either a single QA object or a list of QA objects")
   }
   
-  xx <- seq(0.01, 0.99, 0.01)
+  xx <- seq(0.00, 1, 0.01)
   
   if(n == 1){
     vali = ncol(obj$val_stations)
     niter = nrow(obj$val_stations)
     
-    means.p = data.frame(xx, apply(obj$prption_byProb, 2, mean)/vali)
-    means.a = data.frame(xx, apply(obj$prption_byArea, 2, mean)/vali)
+    means.p = data.frame(xx, c(0, apply(obj$prption_byProb, 2, mean)/vali, 1))
+    means.a = data.frame(xx, c(0, apply(obj$prption_byArea, 2, mean)/vali, 1))
     
     precision = matrix(rep(0, niter*99), ncol=niter, nrow=99)
     for (i in 1:niter){
@@ -32,49 +32,54 @@ plot.QA = function(obj, savePDF = FALSE){
       mean = append(mean, mean(precision[i,]))
     }
     
-    pre <- data.frame(xx,  1-mean)
-    
+    pre = data.frame(xx, c(1, 1-mean, 0))
+
     pd <- data.frame(as.numeric(obj$pd_bird_val) / obj$random_prob_density)
     
-    plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2,
-         xlab="Cumulative probability threshold", 
+    plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+         xlab="Probability quantile", 
          ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
     lines(pre[,1], pre[,2], lwd=2)
 
-    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2,
-         xlab="Cumulative probability threshold", 
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+         xlab="Probability quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
     lines(means.p[,1], means.p[,2], lwd=2)
 
-    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, 
-         xlab="Cumulative area threshold", 
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+         xlab="Area quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
     lines(means.a[,1], means.a[,2], lwd=2)
     
     boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
+    abline(1,0, col="dark grey", lwd=2, lty=3)
     
     if(savePDF){
       pdf("QA1.pdf", width = 8, height = 3)
       layout(matrix(c(1,2,3), ncol=3))
       
-      plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2,
-           xlab="Cumulative probability threshold", 
+      plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+           xlab="Probability quantile", 
            ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
       lines(pre[,1], pre[,2], lwd=2)
-
-      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2,
-           xlab="Cumulative probability threshold", 
+      
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+           xlab="Probability quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
       lines(means.p[,1], means.p[,2], lwd=2)
-
-      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, 
-           xlab="Cumulative area threshold", 
+      
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+           xlab="Area quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
       lines(means.a[,1], means.a[,2], lwd=2)
+      
       dev.off()
       
-      pdf("QA2.pdf", width=8, height=6)      
+      pdf("QA2.pdf", width=8, height=6)     
+      
       boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
+      abline(1,0, col="dark grey", lwd=2, lty=3)
+      
       dev.off()
     }
     
@@ -95,8 +100,8 @@ plot.QA = function(obj, savePDF = FALSE){
       niter[i] = nrow(obj[[i]]$val_stations)
     }
     
-    means.p = data.frame(xx, apply(obj[[1]]$prption_byProb, 2, mean)/vali[1])
-    means.a = data.frame(xx, apply(obj[[1]]$prption_byArea, 2, mean)/vali[1])
+    means.p = data.frame(xx, c(0, apply(obj[[1]]$prption_byProb, 2, mean)/vali[1], 1))
+    means.a = data.frame(xx, c(0, apply(obj[[1]]$prption_byArea, 2, mean)/vali[1], 1))
     
     precision = matrix(rep(0, niter[1] * 99), ncol=niter[1], nrow=99)
     for (i in 1:niter[1]){
@@ -108,15 +113,15 @@ plot.QA = function(obj, savePDF = FALSE){
       mean = append(mean, mean(precision[i,]))
     }
     
-    pre = data.frame(xx,  1-mean)
+    pre = data.frame(xx, c(1, 1-mean, 0))
     
     pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
     pd[1:(niter[1]*vali[1]),1] = as.numeric(obj[[1]]$pd_bird_val) / obj[[1]]$random_prob_density
     
     for(i in 2:n){
 
-      means.p = cbind(means.p, apply(obj[[i]]$prption_byProb, 2, mean)/vali[i])
-      means.a = cbind(means.a, apply(obj[[i]]$prption_byArea, 2, mean)/vali[i])
+      means.p = cbind(means.p, c(0, apply(obj[[i]]$prption_byProb, 2, mean)/vali[i], 1))
+      means.a = cbind(means.a, c(0, apply(obj[[i]]$prption_byArea, 2, mean)/vali[i], 1))
       
       precision = matrix(rep(0, niter[i] * 99), ncol=niter[i], nrow=99)
       for (j in 1:niter[i]){
@@ -128,30 +133,30 @@ plot.QA = function(obj, savePDF = FALSE){
         mean = append(mean, mean(precision[j,]))
       }
       
-      pre = cbind(pre,  1-mean)
+      pre = cbind(pre, c(1, 1-mean, 0))
       
       pd[1:(niter[1]*vali[1]),i] = as.numeric(obj[[i]]$pd_bird_val) / obj[[i]]$random_prob_density
       
     }
     
-    plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2,
-         xlab="Cumulative probability threshold", 
+    plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+         xlab="Probability quantile", 
          ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
     for(i in 1:n){
       lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
     }
     legend(0.01, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")
 
-    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2,
-         xlab="Cumulative probability threshold", 
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+         xlab="Probability quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
     for(i in 1:n){
       lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
     }
     legend(0.01, 1, nm, lw=2, col=seq(2,n+1), bty="n")
       
-    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, 
-         xlab="Cumulative area threshold", 
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
+         xlab="Area quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
     for(i in 1:n){
       lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
@@ -160,29 +165,30 @@ plot.QA = function(obj, savePDF = FALSE){
     
     boxplot(pd, col=seq(2,n+1), names = nm,
             ylab = "Odds ratio (known origin:random)", outline = FALSE)
+    abline(1, 0, col="dark grey", lwd=2, lty=3)
     
     if(savePDF){
       pdf("QA1.pdf", width = 8, height = 3)
       layout(matrix(c(1,2,3), ncol=3))
       
-      plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2,
-           xlab="Cumulative probability threshold", 
+      plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+           xlab="Probability quantile", 
            ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
       for(i in 1:n){
         lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
       }
       legend(0.01, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")
       
-      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2,
-           xlab="Cumulative probability threshold", 
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
+           xlab="Probability quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
       for(i in 1:n){
         lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
       }
       legend(0.01, 1, nm, lw=2, col=seq(2,n+1), bty="n")
       
-      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, 
-           xlab="Cumulative area threshold", 
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+           xlab="Area quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
       for(i in 1:n){
         lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
@@ -190,9 +196,12 @@ plot.QA = function(obj, savePDF = FALSE){
       legend(0.6, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")        
       dev.off()
       
-      pdf("QA2.pdf", width=8, height=6)      
+      pdf("QA2.pdf", width=8, height=6)     
+      
       boxplot(pd, col=seq(2,n+1), names = nm,
               ylab = "Odds ratio (known origin:random)", outline = FALSE)
+      abline(1, 0, col="dark grey", lwd=2, lty=3)
+      
       dev.off()
     }
     
