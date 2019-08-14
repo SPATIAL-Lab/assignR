@@ -4,7 +4,7 @@
 subOrigData function
 }
 \description{
-This function will permit subset the known-origin stable isotope dataset included in this package
+This function subsets the known-origin H isotope dataset included in this package
 }
 \usage{
 subOrigData(taxon = NULL, group = NULL, mask = NULL)
@@ -17,14 +17,14 @@ one string or a string vector. Select species names of known origin data. Detail
 one string or a string vector. Select group names of known origin data. Details can be seen in \code{\link[assignR]{knownOrig}}
 }
   \item{mask}{
-SpatialPolygonsDataFrame. This mask will constrain the investigated area. If this is not provided, default of whole world is used.
+SpatialPolygonsDataFrame. This mask will constrain the extracted area. If this is not provided, default of whole world is used.
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-Data selected as SpatialPointsdataFrame from known-origin data from this package will be returned. It has one feature: d2H, which is ready to be fed into calRaster function.
+Data selected from known-origin data from this package will be returned as SpatialPointsDataFrame with feature: d2H. Output is formatted for use in calRaster or QA functions.
 }
 
 
@@ -47,7 +47,7 @@ d4 = subOrigData(taxon = "Homo sapiens")
 summary(d4)
 
 ## WITH mask
-d5 = subOrigData(taxon = "Turdus merula", mask = naMap) # No isotope data found in mask you choose!
+d5 = subOrigData(taxon = "Turdus merula", mask = naMap) # No isotope data found in mask
 d6 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", "Turdus migratorius"), mask = naMap)
 d7 = subOrigData(group = "human", mask = naMap)
 }

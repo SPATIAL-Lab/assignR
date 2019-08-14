@@ -1,4 +1,4 @@
-plot.QA = function(obj, savePDF = FALSE){
+plot.QA = function(obj, savePNG = FALSE){
 
   if(class(obj) == "QA"){
     n=1
@@ -54,8 +54,9 @@ plot.QA = function(obj, savePDF = FALSE){
     boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
     abline(1,0, col="dark grey", lwd=2, lty=3)
     
-    if(savePDF){
-      pdf("QA1.pdf", width = 8, height = 3)
+    if(savePNG){
+      
+      png("QA1.png", units = "in", width = 8, height = 3, res = 600)
       layout(matrix(c(1,2,3), ncol=3))
       
       plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
@@ -75,7 +76,7 @@ plot.QA = function(obj, savePDF = FALSE){
       
       dev.off()
       
-      pdf("QA2.pdf", width=8, height=6)     
+      png("QA2.png", units = "in", width = 6, height = 4, res = 600)
       
       boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
       abline(1,0, col="dark grey", lwd=2, lty=3)
@@ -167,8 +168,8 @@ plot.QA = function(obj, savePDF = FALSE){
             ylab = "Odds ratio (known origin:random)", outline = FALSE)
     abline(1, 0, col="dark grey", lwd=2, lty=3)
     
-    if(savePDF){
-      pdf("QA1.pdf", width = 8, height = 3)
+    if(savePNG){
+      png("QA1.png", units = "in", width = 8, height = 3, res = 600)
       layout(matrix(c(1,2,3), ncol=3))
       
       plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
@@ -201,9 +202,9 @@ plot.QA = function(obj, savePDF = FALSE){
       text(0.05, 0.95, "(c)")
       
       dev.off()
-      
-      pdf("QA2.pdf", width=8, height=6)     
-      
+
+      png("QA2.png", units = "in", width = 6, height = 4, res = 600)
+
       boxplot(pd, col=seq(2,n+1), names = nm,
               ylab = "Odds ratio (known origin:random)", outline = FALSE)
       abline(1, 0, col="dark grey", lwd=2, lty=3)
