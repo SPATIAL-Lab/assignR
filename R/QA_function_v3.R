@@ -29,7 +29,8 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = T)
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
       if(is.na(proj4string(mask))){
         stop("mask must have coordinate reference system")
-      } else if(proj4string(mask) != proj4string(isoscape)){
+      }
+      if(proj4string(mask) != proj4string(isoscape)){
         mask <- spTransform(mask, crs(isoscape))
         warning("mask was reprojected")
       }

@@ -13,12 +13,15 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #check that known is valid and has defined, correct CRS
   if(class(known) != "SpatialPointsDataFrame") {
     stop("known should be a SpatialPointsDataFrame, see help page of calRaster function")
-  } else if(is.na(proj4string(known))) {
+  }
+  if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
-  } else if(proj4string(known) != proj4string(isoscape)){
+  } 
+  if(proj4string(known) != proj4string(isoscape)){
     known = spTransform(known, crs(isoscape))
     warning("known was reprojected")
-  } else if(ncol(known@data) != 1){
+  } 
+  if(ncol(known@data) != 1){
     stop("known must include a 1-column data frame containing only the isotope values")
   }
 
@@ -27,11 +30,11 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
       if(is.na(proj4string(mask))) {
         stop("mask must have valid coordinate reference system")
-      } else if(proj4string(mask) != proj4string(isoscape)){
+      }
+      if(proj4string(mask) != proj4string(isoscape)){
         mask = spTransform(mask, crs(isoscape))
         warning("mask was reprojected")
       }
-      known <- known[mask,]
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
