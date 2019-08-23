@@ -1,4 +1,4 @@
-pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = TRUE, saveFile = TRUE) {
+pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFile = TRUE) {
   if(class(r) == "rescale"){
     r <- r$isoscape.rescale
   }
