@@ -12,9 +12,12 @@ pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = TRUE, save
   if(!is.null(prior)){
     if(class(prior) != "RasterLayer"){
       stop("prior should be a raster with one layer")
-    } else {
-      compareRaster(r[[1]], prior)
+    } 
+    if(proj4string(prior) != proj4string(r[[1]])) {
+      prior <- projectRaster(prior, crs=crs(r[[1]]))
+      warning("prior was reprojected")
     }
+    compareRaster(r[[1]], prior)
   }
   
   if(class(genplot) != "logical"){
@@ -32,8 +35,9 @@ pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = TRUE, save
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
       if (is.na(proj4string(mask))){
         stop("mask must have coord. ref.")
-      } else if(proj4string(mask) != proj4string(r)) {
-        mask <- spTransform(mask, proj4string(r))
+      } 
+      if(proj4string(mask) != proj4string(r[[1]])) {
+        mask <- spTransform(mask, crs(r[[1]]))
         warning("mask was reprojected")
       }
       rescaled.mean <- crop(rescaled.mean, mask)
