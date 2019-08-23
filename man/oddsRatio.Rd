@@ -2,7 +2,7 @@
 \alias{oddsRatio}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-oddsRatio
+Odds ratio of points or regions
 }
 \description{
 Calculate ratio of odds for two locations (points or polygons)
@@ -24,16 +24,20 @@ points or polygons which must be data.frame or SpatialPolygons
 data("naMap")
 data(d2h_world)
 d = subOrigData(taxon = c("Homo sapiens"), mask = naMap)
+
 # exclude some outlier. This step is optional, which depends on your data quality.
 dd = d[d@coords[,1] < -80,]
-# Rescale from environmental isoscape to tissue isoscape (known must be SpatialPointsDataFrame with coordinate reference system )
+
+# Rescale from environmental isoscape to tissue isoscape
 r = calRaster(known = dd, isoscape = d2h_world, mask = naMap)
+
 # four unknown-origin example
 id = c("A", "B", "C", "D")
-d2H = c(-110, -180, -130, -150)
+d2H = c(-110, -90, -105, -102)
 un = data.frame(id,d2H)
+
 # assignment
-asn = pdRaster(r,unknown=un,mask=naMap)
+asn = pdRaster(r, unknown = un, mask = naMap, saveFile = FALSE)
 
 # Create SpatialPolygons with two polygons
 p1 <- c(-100,60,-100,65,-110,65,-110,60,-100,60)
@@ -46,6 +50,7 @@ p2 <- Polygon(p2)
 p2 <- Polygons(list(p2), "p2")
 p12 <- SpatialPolygons(list(p1,p2),1:2)
 plot(p12)
+
 # Calculate odds ratio for the two polygons created above
 oddsRatio(asn, p12)
 
@@ -53,6 +58,7 @@ oddsRatio(asn, p12)
 pp1 <- c(-100,45)
 pp2 <- c(-100,60)
 pp12 <- as.data.frame(rbind(pp1,pp2))
+
 # Caculate odds ratio for the two points created above
 oddsRatio(asn, pp12)
 }

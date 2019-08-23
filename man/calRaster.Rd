@@ -1,49 +1,48 @@
 \name{calRaster}
 \alias{calRaster}
 \title{
-function to rescale isoscape
+Function to rescale isoscape
 }
 \description{
-This function relies on known-origin tissue data to calibrate between isotope values in precipitation and those in the tissue using simple regression to rescale the precipitation raster into tissue values and generate mean and standard deviation rasters. This will output plots as pdf including regression model and rescaled isoscape mean and standard deviation in output folder under working directory.
+This function uses known-origin tissue data to rescale a map of environmental isotope values to a map of tissue value (and associated uncertainty) using a linear regression model.
 }
 \usage{
 calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF =  TRUE, verboseLM = TRUE)
 }
 \arguments{
   \item{known}{
-SpatialPointsDataFrame. known-origin data that should contain only one feature: tissue isotope value. The coordinate reference system must be the same as isoscape and mask. Optional known-origin data can be queried using the \code{\link[assignR]{knownOrig}} function.
+SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Known-origin data can be queried using the \code{\link[assignR]{knownOrig}} function.
 }
   \item{isoscape}{
- raster. isoscape raster with two layers. The first one is the mean and the second one is either standard deviation or 2 standard deviation. Its coordinate reference system must be the same as input of known and mask.
+ raster. Isoscape raster with two layers. The first one is the mean and the second standard deviation.
 }
   \item{mask}{
- SpatialPolygonsDataFrame. This mask will constrain the isoscape area. If this is not provided, default of mask of isoscape in this argument is used. Its coordinate reference system must be the same as input of known and isoscape.
+ SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is provided, the entire area of isoscape is returned.
 }
   \item{interpMethod}{
-numeric. 1 or 2. Designate one of two methods for extracting values from isoscape raster based on known-origin position. If 1, values for the cell in which a point falls are returned. If 2 (default) the returned values are
-interpolated (bilinear interpolation) from the values of the four nearest raster cells.
+numeric. 1 or 2. Designate one of two methods for extracting values from isoscape. If 1, values for the cell in which a point falls are returned. If 2 the returned values are interpolated (bilinear interpolation) from the values of the four nearest raster cells.
 }
 \item{NA.value}{
- NA [default] or numeric. Identify the value that was used to represent an absence of data in the isoscape raster map. Commonly used values include NA, -9999, 9999, etc. If you are not sure what value was used in your isoscape, you can load the isoscape raster in R and run \code{\link[raster]{click}}(raster) to click the place without value.
+ NA or numeric. Identify the value that was used to represent an absence of data in the isoscape raster map. Commonly used values include NA, -9999, 9999, etc. If you are not sure what value was used in your isoscape, you can load the isoscape raster in R and run \code{\link[raster]{click}}(raster) to query the value in an empty cell.
 }
 \item{ignore.NA}{
- logical. (TRUE or FALSE [default]). If NA values are extracted from isoscape at the location of known-origin, do you want to ignore these values and proceed with calRaster function?
+ logical. (TRUE or FALSE). If NA values are extracted from isoscape at the location of known-origin, do you want to ignore these values and proceed with calRaster function?
 }
 \item{genplot}{
- logical. Plot the results (TRUE [default]) or not (FALSE)).
+ logical. Plot the results?
 }
 \item{savePDF}{
- logical. Save the results as pdf (TRUE [default]) or not (FALSE)).
+ logical. Save the results as pdf?
 }
 \item{verboseLM}{
- logical. Print out the linear regression results (TRUE [default]) or not (FALSE)).
+ logical. Print out the linear regression results?
 }
 }
 
 \value{
-\item{isoscape.rescale }{Rescaled isoscape based on known origin data and isosape, two layer raster, one is mean the other is standard deviation which is a universal value for the map from error of linear regression model.}
-\item{lm.data }{known origin data and correlated isoscape value used for linear regression model}
-\item{lm.model}{linear regression model}
+\item{isoscape.rescale }{RasterBrick. Rescaled isoscape based on known origin data and isosape; first layer is the mean prediction and the second the standard deviation}
+\item{lm.data }{data.frame. Known origin data and extracted isoscape value used for linear regression modeling}
+\item{lm.model}{list. Linear regression model}
 }
 
 \seealso{

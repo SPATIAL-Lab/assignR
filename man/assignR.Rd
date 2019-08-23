@@ -73,7 +73,7 @@ bird_d2h = subOrigData(taxon = "Setophaga ruticilla", mask = naMap)
 
 # run quality assessment using precipitation hydrogen isoscape
 d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2,
-             valiTime = 5, setSeed = TRUE)
+             valiTime = 5, mask = naMap, setSeed = TRUE)
 
 # plot the QA result
 plot(d2h_QA)
