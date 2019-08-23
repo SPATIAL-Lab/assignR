@@ -4,6 +4,10 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
   data("knownOrig")
   result <- NULL
   
+  if(!marker %in% colnames(knownOrig@data)){
+    stop("Marker must be column name for isotope data field")
+  }
+  
   if(!is.null(taxon)){
     if(!all(taxon %in% unique(knownOrig$Taxon))){
       warning("One or more taxa not present in database")
@@ -44,51 +48,38 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
     }
   }
   
-  
-  
-  if (!is.null(taxon)){
-    if (all(taxon %in% unique(knownOrig$Taxon))) {
-      result <- knownOrig[knownOrig$Taxon %in% taxon, ]
-    } else {
-      stop("taxon should be string or string vector given from Taxon column in knownOrig. Please see knownOrig help page!")
-    }
-  }
-  if (!is.null(group)){
-    if (all(group %in% unique(knownOrig$Group))) {
-      result <- knownOrig[knownOrig$Group %in% group, ]
-    } else {
-      stop("group should be string or string vector given from Group column in knownOrig. Please see knownOrig help page!")
-    }
+  result = result[!is.na(result@data[,marker]),]
+  if(length(result) == 0){
+    stop("No samples match query")
   }
 
-  if (!is.null(taxon) && !is.null(group)){
-    stop("Please either choose taxon or group")
-  }
-
-  if (!is.null(mask)) {
-    if (class(mask) == "SpatialPolygonsDataFrame") {
-      if (is.na(proj4string(mask))){
-        stop("mask must have coord. ref.")
+  if(!is.null(mask)) {
+    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+      if(is.na(proj4string(mask))){
+        stop("Mask must have coordinate reference system")
       } else {
         mask <- spTransform(mask, "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
       }
       overlap <- result[mask,]
     } else {
-      stop("Mask should be a SpatialPolygonsDataFrame")
+      stop("Mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
 
-    if (length(overlap[, 1]) != 0) {
+    if(length(overlap) > 0) {
       plot(mask, axes = T)
       plot(overlap, add = T, col = "red")
     } else {
-      cat("No isotope data found in mask\n")
+      stop("No samples found in mask\n")
     }
+    
     result <- overlap
+    
   } else {
     require(maptools)
     data(wrld_simpl)
     plot(wrld_simpl, axes = T)
     points(result, col = "red", cex = 0.5)
+    
   }
   cat(length(result[,1]),"data points are found\n")
   return(result[,marker])
