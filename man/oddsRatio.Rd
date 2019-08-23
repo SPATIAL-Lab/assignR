@@ -57,7 +57,7 @@ oddsRatio(asn, p12)
 # points
 pp1 <- c(-100,45)
 pp2 <- c(-100,60)
-pp12 <- as.data.frame(rbind(pp1,pp2))
+pp12 <- SpatialPoints(coords = rbind(pp1,pp2))
 
 # Caculate odds ratio for the two points created above
 oddsRatio(asn, pp12)
