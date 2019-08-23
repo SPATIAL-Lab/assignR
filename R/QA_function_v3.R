@@ -34,7 +34,6 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = T)
         mask <- spTransform(mask, crs(isoscape))
         warning("mask was reprojected")
       }
-      overlap <- result[mask,]
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
