@@ -1,11 +1,11 @@
 Package: assignR
 Type: Package
-Title: Rescale isoscape using known-origin tissue isotope values, and assign origin of unknown samples with isotopic data 
-Version: 0.1.3
+Title: Tools for inferring geographic origin from isotopic data
+Version: 0.2
 Author: Chao Ma, Gabe Bowen
 Maintainer: Chao Ma <chao.ma@utah.edu>; Gabe Bowen <gabe.bowen@utah.edu>
-Description: Routines for Rescale isoscape using known-origin tissue isotope values, and assign origin of unknown samples with isotopic data 
-Depends: raster, sp, ggplot2, rgdal
+Description: Routines for rescaling isoscapes using known-origin tissue isotope data, assigning origin of unknown samples, and summarizing and assessing assignment results.
+Depends: raster, sp, ggplot2, rgdal, maptools
 License: TBD
 Encoding: UTF-8
 LazyData: true
