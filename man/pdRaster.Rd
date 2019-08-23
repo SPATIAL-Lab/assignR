@@ -17,7 +17,7 @@ Output of \code{\link[assignR]{calRaster}}, or RasterStack or RasterBrick with t
 raster. This is an optional raster layer with prior probabilities, which should has the same projection, resolution and extent as the isoscape raster.
 }
 \item{unknown}{
-data.frame. First column should be unique sample ID, and second column should be tissue d2H values of the individuals for which the assignments will be made.
+data.frame. First column should be unique sample IDs, and second column should be tissue isotope values for the individuals for which the assignments will be made.
 }
 \item{mask}{
 SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this is not provided, a default of mask of rescaled.mean is used.

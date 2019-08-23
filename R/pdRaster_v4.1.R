@@ -1,12 +1,14 @@
-pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = T, saveFile = T) {
+pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = TRUE, saveFile = TRUE) {
   if(class(r) == "rescale"){
     r <- r$isoscape.rescale
   }
+  
   if(class(r) != "RasterStack" & class(r) != "RasterBrick"){
-    stop("input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
+    stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
   } else if(nlayers(r) != 2) {
-    stop("input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
+    stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
   }
+  
   if(!is.null(prior)){
     if(class(prior) != "RasterLayer"){
       stop("prior should be a raster with one layer")
@@ -18,39 +20,58 @@ pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = T, saveFil
   if(class(genplot) != "logical"){
     stop("genplot should be logical (T or F)")
   }
+  
   if(class(saveFile) != "logical"){
     stop("saveFile should be logical (T or F)")
   }
+  
   rescaled.mean = r[[1]]
   rescaled.sd = r[[2]]
+  
   if (!is.null(mask)) {
-  if (class(mask) == "SpatialPolygonsDataFrame") {
-    if (is.na(proj4string(mask))){
+    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+      if (is.na(proj4string(mask))){
         stop("mask must have coord. ref.")
-      } else {
+      } else if(proj4string(mask) != proj4string(r)) {
         mask <- spTransform(mask, proj4string(r))
+        warning("mask was reprojected")
       }
       rescaled.mean <- crop(rescaled.mean, mask)
       rescaled.sd <- crop(rescaled.sd, mask)
     } else {
-      stop("mask should be a SpatialPolygonsDataFrame")
+      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
   }
+  
   if (class(unknown) != "data.frame") {
     stop("unknown should be a data.frame, see help page of pdRaster function")
   }
+  
   if (class(unknown) == "data.frame"){
-    data <- unknown
+    if(ncol(unknown) == 2){
+      if(is.numeric(unknown[,2])){
+        data <- unknown
+      } else {
+        stop("unknown column 2 must contain numeric values")
+      }
+    } else {
+      stop("Wrong number of columns in unknown")
+    }
+
   }
-  n <- length(data[, 2])
-  if(saveFile == T){
+  
+  n <- nrow(data)
+  
+  if(saveFile == TRUE){
     dir.create("output")
     dir.create("output/pdRaster_Gtif")
   }
+  
   errorV <- getValues(rescaled.sd)
   meanV <- getValues(rescaled.mean)
   result <- NULL
   temp <- list()
+  
   for (i in 1:n) {
     indv.data <- data[i, ]
     indv.id <- indv.data[1, 1]
@@ -65,7 +86,7 @@ pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = T, saveFil
     } else {
       result <- stack(result, assign.norm)
     }
-    if(saveFile == T){
+    if(saveFile == TRUE){
       filename <- paste("output/pdRaster_Gtif/", indv.id, ".like", ".tif", sep = "")
       writeRaster(assign.norm, filename = filename, format = "GTiff",
                   overwrite = TRUE)
@@ -73,7 +94,7 @@ pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = T, saveFil
   }
   names(result) <- data[,1]
 
-  if(saveFile == T){
+  if(saveFile == TRUE){
     if (n > 5){
       pdf("./output/output_pdRaster.pdf", width = 10, height = 10)
       par(mfrow = c(ceiling(n/5), 5))
@@ -82,7 +103,6 @@ pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = T, saveFil
     }
   }
 
-
   if (genplot == TRUE){
     if (n == 1){
       pp <- spplot(result)
@@ -93,19 +113,9 @@ pdRaster <- function(r, prior = NULL, unknown, mask = NULL, genplot = T, saveFil
       }
     }
   }
-  if(saveFile == T){
+  
+  if(saveFile == TRUE){
     dev.off()
-  }
-
-  if (genplot == TRUE){
-    if (n == 1){
-      pp <- spplot(result)
-      print(pp)
-    } else {
-      for (i in 1:n){
-        print(spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
-      }
-    }
   }
 
   return(result)

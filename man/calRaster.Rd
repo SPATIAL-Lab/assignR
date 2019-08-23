@@ -7,7 +7,7 @@ function to rescale isoscape
 This function relies on known-origin tissue data to calibrate between isotope values in precipitation and those in the tissue using simple regression to rescale the precipitation raster into tissue values and generate mean and standard deviation rasters. This will output plots as pdf including regression model and rescaled isoscape mean and standard deviation in output folder under working directory.
 }
 \usage{
-calRaster(known, isoscape, mask = NULL, sdMethod = 2, interpMethod = 2, NA.value = NA, ignore.NA = T, genplot = T, savePDF =  T, verboseLM = T)
+calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF =  TRUE, verboseLM = TRUE)
 }
 \arguments{
   \item{known}{
@@ -19,13 +19,8 @@ SpatialPointsDataFrame. known-origin data that should contain only one feature: 
   \item{mask}{
  SpatialPolygonsDataFrame. This mask will constrain the isoscape area. If this is not provided, default of mask of isoscape in this argument is used. Its coordinate reference system must be the same as input of known and isoscape.
 }
-  \item{sdMethod}{
- Uncertainty in the isoscape is standard deviation (1) or two standard deviation (2, default)
-}
   \item{interpMethod}{
-numeric. 1 or 2. Designate oen of two methods for extracting
-values from isoscape raster based on known-origin position. If 1, values for the cell
-in which a point falls are returned. If 2 (default) the returned values are
+numeric. 1 or 2. Designate one of two methods for extracting values from isoscape raster based on known-origin position. If 1, values for the cell in which a point falls are returned. If 2 (default) the returned values are
 interpolated (bilinear interpolation) from the values of the four nearest raster cells.
 }
 \item{NA.value}{
@@ -57,7 +52,8 @@ interpolated (bilinear interpolation) from the values of the four nearest raster
 \examples{
 data("naMap")
 data("d2h_world")
-# the columns of d should be longitude, latitude, and tissue isotope
+
+# extract some known origin data
 d <- subOrigData(taxon = c("Homo sapiens"), mask = naMap)
 r <- calRaster(known = d, isoscape = d2h_world, mask = naMap)
 }

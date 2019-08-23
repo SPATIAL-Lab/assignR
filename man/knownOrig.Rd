@@ -5,7 +5,7 @@
 Isotope values for tissues of known origin
 }
 \description{
-This dataset consists of hydrogen and oxygen isotope values of human hair, insect chitin and bird feathers with location information.
+This dataset consists of hydrogen and oxygen isotope values of human hair, insect chitin and bird feathers with location and sample information.
 }
 \usage{data("knownOrig")}
 \format{
@@ -19,6 +19,6 @@ library(maptools)
 data("knownOrig")
 data("wrld_simpl")
 plot(wrld_simpl)
-points(knownOrig$Longitude,knownOrig$Latitude,col="red",cex=0.5)
+plot(knownOrig, add=TRUE, col="red",cex=0.5)
 }
 \keyword{datasets}

@@ -1,9 +1,9 @@
-calRaster <- function (known, isoscape, mask = NULL, sdMethod = 2, interpMethod = 2,
+calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
           NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF = TRUE, verboseLM = T)
 {
   #check that isoscape is valid and has defined CRS
-  if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
-    if (is.na(proj4string(isoscape))) {
+  if(class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
+    if(is.na(proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
   } else {
@@ -11,43 +11,45 @@ calRaster <- function (known, isoscape, mask = NULL, sdMethod = 2, interpMethod 
   }
 
   #check that known is valid and has defined, correct CRS
-  if (class(known) != "SpatialPointsDataFrame") {
+  if(class(known) != "SpatialPointsDataFrame") {
     stop("known should be a SpatialPointsDataFrame, see help page of calRaster function")
-  } else if (is.na(proj4string(known))) {
+  } else if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } else if(proj4string(known) != proj4string(isoscape)){
-    stop("known must have same coordinate reference system as isoscape")
+    known = spTransform(known, crs(isoscape))
+    warning("known was reprojected")
   } else if(ncol(known@data) != 1){
     stop("known must include a 1-column data frame containing only the isotope values")
   }
 
   #check that mask is valid and has defined, correct CRS
-  if (!is.null(mask)) {
-    if (class(mask) == "SpatialPolygonsDataFrame") {
-      if (is.na(proj4string(mask))) {
+  if(!is.null(mask)) {
+    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+      if(is.na(proj4string(mask))) {
         stop("mask must have valid coordinate reference system")
       } else if(proj4string(mask) != proj4string(isoscape)){
-        stop("mask must have same coordinate reference system as known")
+        mask = spTransform(mask, crs(isoscape))
+        warning("mask was reprojected")
       }
       known <- known[mask,]
     } else {
-      stop("mask should be a SpatialPolygonsDataFrame")
+      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
   }
 
   #check that other inputs are valid
-  if (sdMethod != 1 & sdMethod != 2) {
-    stop("sdMethod should be 1 or 2. See help page for details")
+  if(!interpMethod %in% c(1,2)){
+    stop("interpMethod should be 1 or 2")
   }
-  if (class(genplot) != "logical") {
+  if(class(genplot) != "logical") {
     stop("genplot should be logical (T or F)")
   }
-  if (class(savePDF) != "logical") {
+  if\ (class(savePDF) != "logical") {
     stop("savePDF should be logical (T or F)")
   }
 
   #check and set isoscape NA value if necessary
-  if (!is.na(NA.value)) {
+  if(!is.na(NA.value)) {
     values(isoscape)[values(isoscape) == NA.value] <- NA
   }
 
@@ -66,11 +68,9 @@ calRaster <- function (known, isoscape, mask = NULL, sdMethod = 2, interpMethod 
   if (interpMethod == 1) {
     isoscape.iso <- raster::extract(isoscape, known,
                                     method = "simple")
-  } else if (interpMethod == 2) {
+  } else {
     isoscape.iso <- raster::extract(isoscape, known,
                                     method = "bilinear")
-  } else {
-    stop("interpMethod should be either 1 or 2")
   }
 
   #warn if some known site have NA isoscape values
@@ -93,10 +93,10 @@ calRaster <- function (known, isoscape, mask = NULL, sdMethod = 2, interpMethod 
 
   #output
   if (verboseLM){
-  cat("\n\n---------------------------------------------------------------------------------\n")
-  cat("rescale function uses linear regression model, the summary of this model is:\n")
-  cat("---------------------------------------------------------------------------------\n")
-  print(summary(lmResult))
+    cat("\n\n---------------------------------------------------------------------------------\n")
+    cat("rescale function uses linear regression model, the summary of this model is:\n")
+    cat("---------------------------------------------------------------------------------\n")
+    print(summary(lmResult))
   }
 
   #pull slope and intercept
@@ -141,16 +141,8 @@ calRaster <- function (known, isoscape, mask = NULL, sdMethod = 2, interpMethod 
     print(p11)
   }
 
-  #interpret isoscape uncertainty values (sd or variance)
-  if (sdMethod == 1) {
-    sd1 <- isoscape[[2]]
-  }
-  if (sdMethod == 2) {
-    sd1 <- isoscape[[2]]/2
-  }
-
   #combine uncertainties of isoscape and rescaling function
-  sd <- (sd1^2 + (summary(lmResult)$sigma)^2)^0.5
+  sd <- (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2)^0.5
 
   #stack the output rasters and apply names
   isoscape.rescale <- stack(isoscape.rescale, sd)

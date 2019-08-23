@@ -5,7 +5,7 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
   result <- NULL
   
   if(!marker %in% colnames(knownOrig@data)){
-    stop("Marker must be column name for isotope data field")
+    stop("marker must be column name for isotope data field")
   }
   
   if(!is.null(taxon)){
@@ -56,13 +56,13 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
   if(!is.null(mask)) {
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
       if(is.na(proj4string(mask))){
-        stop("Mask must have coordinate reference system")
+        stop("mask must have coordinate reference system")
       } else {
         mask <- spTransform(mask, "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
       }
       overlap <- result[mask,]
     } else {
-      stop("Mask should be SpatialPolygons or SpatialPolygonsDataFrame")
+      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
 
     if(length(overlap) > 0) {

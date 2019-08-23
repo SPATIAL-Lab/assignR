@@ -1,4 +1,4 @@
-QA <- function(isoscape, known, valiStation, valiTime, setSeed = T){
+QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = T){
 
   #check that isoscape is valid and has defined CRS
   if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
@@ -15,7 +15,8 @@ QA <- function(isoscape, known, valiStation, valiTime, setSeed = T){
   } else if (is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } else if(proj4string(known) != proj4string(isoscape)){
-    stop("known must have same coordinate reference system as isoscape")
+    known = spTransform(known, crs(isoscape))
+    warning("known was reprojected")
   } else if(ncol(known@data) != 1){
     stop("known must include a 1-column data frame containing only the isotope values")
   }
@@ -23,6 +24,21 @@ QA <- function(isoscape, known, valiStation, valiTime, setSeed = T){
   if(!valiStation<nrow(known)){
     stop("valiStation must be smaller than the number of known-origin stations in known")
   }
+  
+  if(!is.null(mask)) {
+    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+      if(is.na(proj4string(mask))){
+        stop("mask must have coordinate reference system")
+      } else if(proj4string(mask) != proj4string(isoscape)){
+        mask <- spTransform(mask, crs(isoscape))
+        warning("mask was reprojected")
+      }
+      overlap <- result[mask,]
+    } else {
+      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
+    }
+  }
+  
   if(setSeed == T){
     set.seed(100)
   }
@@ -45,8 +61,8 @@ QA <- function(isoscape, known, valiStation, valiTime, setSeed = T){
   for (i in 1:valiTime){
     bird_val <- known[val_stations[i,],]
     bird_model <- known[-val_stations[i,],]
-    rescale <- assignR::calRaster(bird_model, isoscape, sdMethod = 1, genplot = F, savePDF = F, verboseLM = F)
-    pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(bird_val@data), bird_val@data[,1]), genplot = F, saveFile = F)
+    rescale <- assignR::calRaster(bird_model, isoscape, mask, genplot = FALSE, savePDF = FALSE, verboseLM = FALSE)
+    pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(bird_val@data), bird_val@data[,1]), genplot = FALSE, saveFile = F)
 
     # pd value for each validation location
     for(m in 1:nlayers(pd)){
