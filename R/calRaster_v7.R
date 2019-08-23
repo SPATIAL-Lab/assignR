@@ -44,7 +44,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   if(class(genplot) != "logical") {
     stop("genplot should be logical (T or F)")
   }
-  if\ (class(savePDF) != "logical") {
+  if (class(savePDF) != "logical") {
     stop("savePDF should be logical (T or F)")
   }
 
