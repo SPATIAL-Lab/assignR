@@ -47,7 +47,7 @@ plot(p12)
 #### Create data.frame with two points of interest ####
 pp1 <- c(-100,45)
 pp2 <- c(-100,60)
-pp12 <- as.data.frame(rbind(pp1,pp2))
+pp12 <- SpatialPoints(coords = rbind(pp1,pp2))
 
 #### Caculate odds ratio for each sample for the two polygons created above ####
 oddsRatio(asn, p12)
