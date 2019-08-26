@@ -15,7 +15,7 @@ oddsRatio(pdR, inputP)
 probability density map which must be raster or RasterLayer
 }
   \item{inputP}{
-points or polygons which must be data.frame or SpatialPolygons
+SpatialPoints or SpatialPolygons (or *DataFrame equivalent) of length 2
 }
 }
 
@@ -38,27 +38,24 @@ un = data.frame(id,d2H)
 # assignment
 asn = pdRaster(r, unknown = un, mask = naMap)
 
-# Create SpatialPolygons for two regions of interest
-p1 <- c(-100,60,-100,65,-110,65,-110,60,-100,60)
-p1 <- matrix(p1, 5,2, byrow = T)
-p1 <- Polygon(p1)
-p1 <- Polygons(list(p1), "p1")
-p2 <- c(-100,40,-100,45,-110,45,-110,40,-100,40)
-p2 <- matrix(p2, 5,2, byrow = T)
-p2 <- Polygon(p2)
-p2 <- Polygons(list(p2), "p2")
-p12 <- SpatialPolygons(list(p1,p2),1:2)
-plot(p12)
+# SpatialPolygons for two regions of interest
+data("plover_range_BreedingSeason")
+data("plover_range_NonBreedingSeason")
+plot(naMap)
+lines(plover_range_BreedingSeason, col = c("red"))
+lines(plover_range_NonBreedingSeason, col = c("blue"))
 
-# Calculate odds ratio for the two polygons created above
-oddsRatio(asn, p12)
+# Get odds ratio for two regions using SpatialPolygon method
+p34 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
+oddsRatio(asn, p34)                      
 
-# Create SpatialPoints with two points of interest
-pp1 <- c(-100,45)
-pp2 <- c(-100,60)
-pp12 <- SpatialPoints(coords = rbind(pp1,pp2))
+# Create SpatialPoints for two points of interest
+pp1 <- c(-108,42)
+pp2 <- c(-103,25)
+pp12 <- SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+points(pp12, pch = 21, bg = "light blue")
 
-# Caculate odds ratio for the two points created above
+# Get odds ratio for two points using SpatialPoints method
 oddsRatio(asn, pp12)
 }
 

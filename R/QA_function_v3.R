@@ -61,7 +61,7 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
   for (i in 1:valiTime){
     bird_val <- known[val_stations[i,],]
     bird_model <- known[-val_stations[i,],]
-    rescale <- assignR::calRaster(bird_model, isoscape, mask, genplot = FALSE, savePDF = FALSE, verboseLM = FALSE)
+    rescale <- assignR::calRaster(bird_model, isoscape, mask, genplot = FALSE, verboseLM = FALSE)
     pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(bird_val@data), bird_val@data[,1]), genplot = FALSE)
 
     # pd value for each validation location
@@ -77,7 +77,7 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
     # accuracy and precision by checking top percentage by cumulative prob.
     precision[[i]] <- matrix(0, 99, valiStation) # precision
     for(j in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = j/100, pdf = F, thresholdType = 1,genplot = F)
+      qtl <- assignR::qtlRaster(pd, threshold = j/100, savePDF = FALSE, thresholdType = 1, genplot = FALSE)
       prption_byProb[i, j] <- 0
       for(k in 1:nlayers(qtl)){
         prption_byProb[i, j] <- prption_byProb[i, j] +
@@ -92,7 +92,7 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
 
     # accuracy by checking top percentage by cumulative area
     for(n in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = n/100, pdf = F, thresholdType = 2,genplot = F)
+      qtl <- assignR::qtlRaster(pd, threshold = n/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
       prption_byArea[i, n] <- 0
       for(k in 1:nlayers(qtl)){
         prption_byArea[i, n] <- prption_byArea[i, n] +

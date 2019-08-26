@@ -47,7 +47,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
         result[[i]] <- pdR[[i]] > pdR.values[start]
       }
     }
-    title1 <- "by Cumulative Probability"
+    title1 <- "probability"
   }
   if(thresholdType == 2){
     for(i in 1:nlayers(pdR)){
@@ -60,20 +60,20 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
         result[[i]] <- pdR[[i]]>cut
       }
     }
-    title1 <- "by Area"
+    title1 <- "area"
   }
   names(result) <- names(pdR)
   if(genplot){
     for(i in 1:nlayers(result)){
       plot(result[[i]])
-      title(paste0("Top ", threshold*100, "% ", title1, " for ", names(result)[i]))
+      title(paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i]))
     }
   }
   if(savePDF){
     pdf("qtlRaster_result.pdf")
     for(i in 1:nlayers(result)){
       plot(result[[i]])
-      title(paste0("Top ", threshold*100, "% ", title1, " for ", names(result)[i]))
+      title(paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i]))
     }
     dev.off()
   }

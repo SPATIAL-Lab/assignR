@@ -36,13 +36,9 @@ plot(naMap)
 lines(plover_range_BreedingSeason, col = c("red"))
 lines(plover_range_NonBreedingSeason, col = c("blue"))
 
-#### Get odds ratio for two regions using list method
-p12 = list("BS" = plover_range_BreedingSeason, "NBS" = plover_range_NonBreedingSeason)
-oddsRatio(asn, p12)
-
 #### Get odds ratio for two regions using SpatialPolygon method
-p34 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
-oddsRatio(asn, p34)                      
+p12 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
+oddsRatio(asn, p12)                      
 
 #### Create SpatialPoints for two points of interest ####
 pp1 <- c(-108,42)

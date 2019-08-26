@@ -1,5 +1,5 @@
 calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
-          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF = FALSE, verboseLM = T)
+          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF = FALSE, verboseLM = TRUE)
 {
   #check that isoscape is valid and has defined CRS
   if(class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
