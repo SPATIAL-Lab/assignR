@@ -52,21 +52,21 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
   stationNum4model <- rowLength - valiStation
   prption_byProb <- matrix(0, valiTime, 99) # accuracy by checking top percentage by cumulative prob.
   prption_byArea <- matrix(0, valiTime, 99) # accuracy by checking top percentage by area
-  pd_bird_val <- matrix(0, valiTime, valiStation) # pd value for each validation location
+  pd_v <- matrix(0, valiTime, valiStation) # pd value for each validation location
   precision <- list() # precision
   
   # create progress bar
   pb <- txtProgressBar(min = 0, max = valiTime, style = 3)
   
   for (i in 1:valiTime){
-    bird_val <- known[val_stations[i,],]
-    bird_model <- known[-val_stations[i,],]
-    rescale <- assignR::calRaster(bird_model, isoscape, mask, genplot = FALSE, verboseLM = FALSE)
-    pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(bird_val@data), bird_val@data[,1]), genplot = FALSE)
+    v <- known[val_stations[i,],]
+    m <- known[-val_stations[i,],]
+    rescale <- assignR::calRaster(m, isoscape, mask, genplot = FALSE, verboseLM = FALSE)
+    pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(v@data), v@data[,1]), genplot = FALSE)
 
     # pd value for each validation location
-    for(m in 1:nlayers(pd)){
-      pd_bird_val[i, m] <- raster::extract(pd[[m]], bird_val[m,], method = "bilinear")
+    for(j in 1:nlayers(pd)){
+      pd_v[i, j] <- raster::extract(pd[[j]], v[j,], method = "bilinear")
     }
 
     xx <- seq(1, 99, 1) ## 1 to 99
@@ -74,14 +74,14 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
     # total area
     Tarea <- length(na.omit(pd[[1]][]))
 
-    # accuracy and precision by checking top percentage by cumulative prob.
+    # spatial precision and accuracy by checking top percentage by cumulative prob.
     precision[[i]] <- matrix(0, 99, valiStation) # precision
     for(j in xx){
       qtl <- assignR::qtlRaster(pd, threshold = j/100, savePDF = FALSE, thresholdType = 1, genplot = FALSE)
       prption_byProb[i, j] <- 0
       for(k in 1:nlayers(qtl)){
         prption_byProb[i, j] <- prption_byProb[i, j] +
-          raster::extract(qtl[[k]], bird_val[k,], method = "bilinear")
+          raster::extract(qtl[[k]], v[k,], method = "bilinear")
         precision[[i]][j, k] <- sum(na.omit(qtl[[k]][]))/Tarea # precision
       }
     }
@@ -90,13 +90,13 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
       precision[[i]][j, k] <- sum(na.omit(qtl[[k]][]))/Tarea # precision
     }
 
-    # accuracy by checking top percentage by cumulative area
+    # sensitivity by checking top percentage by cumulative area
     for(n in xx){
       qtl <- assignR::qtlRaster(pd, threshold = n/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
       prption_byArea[i, n] <- 0
       for(k in 1:nlayers(qtl)){
         prption_byArea[i, n] <- prption_byArea[i, n] +
-          raster::extract(qtl[[k]], bird_val[k,], method = "bilinear")
+          raster::extract(qtl[[k]], v[k,], method = "bilinear")
       }
     }
    
@@ -107,8 +107,8 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
 
   random_prob_density=1/length(na.omit(getValues(isoscape[[1]])))
 
-  result <- list(val_stations, pd_bird_val, prption_byArea, prption_byProb, precision, random_prob_density)
-  names(result) <- c("val_stations", "pd_bird_val", "prption_byArea", "prption_byProb", "precision", "random_prob_density")
+  result <- list(val_stations, pd_v, prption_byArea, prption_byProb, precision, random_prob_density)
+  names(result) <- c("val_stations", "pd_val", "prption_byArea", "prption_byProb", "precision", "random_prob_density")
   class(result) <- "QA"
   return(result)
 }
