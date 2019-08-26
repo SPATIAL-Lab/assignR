@@ -1,3 +1,3 @@
-# assign
+# assignR
 
-You can run the code in Rmarkdown folder to test the package.
+Code in Rmarkdown folder provides tests and examples.
