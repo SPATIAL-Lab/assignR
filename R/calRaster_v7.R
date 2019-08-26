@@ -114,7 +114,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   y = tissue.iso
   xy = data.frame(x, y)
 
-  if (genplot == TRUE) {
+  if (genplot == TRUE || savePDF == TRUE) {
     #formatted lm equation for plotting
     equation <- function(mod) {
       lm_coef <- list(a = as.numeric(round(coef(mod)[1], digits = 2)),
@@ -122,26 +122,18 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
                                                                                   digits = 2))
       lm_eq <- substitute(italic(y) == a + b %.% italic(x) *
                             "," ~ ~italic(R)^2 ~ "=" ~ r2, lm_coef)
-      as.character(as.expression(lm_eq))
+      as.expression(lm_eq)
     }
-
-    #coordinate for placing equation legend in plot
-    xmin = max(x) - 0.4 * (diff(range(x)))
-    xmax = max(x)
-    ymin = min(y) - 0.25 * diff(range(y))
-    ymax = min(y) - 0.1 * diff(range(y))
-
-    #plot object
-    p11 <- ggplot(xy, aes(x = isoscape.iso[, 1], y = tissue.iso)) +
-      geom_point(shape = 1) + geom_smooth(method = lm,
-      se = T) + ggtitle("Rescale regression model") + theme(plot.title = element_text(hjust = 0.5)) +
-      scale_x_continuous(name = "Isoscape value") +
-      scale_y_continuous(name = "Tissue value") + annotate("rect",
-      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
-      fill = "white", colour = "red") + annotate("text",
-      x = (xmax + xmin)/2, y = (ymax + ymin)/2, label = equation(lmResult),
-      parse = TRUE)
-    print(p11)
+    #coordinates for placing equation legend in plot
+    xl = max(x)
+    yl = min(y) + 0.05 * diff(range(y))
+  }
+  
+  if(genplot == TRUE){  
+    #plot
+    plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", ylab="Tissue value", main="Rescale regression model")
+    abline(lmResult)
+    text(xl, yl, equation(lmResult), pos=2)
   }
 
   #combine uncertainties of isoscape and rescaling function
@@ -159,20 +151,25 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #plot the output rasters
   if (genplot == TRUE) {
     print(spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
-                 main = "rescale mean"))
+                 main = "Rescaled mean"))
     print(spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
-                 main = "rescale sd"))
+                 main = "Rescaled sd"))
   }
 
   #pdf output
   if (savePDF == TRUE) {
     dir.create("output")
-    pdf("./output/rescale.result.pdf", width = 8, height = 4)
-    print(p11)
+    pdf("./output/rescale.result.pdf", width = 6, height = 4)
+    
+    #plot
+    plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", ylab="Tissue value", main="Rescale regression model")
+    abline(lmResult)
+    text(xl, yl, equation(lmResult), pos=2)
+    
     print(spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
-                 main = "rescale mean"))
+                 main = "Rescaled mean"))
     print(spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
-                 main = "rescale sd"))
+                 main = "Rescaled sd"))
     dev.off()
   }
 
