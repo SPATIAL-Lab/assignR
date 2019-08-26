@@ -34,7 +34,7 @@ plot.QA = function(obj, savePNG = FALSE){
     
     pre = data.frame(xx, c(1, 1-mean, 0))
 
-    pd <- data.frame(as.numeric(obj$pd_bird_val) / obj$random_prob_density)
+    pd <- data.frame(as.numeric(obj$pd_val) / obj$random_prob_density)
     
     plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
@@ -117,7 +117,7 @@ plot.QA = function(obj, savePNG = FALSE){
     pre = data.frame(xx, c(1, 1-mean, 0))
     
     pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
-    pd[1:(niter[1]*vali[1]),1] = as.numeric(obj[[1]]$pd_bird_val) / obj[[1]]$random_prob_density
+    pd[1:(niter[1]*vali[1]),1] = as.numeric(obj[[1]]$pd_val) / obj[[1]]$random_prob_density
     
     for(i in 2:n){
 
@@ -136,7 +136,7 @@ plot.QA = function(obj, savePNG = FALSE){
       
       pre = cbind(pre, c(1, 1-mean, 0))
       
-      pd[1:(niter[1]*vali[1]),i] = as.numeric(obj[[i]]$pd_bird_val) / obj[[i]]$random_prob_density
+      pd[1:(niter[1]*vali[1]),i] = as.numeric(obj[[i]]$pd_val) / obj[[i]]$random_prob_density
       
     }
     
