@@ -32,21 +32,14 @@ Vander Zanden, H.B., Wunder, M.B., Hobson, K.A., Van Wilgenburg, S.L., Wassenaar
 # load data
 data(naMap) # North America 
 data(d2h_world) # precipitation hydrogen isotope of the world
-data(knownOrig) # hydrogen isotopes of known-origin samples
-
-# crop the world hydrogen data to North America
-r <- crop(d2h_world, naMap)
-plot(r)
-
-# convert 2 standard deviation from d2h_world to 1 standard deviation
-r[[2]] <- r[[2]]/2
+data(knownOrig) # isotopes of known-origin samples
 
 # extract some known-origin data
 bird_d2h <- subOrigData(taxon = "Lanius ludovicianus")
 
 # run quality assessment based hydrogen isotope from precipitation and known-origin bird
 d2h_QA <- QA(isoscape = r, known = bird_d2h, valiStation = 2, 
-                    valiTime = 5, setSeed = T)
+                    valiTime = 5, mask = naMap)
                     
 # plot the QA result
 plot(d2h_QA)

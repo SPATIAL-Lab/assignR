@@ -7,7 +7,7 @@ assign function
 Assign unknown tissue isotope to calibrated precipitation isoscape.
 }
 \usage{
-pdRaster(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFile = TRUE)
+pdRaster(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFiles = FALSE)
 }
 \arguments{
 \item{r}{
@@ -25,12 +25,12 @@ SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this 
 \item{genplot}{
 logical. Generate summary plots in R?
 }
-\item{saveFile}{
+\item{saveFiles}{
 logical. Save the results?
 }
 }
 \value{
-returns an object of class RasterStack or RasterLayer that includes a probability density raster for each individual in "unknown". pdRaster writes individual rasters in GTiff format to disk in the working directory for each individual in "unknown".
+returns an object of class RasterStack or RasterLayer that includes a probability density raster for each individual in "unknown". If saveFiles == TRUE writes individual rasters in GTiff format to disk in the working directory for each individual in "unknown" and a pdf file with images for each probability density raster.
 }
 
 \seealso{
@@ -39,10 +39,17 @@ returns an object of class RasterStack or RasterLayer that includes a probabilit
 \examples{
 data(naMap)
 data(d2h_world)
-d <- subOrigData(taxon = c("Homo sapiens"), mask = naMap)
-r <- calRaster(known = d, isoscape = d2h_world, mask = naMap)
+
+#### Load hydrogen isotope for human hair in North America ####
+d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+
+#### Rescale from environmental isoscape to tissue isoscape ####
+r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
+
+#### Sample to assign
 id <- "smile"
 d2H <- -80
 un <- data.frame(id,d2H)
-asn <- pdRaster(r, unknown = un, mask=naMap)
+
+asn <- pdRaster(r, unknown = un, mask = naMap, saveFiles = TRUE)
 }

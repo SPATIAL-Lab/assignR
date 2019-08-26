@@ -21,21 +21,20 @@ probability density map which must be raster or RasterLayer
 # load North America SpatialPolygonsDataFrame data in assignR package
 data("naMap")
 data(d2h_world)
-d = subOrigData(taxon = c("Homo sapiens"), mask = naMap)
 
-# exclude some outlier. This step is optional, which depends on your data quality.
-dd = d[d@coords[,1] < -80,]
+#### Load hydrogen isotope for human hair in North America ####
+d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
 
-# Rescale from environmental isoscape to tissue isoscape
-r = calRaster(known = dd, isoscape = d2h_world, mask = naMap)
+#### Rescale from environmental isoscape to tissue isoscape ####
+r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 
-# four unknown-origin example
+# four unknown-origin examples
 id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
 un = data.frame(id,d2H)
 
 # assignment
-asn = pdRaster(r, unknown = un, mask = naMap, saveFile = FALSE)
+asn = pdRaster(r, unknown = un, mask = naMap)
 
 # joint probability for individuals of common origin
 unionP(asn)

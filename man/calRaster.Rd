@@ -7,7 +7,7 @@ Function to rescale isoscape
 This function uses known-origin tissue data to rescale a map of environmental isotope values to a map of tissue value (and associated uncertainty) using a linear regression model.
 }
 \usage{
-calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF =  TRUE, verboseLM = TRUE)
+calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF =  FALSE, verboseLM = TRUE)
 }
 \arguments{
   \item{known}{
@@ -52,7 +52,9 @@ numeric. 1 or 2. Designate one of two methods for extracting values from isoscap
 data("naMap")
 data("d2h_world")
 
-# extract some known origin data
-d <- subOrigData(taxon = c("Homo sapiens"), mask = naMap)
-r <- calRaster(known = d, isoscape = d2h_world, mask = naMap)
+#### Load hydrogen isotope for human hair in North America ####
+d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+
+#### Rescale from environmental isoscape to tissue isoscape ####
+r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 }

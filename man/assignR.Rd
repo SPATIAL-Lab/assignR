@@ -27,21 +27,21 @@ d2H = seq(-160, -80, by=80/25)
 un = data.frame(id,d2H)
 
 #### Assignment for unknown-origin examples ####
-asn = pdRaster(r,unknown=un,mask=naMap, saveFile=FALSE)
+asn = pdRaster(r, unknown = un, mask = naMap)
 
 #### Create SpatialPolygons for two regions of interest ####
 p1 <- c(-100,60,-100,65,-110,65,-110,60,-100,60)
-p1 <- matrix(p1, 5,2, byrow = T)
+p1 <- matrix(p1, 5,2, byrow = TRUE)
 p1 <- Polygon(p1)
 p1 <- Polygons(list(p1), "p1")
 p2 <- c(-100,40,-100,45,-110,45,-110,40,-100,40)
-p2 <- matrix(p2, 5,2, byrow = T)
+p2 <- matrix(p2, 5,2, byrow = TRUE)
 p2 <- Polygon(p2)
 p2 <- Polygons(list(p2), "p2")
 p12 <- SpatialPolygons(list(p1,p2),1:2)
 plot(p12)
 
-#### Create data.frame with two points of interest ####
+#### Create SpatialPoints with two points of interest ####
 pp1 <- c(-100,45)
 pp2 <- c(-100,60)
 pp12 <- SpatialPoints(coords = rbind(pp1,pp2))
@@ -53,9 +53,10 @@ oddsRatio(asn, p12)
 oddsRatio(asn, pp12)
 
 #### Binary reclassification ####
-### Top 10% of probability surface (defined by % area)
-qtlRaster(asn, threshold = 0.1, thresholdType = 2)
-### Top 10% of probability surface (defined by % cumulative probability)
+# Top 10% of probability surface (defined by % area)
+qtlRaster(asn, threshold = 0.1)
+
+# Top 10% of probability surface (defined by % probability)
 qtlRaster(asn, threshold = 0.1, thresholdType = 1)
 
 #### Joint probability for individuals of common origin ####
@@ -70,7 +71,7 @@ bird_d2h = subOrigData(taxon = "Setophaga ruticilla", mask = naMap)
 
 # run quality assessment using precipitation hydrogen isoscape
 d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2,
-             valiTime = 5, mask = naMap, setSeed = TRUE)
+             valiTime = 5, mask = naMap)
 
 # plot the QA result
 plot(d2h_QA)

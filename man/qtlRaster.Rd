@@ -8,7 +8,7 @@ Binary reclassification
 Select top X percent of probability surface (defined by area percentage or cumulative probability)
 }
 \usage{
-qtlRaster(pdR, threshold, thresholdType)
+qtlRaster(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,13 +19,13 @@ probability density map which must be raster or RasterLayer
 numeric from 0 to 1, top percentage to choose
 }
   \item{thresholdType}{
-numeric 1 or 2. 1 is to choose top percentage by cumulative probability; 2 is to choose top percentage by area
+numeric 1 or 2. 1 selects the top percentage by probability; 2 selects the top percentage by area
 }
   \item{genplot}{
-generate summary plot? (T or F)
+generate summary plot? (TRUE or FALSE)
 }
-  \item{pdf}{
-save summary plot as PDF? (T or F)
+  \item{savePDF}{
+save summary plot as PDF? (TRUE or FALSE)
 }
 }
 
@@ -33,19 +33,24 @@ save summary plot as PDF? (T or F)
 # load North America SpatialPolygonsDataFrame data in assignR package
 data("naMap")
 data(d2h_world)
-d = subOrigData(taxon = c("Homo sapiens"), mask = naMap)
-# exclude some outlier. This step is optional, which depends on your data quality.
-dd = d[d@coords[,1] < -80,]
-# Rescale from environmental isoscape to tissue isoscape (known must be SpatialPointsDataFrame with coordinate reference system )
-r = calRaster(known = dd, isoscape = d2h_world, mask = naMap)
-# four unknown-origin example
+
+#### Load hydrogen isotope for human hair in North America ####
+d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+
+#### Rescale from environmental isoscape to tissue isoscape ####
+r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
+
+# four unknown-origin examples
 id = c("A", "B", "C", "D")
-d2H = c(-110, -180, -130, -150)
+d2H = c(-110, -90, -105, -102)
 un = data.frame(id,d2H)
+
 # assignment
 asn = pdRaster(r,unknown=un,mask=naMap)
+
 # top 10% of probability surface (defined by % area)
-qtlRaster(asn, threshold = 0.1, thresholdType = 2, pdf = T)
-# top 10% of probability surface (defined by % cumulative probability)
-qtlRaster(asn, threshold = 0.1, thresholdType = 1, pdf = F)
+qtlRaster(asn, threshold = 0.1, savePDF = TRUE)
+
+# top 10% of probability surface (defined by % probability)
+qtlRaster(asn, threshold = 0.1, thresholdType = 1)
 }

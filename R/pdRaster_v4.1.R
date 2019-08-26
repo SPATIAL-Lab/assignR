@@ -1,4 +1,4 @@
-pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFile = TRUE) {
+pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFiles = FALSE) {
   if(class(r) == "rescale"){
     r <- r$isoscape.rescale
   }
@@ -24,8 +24,8 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
     stop("genplot should be logical (T or F)")
   }
   
-  if(class(saveFile) != "logical"){
-    stop("saveFile should be logical (T or F)")
+  if(class(saveFiles) != "logical"){
+    stop("saveFiles should be logical (T or F)")
   }
   
   rescaled.mean = r[[1]]
@@ -66,7 +66,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
   
   n <- nrow(data)
   
-  if(saveFile == TRUE){
+  if(saveFiles == TRUE){
     dir.create("output")
     dir.create("output/pdRaster_Gtif")
   }
@@ -90,7 +90,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
     } else {
       result <- stack(result, assign.norm)
     }
-    if(saveFile == TRUE){
+    if(saveFiles == TRUE){
       filename <- paste("output/pdRaster_Gtif/", indv.id, ".like", ".tif", sep = "")
       writeRaster(assign.norm, filename = filename, format = "GTiff",
                   overwrite = TRUE)
@@ -98,7 +98,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
   }
   names(result) <- data[,1]
 
-  if(saveFile == TRUE){
+  if(saveFiles == TRUE){
     if (n > 5){
       pdf("./output/output_pdRaster.pdf", width = 10, height = 10)
       par(mfrow = c(ceiling(n/5), 5))
@@ -118,7 +118,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
     }
   }
   
-  if(saveFile == TRUE){
+  if(saveFiles == TRUE){
     dev.off()
   }
 

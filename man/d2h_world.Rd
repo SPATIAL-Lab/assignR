@@ -9,7 +9,7 @@ Global growing season precipitation δ2H isoscape from waterisotopes.org
 }
 \usage{data("d2h_world")}
 \format{
- raster with two layers. The first layer is the mean prediction and the second one is 1 standard deviation
+ raster with two layers. The first layer is the mean prediction and the second is 1 standard deviation
 }
 \references{
 Bowen, G. J. (2018) Gridded maps of the isotopic composition of meteoric waters. http://www.waterisotopes.org.

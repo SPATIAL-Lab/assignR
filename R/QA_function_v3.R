@@ -1,4 +1,4 @@
-QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = T){
+QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TRUE){
 
   #check that isoscape is valid and has defined CRS
   if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
@@ -62,7 +62,7 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = T)
     bird_val <- known[val_stations[i,],]
     bird_model <- known[-val_stations[i,],]
     rescale <- assignR::calRaster(bird_model, isoscape, mask, genplot = FALSE, savePDF = FALSE, verboseLM = FALSE)
-    pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(bird_val@data), bird_val@data[,1]), genplot = FALSE, saveFile = F)
+    pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(bird_val@data), bird_val@data[,1]), genplot = FALSE)
 
     # pd value for each validation location
     for(m in 1:nlayers(pd)){

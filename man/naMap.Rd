@@ -5,7 +5,7 @@
 data: naMap
 }
 \description{
-North America polygon
+Simplified North American boundaries polygon
 }
 \usage{data("naMap")}
 \format{
