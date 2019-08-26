@@ -29,27 +29,28 @@ un = data.frame(id,d2H)
 #### Assignment for unknown-origin examples ####
 asn = pdRaster(r, unknown = un, mask = naMap)
 
-#### Create SpatialPolygons for two regions of interest ####
-p1 <- c(-100,60,-100,65,-110,65,-110,60,-100,60)
-p1 <- matrix(p1, 5,2, byrow = TRUE)
-p1 <- Polygon(p1)
-p1 <- Polygons(list(p1), "p1")
-p2 <- c(-100,40,-100,45,-110,45,-110,40,-100,40)
-p2 <- matrix(p2, 5,2, byrow = TRUE)
-p2 <- Polygon(p2)
-p2 <- Polygons(list(p2), "p2")
-p12 <- SpatialPolygons(list(p1,p2),1:2)
-plot(p12)
+#### SpatialPolygons for two regions of interest ####
+data("plover_range_BreedingSeason")
+data("plover_range_NonBreedingSeason")
+plot(naMap)
+lines(plover_range_BreedingSeason, col = c("red"))
+lines(plover_range_NonBreedingSeason, col = c("blue"))
 
-#### Create SpatialPoints with two points of interest ####
-pp1 <- c(-100,45)
-pp2 <- c(-100,60)
-pp12 <- SpatialPoints(coords = rbind(pp1,pp2))
-
-#### Caculate odds ratio for each sample for the two polygons created above ####
+#### Get odds ratio for two regions using list method
+p12 = list("BS" = plover_range_BreedingSeason, "NBS" = plover_range_NonBreedingSeason)
 oddsRatio(asn, p12)
 
-#### Caculate odds ratio for each sample for the two points created above ####
+#### Get odds ratio for two regions using SpatialPolygon method
+p34 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
+oddsRatio(asn, p34)                      
+
+#### Create SpatialPoints for two points of interest ####
+pp1 <- c(-108,42)
+pp2 <- c(-103,25)
+pp12 <- SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+points(pp12, pch = 21, bg = "light blue")
+
+#### Get odds ratio for two points using SpatialPoints method ####
 oddsRatio(asn, pp12)
 
 #### Binary reclassification ####
