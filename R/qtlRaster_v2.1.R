@@ -23,9 +23,11 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
   if(class(savePDF) != "logical"){
     stop("pdf must be logical (T/F)")
   }
+  
   result <- pdR
+  n = nlayers(result)  
   if(thresholdType == 1){
-    for(i in 1:nlayers(pdR)){
+    for(i in 1:n){
       pdR.values <- na.omit(getValues(pdR[[i]]))
       pdR.values <- sort(pdR.values)
       k <- length(pdR.values)
@@ -41,7 +43,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
           right <- start
         }
       }
-      if(nlayers(pdR) == 1){
+      if(n == 1){
         result <- pdR[[i]] > pdR.values[start]
       }else{
         result[[i]] <- pdR[[i]] > pdR.values[start]
@@ -49,12 +51,13 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
     }
     title1 <- "probability"
   }
+  
   if(thresholdType == 2){
-    for(i in 1:nlayers(pdR)){
+    for(i in 1:n){
       pdR.values <- na.omit(getValues(pdR[[i]]))
       k <- length(pdR.values)
       cut <- sort(pdR.values)[round((1-threshold)*k)]
-      if(nlayers(pdR) == 1){
+      if(n == 1){
         result <- pdR[[i]] > cut
       }else{
         result[[i]] <- pdR[[i]]>cut
@@ -62,18 +65,28 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
     }
     title1 <- "area"
   }
+  
   names(result) <- names(pdR)
+  tls = character(n)
+  if(n > 1){
+    for(i in 1:n){
+      tls[i] = paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i]))
+    }
+  } else{
+    tls = paste0("Top ", threshold*100, "% quantile by ", title1)
+  }
+  
   if(genplot){
-    for(i in 1:nlayers(result)){
+    for(i in 1:n){
       plot(result[[i]])
-      title(paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i]))
+      title(tls[i])
     }
   }
   if(savePDF){
     pdf("qtlRaster_result.pdf")
-    for(i in 1:nlayers(result)){
+    for(i in 1:n){
       plot(result[[i]])
-      title(paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i]))
+      title(tls[i])
     }
     dev.off()
   }

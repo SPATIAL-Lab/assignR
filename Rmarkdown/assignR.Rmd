@@ -31,10 +31,10 @@ data("d2h_world")
 plot(d2h_world)
 ```
 
-Load H isotope data for North American human hair from package database. Here we limit to data from one publication...comparability of H measuerments across different labs and methods is often questionable. 
+Load H isotope data for North American Loggerhead Shrike from package database. Here we limit to data from one publication...comparability of H measuerments across different labs and methods is often questionable. 
 
 ```{r humanData}
-d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012", mask = naMap)
 ```
 
 # Isoscape Calibration and Probability of Origin for Unknown Samples 
@@ -64,7 +64,7 @@ asn = pdRaster(r, unknown = un)
 
 The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering questions...for example "is it more likley this sample came from France or Spain?", or "how likley is this hypothesized location relative to other possibilities?". 
 
-Let's compare probabilities for two spatial areas defined by the summer and winter ranges of the Mountain Plover. No, this doesn't make sense in the context of our analysis of hypothetical human hair samples, but it provides a nice example!
+Let's compare probabilities for two spatial areas defined by the summer and winter ranges of the Mountain Plover. Yes, this is a different species than we are working with, but it provides a nice example!
 
 Load the data and plot it (note the regions are complex and consist of multiple parts, which is not an issue).
 
