@@ -9,6 +9,7 @@ Code in Rmarkdown folder provides tests and examples.
 ## Package contents
 
 **Datasets**
+
 *d2h_world.rda*
 Global growing season precipitation δ2H isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
 
@@ -28,6 +29,7 @@ Mountain plover breeding season range
 Mountain plover non-breeding season range
 
 **Functions**
+
 *subOrigData*
 Subset the known-origin stable isotope dataset included in this package
 
