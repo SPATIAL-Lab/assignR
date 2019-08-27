@@ -1,7 +1,7 @@
 Package: assignR
 Type: Package
 Title: Tools for inferring geographic origin from isotopic data
-Version: 0.2
+Version: 1.0
 Author: Chao Ma, Gabe Bowen
 Maintainer: Chao Ma <chao.ma@utah.edu>; Gabe Bowen <gabe.bowen@utah.edu>
 Description: Routines for rescaling isoscapes using known-origin tissue isotope data, assigning origin of unknown samples, and summarizing and assessing assignment results.
