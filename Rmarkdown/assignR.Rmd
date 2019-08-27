@@ -142,7 +142,7 @@ qa1 = QA(d2h_world, d, valiStation = 10, valiTime = 5, mask = naMap)
 
 Plot the result. 
 
-In the first plot three panels show three metrics, granularity (higher is better), accuracy (closer to 1:1 is better), and sensitivity (higher is better), described in Ma et al., in review. The second plot shows the poterior probabilities at the known locations of origin relative to random (1, higher is better). 
+The first three panels show three metrics, granularity (higher is better), accuracy (closer to 1:1 suggests uncertainty estimates used in the anlaysis are appropriate), and sensitivity (higher is better), described in Ma et al., in review. The second plot shows the poterior probabilities at the known locations of origin relative to random (=1, higher is better). 
 
 A researcher might refer to the sensitivity plot, for example, to assess what *qtlRaster* area threshold would be required to obtain 90% correct assignments in their study system.
 
