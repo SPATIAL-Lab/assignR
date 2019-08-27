@@ -10,49 +10,34 @@ Code in Rmarkdown folder provides tests and examples.
 
 **Datasets**
 
-*d2h_world.rda*
-Global growing season precipitation δ2H isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
+*d2h_world.rda* - Global growing season precipitation δ2H isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
 
-*d18o_world.rda*
-Global growing season precipitation δ18O isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
+*d18o_world.rda* - Global growing season precipitation δ18O isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
 
-*knownOrig.rda*	
-Hydrogen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 2616 samples)
+*knownOrig.rda*	- Hydrogen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 2616 samples)
 
-*naMap.rda*
-North America outline
+*naMap.rda* - North America outline
 
-*plover_range_BreedingSeason.rda*
-Mountain plover breeding season range
+*plover_range_BreedingSeason.rda* - Mountain plover breeding season range
 
-*plover_range_NonBreedingSeason.rda*
-Mountain plover non-breeding season range
+*plover_range_NonBreedingSeason.rda* - Mountain plover non-breeding season range
 
 **Functions**
 
-*subOrigData*
-Subset the known-origin stable isotope dataset included in this package
+*subOrigData* - Subset the known-origin stable isotope dataset included in this package
 
-*calRaster*
-Transform environmental isoscape to tissue isoscape
+*calRaster* - Transform environmental isoscape to tissue isoscape
 
-*pdRaster*
-Assign sample to calibrated tissue isoscape based on tissue isotopic composition
+*pdRaster* - Assign sample to calibrated tissue isoscape based on tissue isotopic composition
 
-*qtlRaster*
-Select most likely region of origin from posterior probability surface (by cumulative percent area probability)
+*qtlRaster* - Select most likely region of origin from posterior probability surface (by cumulative percent area probability)
 
-*jointP*
-Calculate joint probability for individuals of common origin (product of probabilities)
+*jointP* - Calculate joint probability for individuals of common origin (product of probabilities)
 
-*unionP*
-Calculate probability that at least one individual came from each map location (union of probabilities)
+*unionP* - Calculate probability that at least one individual came from each map location (union of probabilities)
 
-*oddsRatio*
-Calculate ratio of odds for two locations or areas (points or polygons)
+*oddsRatio* - Calculate ratio of odds for two locations or areas (points or polygons)
 
-*QA*
-Quality analysis of geographic assignment
+*QA* - Quality analysis of geographic assignment
 
-*plot.QA*
-Plot results of one or more quality analyses from QA function
+*plot.QA* - Plot results of one or more quality analyses from QA function
