@@ -6,7 +6,7 @@ Data and tools supporting geographic assignment of materials based on their isot
 
 Code in Rmarkdown folder provides tests and examples.
 
-## Package contents:
+## Package contents
 
 **Datasets**
 *d2h_world.rda*
