@@ -1,0 +1,176 @@
+---
+title: "assignR_examples"
+author: "Gabe Bowen, Chao Ma"
+date: "August 27, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Getting Started
+
+Load the package.
+
+```{r loadlib}
+library(assignR)
+```
+
+Load and plot North America boundary mask.
+
+```{r boundary}
+data("naMap")
+plot(naMap)
+```
+
+Load and plot global growing season precipitation H isoscape. Data are from [waterisotopes.org](http://waterisotopes.org).
+
+```{r isoscape}
+data("d2h_world")
+plot(d2h_world)
+```
+
+Load H isotope data for North American human hair from package database. Here we limit to data from one publication...comparability of H measuerments across different labs and methods is often questionable. 
+
+```{r humanData}
+d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+```
+
+# Isoscape Calibration and Probability of Origin for Unknown Samples 
+
+calRaster fits a linear model relating the precipitation isoscape values to hair values, and applies it to produce a hair isoscape.
+
+```{r calRaster}
+r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
+```
+
+Create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape.
+
+```{r samples}
+id = letters[1:5]
+d2H = rnorm(5, -120, 8)
+un = data.frame(id, d2H)
+```
+
+Produce posterior probability density maps used in the assignment of the unknown origin samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf)
+
+```{r pdRaster}
+asn = pdRaster(r, unknown = un)
+```
+
+# Post-hoc Analysis
+## Odds Ratio
+
+The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering questions...for example "is it more likley this sample came from France or Spain?", or "how likley is this hypothesized location relative to other possibilities?". 
+
+Let's compare probabilities for two spatial areas defined by the summer and winter ranges of the Mountain Plover. No, this doesn't make sense in the context of our analysis of hypothetical human hair samples, but it provides a nice example!
+
+Load the data and plot it (note the regions are complex and consist of multiple parts, which is not an issue).
+
+```{r polygons}
+data("plover_range_BreedingSeason")
+data("plover_range_NonBreedingSeason")
+plot(naMap)
+lines(plover_range_BreedingSeason, col = c("red"))
+lines(plover_range_NonBreedingSeason, col = c("blue"))
+```
+
+Get the odds ratio for the two regions. The result reports the odds ratio for the two regions for each of the 5 unknown samples plus the ratio of areas. If the isotope values were completely uninformative the odds ratios would equal the ratio of areas.
+
+```{r oddsRatio1}
+p12 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
+oddsRatio(asn, p12)
+```
+
+Comparisons can also be made using points. Create two points (one in each of the regions above) and compare their odds. The result also shows the odds ratio for each point relative to the most- and least-likley gridcells on the posterior probability map.
+
+```{r oddsRatio2}
+pp1 = c(-108,42)
+pp2 = c(-103,25)
+pp12 = SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+oddsRatio(asn, pp12)
+```
+
+## Assignment
+
+Researchers often want to classify their study area in to regions that are and are not likley to be the origin of the sample (effectively 'assigning' the sample to a part of the area). This requires choosing a subjective threshold to define how much of the study domain is represented in the assignment region. *qtlRaster* offers two choices.
+
+Extract 10% of the study area, giving maps that show the 10% of grid cells with the highest posterior probability for each sample.
+
+```{r qtlRaster1}
+qtlRaster(asn, threshold = 0.1)
+```
+
+Extract 80% of the posterior probability density, giving maps that show the smallest region within which there is an 80% chance each sample originated.
+
+```{r qtlRaster2}
+qtlRaster(asn, threshold = 0.8, thresholdType = 1)
+```
+
+## Summarization
+
+*jointP* and *unionP* offer two options for summarizing posterior probabilities from multiple samples.
+
+Calculate the probability that **all** samples came from any given gridcell in the analysis area. Note that this summarization will only be useful if all samples are truely derived from a single population of common gegraphic origin.
+
+```{r jointP}
+jointP(asn)
+```
+
+Calculate the probability that **any** sample came from any given gridcell in the analysis area.
+
+```{r unionP}
+up = unionP(asn)
+```
+
+Identify 10% of the analysis area that is most likley to be the origin of one or more samples.
+
+```{r qtlRaster3}
+qtlRaster(up, threshold = 0.1)
+```
+
+## Quality analysis and method comparison
+
+How good are the geographic assignments made using isotope data? What area or probability threshold should be used for assignment? Is it better to use isoscape *A* or *B* for my analysis? These questions can be answered through split-sample validation using *QA*.
+
+Run quality assessment on the knonw-origin human dataset and precipitation isoscape. Note that these analyses take some time to run, depending on the number of stations and iterations used.
+
+```{r QA1}
+qa1 = QA(d2h_world, d, valiStation = 10, valiTime = 5, mask = naMap)
+```
+
+Plot the result. 
+
+In the first plot three panels show three metrics, granularity (higher is better), accuracy (closer to 1:1 is better), and sensitivity (higher is better), described in Ma et al., in review. The second plot shows the poterior probabilities at the known locations of origin relative to random (1, higher is better). 
+
+A researcher might refer to the sensitivity plot, for example, to assess what *qtlRaster* area threshold would be required to obtain 90% correct assignments in their study system.
+
+```{r plot.QA1}
+plot(qa1)
+```
+
+How would using a different isoscape, or different known origin dataset, affect the analysis? Multiple QA objects can be compared to assess the impact.
+
+Let's modify our isoscape to add some noise.
+
+```{r modraster}
+dv = getValues(d2h_world[[1]])
+dv = dv + rnorm(length(dv), 0, 15)
+d2h_fuzzy = setValues(d2h_world[[1]], dv)
+plot(d2h_fuzzy)
+d2h_fuzzy = brick(d2h_fuzzy, d2h_world[[2]])
+```
+
+Rerun *QA* using the new version of the isoscape.
+
+```{r QA2}
+qa2 = QA(d2h_fuzzy, d, valiStation = 10, valiTime = 5, mask = naMap)
+```
+
+Now use *plot.QA* to compare.
+
+```{r plot.QA2}
+qas = list("normal" = qa1, "fuzzy" = qa2)
+plot.QA(qas)
+```
