@@ -70,7 +70,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
   tls = character(n)
   if(n > 1){
     for(i in 1:n){
-      tls[i] = paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i]))
+      tls[i] = paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i])
     }
   } else{
     tls = paste0("Top ", threshold*100, "% quantile by ", title1)
