@@ -14,7 +14,7 @@ Code in Rmarkdown folder provides tests and examples.
 
 *d18o_world.rda* - Global growing season precipitation δ18O isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
 
-*knownOrig.rda*	- Hydrogen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 2616 samples)
+*knownOrig.rda*	- Hydrogen and oxygen (if available) isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 2721 samples)
 
 *naMap.rda* - North America outline
 
