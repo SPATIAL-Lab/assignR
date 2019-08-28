@@ -8,7 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
----
+
+*****
 # Getting Started
 
 Install *assignR*. If necessary first install and load the *devtools* package.
@@ -17,31 +18,35 @@ Install *assignR*. If necessary first install and load the *devtools* package.
 install.packages("devtools", repos = "https://cloud.r-project.org")
 library(devtools)
 ```
----
+
+*****
 Now *assignR* can be installed directly from the GitHub repository.
 
 ```{r install}
 install_github("SPATIAL-Lab/assignR", force = TRUE)
 library(assignR)
 ```
----
+
+*****
 Add some data from the package to your local environment. Load and plot the North America boundary mask.
 
 ```{r boundary}
 data("naMap")
 plot(naMap)
 ```
----
+
+*****
 Load and plot global growing season precipitation H isoscape. Data are from [waterisotopes.org](http://waterisotopes.org).
 
 ```{r isoscape}
 data("d2h_world")
 plot(d2h_world)
 ```
----
+
+*****
 Load H isotope data for North American Loggerhead Shrike from package database. Here we limit to data from one publication...comparability of H measuerments across different labs and methods is often questionable. 
 
-```{r humanData}
+```{r birdData}
 d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012", mask = naMap)
 ```
 
@@ -52,7 +57,8 @@ calRaster fits a linear model relating the precipitation isoscape values to hair
 ```{r calRaster}
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 ```
----
+
+*****
 Create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape.
 
 ```{r samples}
@@ -60,7 +66,8 @@ id = letters[1:5]
 d2H = rnorm(5, -120, 8)
 un = data.frame(id, d2H)
 ```
----
+
+*****
 Produce posterior probability density maps used in the assignment of the unknown origin samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf)
 
 ```{r pdRaster}
@@ -83,14 +90,16 @@ plot(naMap)
 lines(plover_range_BreedingSeason, col = c("red"))
 lines(plover_range_NonBreedingSeason, col = c("blue"))
 ```
----
+
+*****
 Get the odds ratio for the two regions. The result reports the odds ratio for the two regions for each of the 5 unknown samples plus the ratio of areas. If the isotope values were completely uninformative the odds ratios would equal the ratio of areas.
 
 ```{r oddsRatio1}
 p12 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
 oddsRatio(asn, p12)
 ```
----
+
+*****
 Comparisons can also be made using points. Create two points (one in each of the regions above) and compare their odds. The result also shows the odds ratio for each point relative to the most- and least-likley gridcells on the posterior probability map.
 
 ```{r oddsRatio2}
@@ -109,7 +118,8 @@ Extract 10% of the study area, giving maps that show the 10% of grid cells with 
 ```{r qtlRaster1}
 qtlRaster(asn, threshold = 0.1)
 ```
----
+
+*****
 Extract 80% of the posterior probability density, giving maps that show the smallest region within which there is an 80% chance each sample originated.
 
 ```{r qtlRaster2}
@@ -125,13 +135,15 @@ Calculate the probability that **all** samples came from any given gridcell in t
 ```{r jointP}
 jointP(asn)
 ```
----
+
+*****
 Calculate the probability that **any** sample came from any given gridcell in the analysis area.
 
 ```{r unionP}
 up = unionP(asn)
 ```
----
+
+*****
 Identify 10% of the analysis area that is most likley to be the origin of one or more samples.
 
 ```{r qtlRaster3}
@@ -147,7 +159,8 @@ Run quality assessment on the knonw-origin human dataset and precipitation isosc
 ```{r QA1}
 qa1 = QA(d2h_world, d, valiStation = 10, valiTime = 5, mask = naMap)
 ```
----
+
+*****
 Plot the result. 
 
 The first three panels show three metrics, granularity (higher is better), accuracy (closer to 1:1 suggests uncertainty estimates used in the anlaysis are appropriate), and sensitivity (higher is better), described in Ma et al., in review. The second plot shows the poterior probabilities at the known locations of origin relative to random (=1, higher is better). 
@@ -157,7 +170,8 @@ A researcher might refer to the sensitivity plot, for example, to assess what *q
 ```{r plot.QA1}
 plot(qa1)
 ```
----
+
+*****
 How would using a different isoscape, or different known origin dataset, affect the analysis? Multiple QA objects can be compared to assess the impact.
 
 Let's modify our isoscape to add some noise.
@@ -169,13 +183,15 @@ d2h_fuzzy = setValues(d2h_world[[1]], dv)
 plot(d2h_fuzzy)
 d2h_fuzzy = brick(d2h_fuzzy, d2h_world[[2]])
 ```
----
+
+*****
 Rerun *QA* using the new version of the isoscape.
 
 ```{r QA2}
 qa2 = QA(d2h_fuzzy, d, valiStation = 10, valiTime = 5, mask = naMap)
 ```
----
+
+*****
 Now use *plot.QA* to compare. Assignments made using the fuzzy isoscape are generally poorer than those made without fuzzing.
 
 ```{r plot.QA2}
