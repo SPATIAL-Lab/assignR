@@ -52,7 +52,7 @@ d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012",
 
 # Isoscape Calibration and Probability of Origin for Unknown Samples 
 
-calRaster fits a linear model relating the precipitation isoscape values to hair values, and applies it to produce a hair isoscape.
+calRaster fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a sample-type specific isoscape.
 
 ```{r calRaster}
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
@@ -63,7 +63,7 @@ Create some hypothetical sample IDs and values to demonstrate how samples of unk
 
 ```{r samples}
 id = letters[1:5]
-d2H = rnorm(5, -120, 8)
+d2H = rnorm(5, -110, 8)
 un = data.frame(id, d2H)
 ```
 
