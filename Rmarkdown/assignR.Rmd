@@ -52,7 +52,7 @@ d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012",
 
 # Isoscape Calibration and Probability of Origin for Unknown Samples 
 
-calRaster fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a sample-type specific isoscape.
+We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. *calRaster* fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a sample-type specific isoscape.
 
 ```{r calRaster}
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
@@ -79,7 +79,7 @@ asn = pdRaster(r, unknown = un)
 
 The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering questions...for example "is it more likley this sample came from France or Spain?", or "how likley is this hypothesized location relative to other possibilities?". 
 
-Let's compare probabilities for two spatial areas defined by the summer and winter ranges of the Mountain Plover. Yes, this is a different species than we are working with, but it provides a nice example!
+Let's compare probabilities for two spatial areas defined by the summer and winter ranges of the Mountain Plover. Yes, this is a different species than we are working with, and in most cases we would not be trying to distinguish between winter and summer habitats, but it provides a nice example!
 
 Load the data and plot it (note the regions are complex and consist of multiple parts, which is not an issue).
 
@@ -181,13 +181,13 @@ dv = getValues(d2h_world[[1]])
 dv = dv + rnorm(length(dv), 0, 15)
 d2h_fuzzy = setValues(d2h_world[[1]], dv)
 plot(d2h_fuzzy)
-d2h_fuzzy = brick(d2h_fuzzy, d2h_world[[2]])
 ```
 
 *****
-Rerun *QA* using the new version of the isoscape.
+Combine the fuzzy isoscape with the original isoscape uncertainty layer, and rerun *QA* using the new version of the isoscape.
 
 ```{r QA2}
+d2h_fuzzy = brick(d2h_fuzzy, d2h_world[[2]])
 qa2 = QA(d2h_fuzzy, d, valiStation = 10, valiTime = 5, mask = naMap)
 ```
 
