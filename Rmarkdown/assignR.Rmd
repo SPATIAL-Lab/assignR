@@ -1,7 +1,7 @@
 ---
 title: "assignR Examples"
 author: "Gabe Bowen, Chao Ma"
-date: "August 27, 2019"
+date: "August 29, 2019"
 output: html_document
 ---
 
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Install *assignR*. If necessary first install and load the *devtools* package from CRAN.
 
-```{r devtools}
+```{r devtools, results="hide"}
 install.packages("devtools", repos = "https://cloud.r-project.org")
 library(devtools)
 ```
@@ -22,7 +22,7 @@ library(devtools)
 *****
 Now *assignR* can be installed from the GitHub repository.
 
-```{r install}
+```{r install, results="hide"}
 install_github("SPATIAL-Lab/assignR", force = TRUE)
 library(assignR)
 ```
@@ -52,6 +52,7 @@ d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012",
 
 For a real application you would want to explore the *knownOrigin.rda* dataset to find measurements that are appropriate to your study system (same or similar taxon, geographic region, measurement approach, etc.) or collect and import known-origin data that are specific to your system.
 
+*****
 # Isoscape Calibration and Probability of Origin for Unknown Samples 
 
 We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. *calRaster* fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a sample-type specific isoscape.
@@ -78,6 +79,7 @@ asn = pdRaster(r, unknown = un)
 
 Check out the help page for *pdRaster* for additional options, including the use of informative prior probabilities.
 
+*****
 # Post-hoc Analysis
 ## Odds Ratio
 
@@ -164,6 +166,7 @@ Any of the other post-hoc analysis tools can be applied to the summarized result
 qtlRaster(up, threshold = 0.1)
 ```
 
+*****
 ## Quality analysis and method comparison
 
 How good are the geographic assignments? What area or probability threshold should be used? Is it better to use isoscape *A* or *B* for my analysis? These questions can be answered through split-sample validation using *QA*.
