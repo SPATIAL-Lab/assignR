@@ -11,6 +11,7 @@ jointP <- function(pdR){
   }
   result <- result/cellStats(result,sum)
   names(result) <- "Joint_Probability"
+  options(scipen = -2)
   plot(result)
   title("Joint Probability")
   return(result)
