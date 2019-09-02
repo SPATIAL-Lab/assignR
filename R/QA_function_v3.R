@@ -39,14 +39,14 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
     }
   }
   
-  if(setSeed == T){
+  if(setSeed == TRUE){
     set.seed(100)
   }
   
   rowLength <- nrow(known)
-  val_stations <- sort(sample(1:rowLength,valiStation,replace = F))
+  val_stations <- sort(sample(1:rowLength,valiStation,replace = FALSE))
   for (i in 1:(valiTime-1)){
-    val_stations <- rbind(val_stations,sort(sample(1:rowLength,valiStation,replace = F)))
+    val_stations <- rbind(val_stations,sort(sample(1:rowLength,valiStation,replace = FALSE)))
   }
 
   stationNum4model <- rowLength - valiStation

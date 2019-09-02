@@ -62,11 +62,12 @@ r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 ```
 
 *****
-Let's create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape. The isotope values we've used here are drawn from a random distribution with mean -110 per mil and standard deviation of 8 per mil, which is pretty reasonable for the variance you might expect from conspecific residents at a single location. If you had real measured data for your study samples you would load them here, instead.
+Let's create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape. The isotope values are drawn from a random distribution with a standard deviation of 8 per mil, which is a pretty reasonable variance for conspecific residents at a single location. If you had real measured data for your study samples you would load them here, instead.
 
 ```{r samples}
 id = letters[1:5]
-d2H = c(-104.5, -105.5, -87.8, -106.9, -113.1)
+set.seed(10)
+d2H = rnorm(5, -110, 8)
 un = data.frame(id, d2H)
 ```
 
@@ -199,10 +200,10 @@ A researcher might refer to the sensitivity plot, for example, to assess what *q
 The accuracy plot is useful in assessing the stability and quality of the calibration relationship. Accuracy values that fall well below the 1:1 line suggest that the calibration relationship is unstable, and suggest that the known origin sample set should be examined in more detail and/or supplemented. Here's an example.
 
 ```{r QA_unstable}
-plot.QA(QA(d2h_world, subOrigData(taxon = "Buteo platypterus"), valiStation = 5, valiTime = 10, mask= naMap))
+plot.QA(QA(d2h_world, subOrigData(taxon = "Buteo platypterus"), valiStation = 6, valiTime = 10, mask= naMap, setSeed = 10))
 ```
 
-Although the isotope-based assignments still have substantial power, notice the low accuracy values. The plot indicates that at the 0.5 probability quantile, for example, the method is only correctly assigning ~40% of samples. It turns out that the sample set for *Buteo platypterus* is relatively small and the relationship with the isoscape values somewhat non-linear:
+Although the isotope-based assignments still have substantial power, notice the low accuracy values at probability quantiles above 0.4. The plot indicates that at the 0.8 probability quantile, where you would expect to correctly assign 80% of samples, the method is only correctly assigning ~60%. It turns out that the sample set for *Buteo platypterus* is relatively small and the relationship with the isoscape values somewhat non-linear:
 
 ```{r Buteo}
 plot(extract(d2h_world[[1]], d), d$d2H, xlab = "Isoscape", ylab = "Sample")
