@@ -44,7 +44,7 @@ plot(d2h_world)
 ```
 
 *****
-Load H isotope data for North American Loggerhead Shrike from the package database. Here we are limiting the data to values from one publication...comparability of H isotope measuerments across different labs and methods is often questionable.
+Load H isotope data for North American Loggerhead Shrike from the package database. Here we are limiting the data to values from one publication...comparability of H isotope measurements across different labs and methods is often questionable.
 
 ```{r birdData}
 d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012", mask = naMap)
@@ -62,11 +62,11 @@ r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 ```
 
 *****
-Let's create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape. If you had real measured data for your study samples you would load them here, instead.
+Let's create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape. The isotope values we've used here are drawn from a random distribution with mean -110 per mil and standard deviation of 8 per mil, which is pretty reasonable for the variance you might expect from conspecific residents at a single location. If you had real measured data for your study samples you would load them here, instead.
 
 ```{r samples}
 id = letters[1:5]
-d2H = rnorm(5, -110, 8)
+d2H = c(-104.5, -105.5, -87.8, -106.9, -113.1)
 un = data.frame(id, d2H)
 ```
 
@@ -75,6 +75,12 @@ Produce posterior probability density maps used to the assign the unknown origin
 
 ```{r pdRaster}
 asn = pdRaster(r, unknown = un)
+```
+
+Cell values in these maps are small because each cell's value represents the probability that this individual cell is the actual origin of the sample. Together, all cell values on the map should sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.
+
+```{r sums}
+cellStats(asn[[1]], 'sum')
 ```
 
 Check out the help page for *pdRaster* for additional options, including the use of informative prior probabilities.
@@ -97,7 +103,7 @@ lines(plover_range_BreedingSeason, col = c("red"))
 lines(plover_range_NonBreedingSeason, col = c("blue"))
 ```
 
-Note that the regions are complex and consist of multiple parts, which is not an problem.
+Note that the regions are complex and consist of multiple parts, which is not a problem.
  
 *****
 Get the odds ratio for the two regions. The result reports the odds ratio for the regions (first relative to second) for each of the 5 unknown samples plus the ratio of the areas of the regions. If the isotope values (& prior) were completely uninformative the odds ratios would equal the ratio of areas.
@@ -184,9 +190,25 @@ Plot the result.
 plot(qa1)
 ```
 
-The first three panels show three metrics, granularity (higher is better), accuracy (closer to 1:1 suggests uncertainty estimates used in the anlaysis are appropriate and the calibration relationship is stable), and sensitivity (higher is better). The second plot shows the poterior probabilities at the known locations of origin relative to random (=1, higher is better). More information is provided in Ma et al., in review.
+The first three panels show three metrics, granularity (higher is better), accuracy (closer to 1:1 is better), and sensitivity (higher is better). The second plot shows the poterior probabilities at the known locations of origin relative to random (=1, higher is better). More information is provided in Ma et al., in review.
 
 A researcher might refer to the sensitivity plot, for example, to assess what *qtlRaster* area threshold would be required to obtain 90% correct assignments in their study system. Here it's somewhere between 0.25 and 0.3.
+
+*****
+
+The accuracy plot is useful in assessing the stability and quality of the calibration relationship. Accuracy values that fall well below the 1:1 line suggest that the calibration relationship is unstable, and suggest that the known origin sample set should be examined in more detail and/or supplemented. Here's an example.
+
+```{r QA_unstable}
+plot.QA(QA(d2h_world, subOrigData(taxon = "Buteo platypterus"), valiStation = 5, valiTime = 10, mask= naMap))
+```
+
+Although the isotope-based assignments still have substantial power, notice the low accuracy values. The plot indicates that at the 0.5 probability quantile, for example, the method is only correctly assigning ~40% of samples. It turns out that the sample set for *Buteo platypterus* is relatively small and the relationship with the isoscape values somewhat non-linear:
+
+```{r Buteo}
+plot(extract(d2h_world[[1]], d), d$d2H, xlab = "Isoscape", ylab = "Sample")
+```
+
+This gives inconsistent assignment results when the dataset is sub-sampled for validation, and suggests that the calibration for this species is not well constrained by the data. Here it would be a good idea to supplement the known-origin dataset with additional samples or identify and remove outliers that might bias the calibration relationship.
 
 *****
 How would using a different isoscape or different known origin dataset affect the analysis? Multiple QA objects can be compared to make these types of assessments.

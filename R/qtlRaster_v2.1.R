@@ -78,14 +78,14 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
   
   if(genplot){
     for(i in 1:n){
-      plot(result[[i]])
+      plot(result[[i]], legend=FALSE)
       title(tls[i])
     }
   }
   if(savePDF){
     pdf("qtlRaster_result.pdf")
     for(i in 1:n){
-      plot(result[[i]])
+      plot(result[[i]], legend=FALSE)
       title(tls[i])
     }
     dev.off()
