@@ -93,10 +93,6 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
       }
     }
 
-    for(k in 1:nlayers(qtl)){
-      precision[[i]][j, k] <- sum(na.omit(qtl[[k]][]))/Tarea # precision
-    }
-
     # sensitivity by checking top percentage by cumulative area
     for(n in xx){
       qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
