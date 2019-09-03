@@ -14,6 +14,9 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   if(class(known) != "SpatialPointsDataFrame") {
     stop("known should be a SpatialPointsDataFrame, see help page of calRaster function")
   }
+  if(any(is.na(known@data)) || any(is.nan(known@data)) || any(is.null(known@data))){
+    stop("Missing values detected in known")
+  }
   if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } 

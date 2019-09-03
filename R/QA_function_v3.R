@@ -12,9 +12,14 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
   #check that known is valid and has defined, correct CRS
   if (class(known) != "SpatialPointsDataFrame") {
     stop("known should be a SpatialPointsDataFrame, see help page of calRaster function")
-  } else if (is.na(proj4string(known))) {
+  }
+  if(any(is.na(known@data)) || any(is.nan(known@data)) || any(is.null(known@data))){
+    stop("Missing values detected in known")
+  }
+  if (is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
-  } else if(proj4string(known) != proj4string(isoscape)){
+  } 
+  if(proj4string(known) != proj4string(isoscape)){
     known = spTransform(known, crs(isoscape))
     warning("known was reprojected")
   } else if(ncol(known@data) != 1){
