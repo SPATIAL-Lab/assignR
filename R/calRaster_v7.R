@@ -87,8 +87,8 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     }
 
     #remove na values before continuing
-    isoscape.iso <- isoscape.iso[-na, ]
-    tissue.iso <- tissue.iso[-na, ]
+    tissue.iso <- tissue.iso[!is.na(isoscape.iso[,1])]
+    isoscape.iso <- isoscape.iso[!is.na(isoscape.iso[,1]), ]
   }
 
   #fit the regression model
