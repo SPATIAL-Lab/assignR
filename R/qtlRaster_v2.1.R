@@ -28,25 +28,32 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
   n = nlayers(result)  
   if(thresholdType == 1){
     for(i in 1:n){
-      pdR.values <- na.omit(getValues(pdR[[i]]))
-      pdR.values <- sort(pdR.values)
-      k <- length(pdR.values)
-      left <- 1
-      right <-  k
-      while((right-left) > 2){
-        start <- round((left+right)/2)
-        total <- sum(pdR.values[start:k])
-        if(total > threshold){
-          left <- start
+      if(threshold == 0){
+        cut = 1
+      } else if(threshold == 1){
+        cut = 0
+      } else{
+        pdR.values <- na.omit(getValues(pdR[[i]]))
+        pdR.values <- sort(pdR.values)
+        k <- length(pdR.values)
+        left <- 1
+        right <-  k
+        while((right-left) > 2){
+          start <- round((left+right)/2)
+          total <- sum(pdR.values[start:k])
+          if(total > threshold){
+            left <- start
+          }
+          if(total < threshold){
+            right <- start
+          }
         }
-        if(total < threshold){
-          right <- start
-        }
+        cut = pdR.values[start]        
       }
       if(n == 1){
-        result <- pdR[[i]] > pdR.values[start]
+        result <- pdR[[i]] > cut
       }else{
-        result[[i]] <- pdR[[i]] > pdR.values[start]
+        result[[i]] <- pdR[[i]] > cut
       }
     }
     title1 <- "probability"
@@ -54,9 +61,15 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
   
   if(thresholdType == 2){
     for(i in 1:n){
-      pdR.values <- na.omit(getValues(pdR[[i]]))
-      k <- length(pdR.values)
-      cut <- sort(pdR.values)[round((1-threshold)*k)]
+      if(threshold == 0){
+        cut = 1
+      } else if(threshold == 1){
+        cut = 0
+      } else{
+        pdR.values <- na.omit(getValues(pdR[[i]]))
+        k <- length(pdR.values)
+        cut <- sort(pdR.values)[round((1-threshold)*k)]
+      }
       if(n == 1){
         result <- pdR[[i]] > cut
       }else{
