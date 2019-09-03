@@ -8,7 +8,7 @@ Test the efficacy of geographic assignment using a certain type of isoscape
 What is the power of a certain isoscape used for geographic assignment? Using the known origin data and the isoscape as input to test it. You will get the population accuracy, precision and probability density (see returned ).
 }
 \usage{
-QA(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TRUE)
+QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, mask = NULL, setSeed = TRUE)
 }
 \arguments{
   \item{isoscape}{raster. Environmental isoscape. Two layers: the first one is mean and the second one is standard deviation.}

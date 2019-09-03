@@ -1,4 +1,4 @@
-QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TRUE){
+QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, mask = NULL, setSeed = TRUE){
 
   #check that isoscape is valid and has defined CRS
   if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
