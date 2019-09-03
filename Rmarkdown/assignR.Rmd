@@ -66,7 +66,7 @@ Let's create some hypothetical sample IDs and values to demonstrate how samples 
 
 ```{r samples}
 id = letters[1:5]
-set.seed(10)
+set.seed(123)
 d2H = rnorm(5, -110, 8)
 un = data.frame(id, d2H)
 print(un)
@@ -181,7 +181,7 @@ How good are the geographic assignments? What area or probability threshold shou
 
 We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).
 
-```{r QA1}
+```{r QA1, warning=FALSE}
 qa1 = QA(d2h_world, d, valiStation = 10, valiTime = 5, mask = naMap)
 ```
 
@@ -200,9 +200,8 @@ A researcher might refer to the sensitivity plot, for example, to assess what *q
 
 The accuracy plot is useful in assessing the stability and quality of the calibration relationship. Accuracy values that fall well below the 1:1 line suggest that the calibration relationship is unstable, and suggest that the known origin sample set should be examined in more detail and/or supplemented. Here's an example.
 
-```{r QA_unstable}
+```{r QA_unstable, warning=FALSE}
 d2 = subOrigData(taxon = "Buteo platypterus")
-set.seed(100)
 plot.QA(QA(d2h_world, d2, valiStation = 5, valiTime = 5, mask= naMap))
 ```
 
@@ -229,7 +228,7 @@ plot(d2h_fuzzy)
 *****
 We'll combine the fuzzy isoscape with the uncertainty layer from the original isoscape, then rerun *QA* using the new version. Obviously this is not something you'd do in real work, but as an example it allows us to ask the question "how would the quality of my assignments change if my isoscape predictions were of reduced quality?". 
 
-```{r QA2}
+```{r QA2, warning=FALSE}
 d2h_fuzzy = brick(d2h_fuzzy, d2h_world[[2]])
 qa2 = QA(d2h_fuzzy, d, valiStation = 10, valiTime = 5, mask = naMap)
 ```
@@ -244,4 +243,6 @@ plot.QA(qas)
 
 Assignments made using the fuzzy isoscape are generally poorer than those made without fuzzing. Hopefully that's not a surprise, but you might encounter cases where decisions about how to design your project or conduct your data analysis do have previously unknown or unexpected consequences. These types of comparisons can help reveal them!
 
+*****
+*****
 Questions or comments? <gabe.bowen@utah.edu>
