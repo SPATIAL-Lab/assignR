@@ -80,8 +80,10 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
       qtl <- assignR::qtlRaster(pd, threshold = j/100, savePDF = FALSE, thresholdType = 1, genplot = FALSE)
       prption_byProb[i, j] <- 0
       for(k in 1:nlayers(qtl)){
-        prption_byProb[i, j] <- prption_byProb[i, j] +
-          raster::extract(qtl[[k]], v[k,], method = "bilinear")
+        rv = raster::extract(qtl[[k]], v[k,], method = "bilinear")
+        if(!is.na(rv)){
+          prption_byProb[i, j] <- prption_byProb[i, j] + rv
+        }
         precision[[i]][j, k] <- sum(na.omit(qtl[[k]][]))/Tarea # precision
       }
     }
@@ -95,8 +97,10 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
       qtl <- assignR::qtlRaster(pd, threshold = n/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
       prption_byArea[i, n] <- 0
       for(k in 1:nlayers(qtl)){
-        prption_byArea[i, n] <- prption_byArea[i, n] +
-          raster::extract(qtl[[k]], v[k,], method = "bilinear")
+        rv = raster::extract(qtl[[k]], v[k,], method = "bilinear")
+        if(!is.na(rv)){
+          prption_byArea[i, n] <- prption_byArea[i, n] + rv
+        }
       }
     }
    
