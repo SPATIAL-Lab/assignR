@@ -25,6 +25,10 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
     stop("valiStation must be smaller than the number of known-origin stations in known")
   }
   
+  if(valiTime<2){
+    stop("valiTime must be an integer greater than 1")
+  }
+  
   if(!is.null(mask)) {
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
       if(is.na(proj4string(mask))){
@@ -45,15 +49,16 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
   
   rowLength <- nrow(known)
   val_stations <- sort(sample(1:rowLength,valiStation,replace = FALSE))
-  for (i in 1:(valiTime-1)){
+  for (i in 2:valiTime){
     val_stations <- rbind(val_stations,sort(sample(1:rowLength,valiStation,replace = FALSE)))
   }
 
+
   stationNum4model <- rowLength - valiStation
-  prption_byProb <- matrix(0, valiTime, 99) # accuracy by checking top percentage by cumulative prob.
-  prption_byArea <- matrix(0, valiTime, 99) # accuracy by checking top percentage by area
-  pd_v <- matrix(0, valiTime, valiStation) # pd value for each validation location
-  precision <- list() # precision
+  prption_byProb <- matrix(0, valiTime, 101)   
+  prption_byArea <- matrix(0, valiTime, 101) 
+  pd_v <- matrix(0, valiTime, valiStation) 
+  precision <- list() 
   
   # create progress bar
   pb <- txtProgressBar(min = 0, max = valiTime, style = 3)
@@ -69,15 +74,15 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
       pd_v[i, j] <- raster::extract(pd[[j]], v[j,], method = "bilinear")
     }
 
-    xx <- seq(1, 99, 1) ## 1 to 99
+    xx <- seq(1, 101, 1)
 
     # total area
     Tarea <- length(na.omit(pd[[1]][]))
 
     # spatial precision and accuracy by checking top percentage by cumulative prob.
-    precision[[i]] <- matrix(0, 99, valiStation) # precision
+    precision[[i]] <- matrix(0, 101, valiStation) # precision
     for(j in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = j/100, savePDF = FALSE, thresholdType = 1, genplot = FALSE)
+      qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, savePDF = FALSE, thresholdType = 1, genplot = FALSE)
       prption_byProb[i, j] <- 0
       for(k in 1:nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,], method = "bilinear")
@@ -94,7 +99,7 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
 
     # sensitivity by checking top percentage by cumulative area
     for(n in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = n/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
+      qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
       prption_byArea[i, n] <- 0
       for(k in 1:nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,], method = "bilinear")

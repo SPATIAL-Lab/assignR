@@ -19,20 +19,20 @@ plot.QA = function(obj, savePNG = FALSE){
     vali = ncol(obj$val_stations)
     niter = nrow(obj$val_stations)
     
-    means.p = data.frame(xx, c(0, apply(obj$prption_byProb, 2, mean)/vali, 1))
-    means.a = data.frame(xx, c(0, apply(obj$prption_byArea, 2, mean)/vali, 1))
+    means.p = data.frame(xx, apply(obj$prption_byProb, 2, mean)/vali)
+    means.a = data.frame(xx, apply(obj$prption_byArea, 2, mean)/vali)
     
-    precision = matrix(rep(0, niter*99), ncol=niter, nrow=99)
+    precision = matrix(rep(0, niter*101), ncol=niter, nrow=101)
     for (i in 1:niter){
       precision[,i] <- apply(obj$precision[[i]],1, median)
     }
     
     mean = NULL
-    for(i in 1:99){
+    for(i in 1:101){
       mean = append(mean, mean(precision[i,]))
     }
     
-    pre = data.frame(xx, c(1, 1-mean, 0))
+    pre = data.frame(xx, 1-mean)
 
     pd <- data.frame(as.numeric(obj$pd_val) / obj$random_prob_density)
     
@@ -101,20 +101,20 @@ plot.QA = function(obj, savePNG = FALSE){
       niter[i] = nrow(obj[[i]]$val_stations)
     }
     
-    means.p = data.frame(xx, c(0, apply(obj[[1]]$prption_byProb, 2, mean)/vali[1], 1))
-    means.a = data.frame(xx, c(0, apply(obj[[1]]$prption_byArea, 2, mean)/vali[1], 1))
+    means.p = data.frame(xx, apply(obj[[1]]$prption_byProb, 2, mean)/vali[1])
+    means.a = data.frame(xx, apply(obj[[1]]$prption_byArea, 2, mean)/vali[1])
     
-    precision = matrix(rep(0, niter[1] * 99), ncol=niter[1], nrow=99)
+    precision = matrix(rep(0, niter[1] * 101), ncol=niter[1], nrow=101)
     for (i in 1:niter[1]){
       precision[,i] <- apply(obj[[1]]$precision[[i]],1, median)
     }
     
     mean = NULL
-    for(i in 1:99){
+    for(i in 1:101){
       mean = append(mean, mean(precision[i,]))
     }
     
-    pre = data.frame(xx, c(1, 1-mean, 0))
+    pre = data.frame(xx, 1-mean)
     
     pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
     pd[1:(niter[1]*vali[1]),1] = as.numeric(obj[[1]]$pd_val) / obj[[1]]$random_prob_density
@@ -124,17 +124,17 @@ plot.QA = function(obj, savePNG = FALSE){
       means.p = cbind(means.p, c(0, apply(obj[[i]]$prption_byProb, 2, mean)/vali[i], 1))
       means.a = cbind(means.a, c(0, apply(obj[[i]]$prption_byArea, 2, mean)/vali[i], 1))
       
-      precision = matrix(rep(0, niter[i] * 99), ncol=niter[i], nrow=99)
+      precision = matrix(rep(0, niter[i] * 101), ncol=niter[i], nrow=101)
       for (j in 1:niter[i]){
         precision[,j] <- apply(obj[[i]]$precision[[j]],1, median)
       }
       
       mean = NULL
-      for(j in 1:99){
+      for(j in 1:101){
         mean = append(mean, mean(precision[j,]))
       }
       
-      pre = cbind(pre, c(1, 1-mean, 0))
+      pre = cbind(pre, 1-mean)
       
       pd[1:(niter[1]*vali[1]),i] = as.numeric(obj[[i]]$pd_val) / obj[[i]]$random_prob_density
       

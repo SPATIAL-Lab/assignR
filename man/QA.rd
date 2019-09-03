@@ -19,7 +19,7 @@ SpatialPointsDataFrame. known-origin data that should contain one feature: tissu
   numeric. How many stations of the known origin with tissue isotope are used for validation. This must be smaller than the total number of known origin.
 }
   \item{valiTime}{
-numeric. How many times do you want to randomly draw validation stations and run the validation.
+numeric. How many times do you want to randomly draw validation stations and run the validation. Must be an integer greater than one. 
 }
   \item{setSeed}{
 Do you want to set.seed() when you run the randomly draw validation stations? If yes and your input data are the same, the output would be exactely the same.
