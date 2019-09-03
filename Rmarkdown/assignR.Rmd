@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Install *assignR*. If necessary first install and load the *devtools* package from CRAN.
 
-```{r devtools, results="hide"}
+```{r devtools, message=FALSE, warning=FALSE, results="hide"}
 install.packages("devtools", repos = "https://cloud.r-project.org")
 library(devtools)
 ```
@@ -22,7 +22,7 @@ library(devtools)
 *****
 Now *assignR* can be installed from the GitHub repository.
 
-```{r install, results="hide"}
+```{r install, message=FALSE, warning=FALSE, results="hide"}
 install_github("SPATIAL-Lab/assignR", force = TRUE)
 library(assignR)
 ```
@@ -69,6 +69,7 @@ id = letters[1:5]
 set.seed(10)
 d2H = rnorm(5, -110, 8)
 un = data.frame(id, d2H)
+print(un)
 ```
 
 *****
@@ -78,7 +79,7 @@ Produce posterior probability density maps used to the assign the unknown origin
 asn = pdRaster(r, unknown = un)
 ```
 
-Cell values in these maps are small because each cell's value represents the probability that this individual cell is the actual origin of the sample. Together, all cell values on the map should sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.
+Cell values in these maps are small because each cell's value represents the probability that this one cell, out of all of them on the map, is the actual origin of the sample. Together, all cell values on the map should sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.
 
 ```{r sums}
 cellStats(asn[[1]], 'sum')
@@ -200,13 +201,15 @@ A researcher might refer to the sensitivity plot, for example, to assess what *q
 The accuracy plot is useful in assessing the stability and quality of the calibration relationship. Accuracy values that fall well below the 1:1 line suggest that the calibration relationship is unstable, and suggest that the known origin sample set should be examined in more detail and/or supplemented. Here's an example.
 
 ```{r QA_unstable}
-plot.QA(QA(d2h_world, subOrigData(taxon = "Buteo platypterus"), valiStation = 6, valiTime = 10, mask= naMap, setSeed = 10))
+d2 = subOrigData(taxon = "Buteo platypterus")
+set.seed(100)
+plot.QA(QA(d2h_world, d2, valiStation = 5, valiTime = 5, mask= naMap))
 ```
 
-Although the isotope-based assignments still have substantial power, notice the low accuracy values at probability quantiles above 0.4. The plot indicates that at the 0.8 probability quantile, where you would expect to correctly assign 80% of samples, the method is only correctly assigning ~60%. It turns out that the sample set for *Buteo platypterus* is relatively small and the relationship with the isoscape values somewhat non-linear:
+Although the isotope-based assignments still have substantial power, notice the low accuracy values. The plot indicates that at the 0.8 probability quantile, where you would expect to correctly assign 60% of samples, the method is correctly assigning less than 60%. It turns out that the sample set for *Buteo platypterus* is relatively small and the relationship with the isoscape values somewhat non-linear:
 
 ```{r Buteo}
-plot(extract(d2h_world[[1]], d), d$d2H, xlab = "Isoscape", ylab = "Sample")
+plot(extract(d2h_world[[1]], d2), d2$d2H, xlab = "Isoscape", ylab = "Sample")
 ```
 
 This gives inconsistent assignment results when the dataset is sub-sampled for validation, and suggests that the calibration for this species is not well constrained by the data. Here it would be a good idea to supplement the known-origin dataset with additional samples or identify and remove outliers that might bias the calibration relationship.

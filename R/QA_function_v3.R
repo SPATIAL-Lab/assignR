@@ -40,7 +40,7 @@ QA <- function(isoscape, known, valiStation, valiTime, mask = NULL, setSeed = TR
   }
   
   if(setSeed == TRUE){
-    set.seed(100)
+    set.seed(100, sample.kind = "Rounding")
   }
   
   rowLength <- nrow(known)
