@@ -197,23 +197,6 @@ The first three panels show three metrics, granularity (higher is better), accur
 A researcher might refer to the sensitivity plot, for example, to assess what *qtlRaster* area threshold would be required to obtain 90% correct assignments in their study system. Here it's somewhere between 0.25 and 0.3.
 
 *****
-
-The accuracy plot is useful in assessing the stability and quality of the calibration relationship. Accuracy values that fall well below the 1:1 line suggest that the calibration relationship is unstable, and suggest that the known origin sample set should be examined in more detail and/or supplemented. Here's an example.
-
-```{r QA_unstable, warning=FALSE}
-d2 = subOrigData(taxon = "Buteo platypterus")
-plot.QA(QA(d2h_world, d2, valiStation = 5, valiTime = 5, mask= naMap))
-```
-
-Although the isotope-based assignments still have substantial power, notice the low accuracy values. The plot indicates that at the 0.8 probability quantile, where you would expect to correctly assign 60% of samples, the method is correctly assigning less than 60%. It turns out that the sample set for *Buteo platypterus* is relatively small and the relationship with the isoscape values somewhat non-linear:
-
-```{r Buteo}
-plot(extract(d2h_world[[1]], d2), d2$d2H, xlab = "Isoscape", ylab = "Sample")
-```
-
-This gives inconsistent assignment results when the dataset is sub-sampled for validation, and suggests that the calibration for this species is not well constrained by the data. Here it would be a good idea to supplement the known-origin dataset with additional samples or identify and remove outliers that might bias the calibration relationship.
-
-*****
 How would using a different isoscape or different known origin dataset affect the analysis? Multiple QA objects can be compared to make these types of assessments.
 
 Let's modify our isoscape to add some random noise.
