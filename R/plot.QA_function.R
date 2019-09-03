@@ -121,8 +121,8 @@ plot.QA = function(obj, savePNG = FALSE){
     
     for(i in 2:n){
 
-      means.p = cbind(means.p, c(0, apply(obj[[i]]$prption_byProb, 2, mean)/vali[i], 1))
-      means.a = cbind(means.a, c(0, apply(obj[[i]]$prption_byArea, 2, mean)/vali[i], 1))
+      means.p = cbind(means.p, apply(obj[[i]]$prption_byProb, 2, mean)/vali[i])
+      means.a = cbind(means.a, apply(obj[[i]]$prption_byArea, 2, mean)/vali[i])
       
       precision = matrix(rep(0, niter[i] * 101), ncol=niter[i], nrow=101)
       for (j in 1:niter[i]){
