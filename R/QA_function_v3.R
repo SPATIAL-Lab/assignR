@@ -6,7 +6,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
       stop("isoscape must have valid coordinate reference system")
     }
   } else {
-    stop("isoscape should be a RasterStack or RastrBrick")
+    stop("isoscape should be a RasterStack or RasterBrick")
   }
 
   #check that known is valid and has defined, correct CRS

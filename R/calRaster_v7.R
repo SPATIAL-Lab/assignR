@@ -7,7 +7,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
       stop("isoscape must have valid coordinate reference system")
     }
   } else {
-    stop("isoscape should be a RasterStack or RastrBrick")
+    stop("isoscape should be a RasterStack or RasterBrick")
   }
 
   #check that known is valid and has defined, correct CRS
@@ -80,7 +80,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   if (any(is.na(isoscape.iso[, 1]))) {
     na <- which(is.na(isoscape.iso[, 1]))
     cat("\n\n----------------------------------------------------------------\n")
-    cat("Warning: NO data are found at following locations:\n")
+    cat("Warning: NO isoscape values found at the following locations:\n")
     print(known@coords[na])
     if (!ignore.NA) {
       stop("Delete these data in known origin data or use a different isoscape that has values at these locations")
