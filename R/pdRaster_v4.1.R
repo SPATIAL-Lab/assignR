@@ -14,7 +14,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
     stop("unknown must be a data.frame")
   }
   if(any(is.na(unknown[,2])) || any(is.nan(unknown[,2])) || any(is.null(unknown[,2]))){
-    stop("Missing isotope values detected in known")
+    stop("Missing isotope values detected in unknown")
   }
   
   if(!is.null(prior)){
