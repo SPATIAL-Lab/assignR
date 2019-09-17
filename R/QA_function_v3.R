@@ -76,7 +76,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
 
     # pd value for each validation location
     for(j in 1:nlayers(pd)){
-      pd_v[i, j] <- raster::extract(pd[[j]], v[j,], method = "bilinear")
+      pd_v[i, j] <- raster::extract(pd[[j]], v[j,])
     }
 
     xx <- seq(1, 101, 1)
@@ -90,7 +90,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
       qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, savePDF = FALSE, thresholdType = 1, genplot = FALSE)
       prption_byProb[i, j] <- 0
       for(k in 1:nlayers(qtl)){
-        rv = raster::extract(qtl[[k]], v[k,], method = "bilinear")
+        rv = raster::extract(qtl[[k]], v[k,])
         if(!is.na(rv)){
           prption_byProb[i, j] <- prption_byProb[i, j] + rv
         }
@@ -103,7 +103,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
       qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
       prption_byArea[i, n] <- 0
       for(k in 1:nlayers(qtl)){
-        rv = raster::extract(qtl[[k]], v[k,], method = "bilinear")
+        rv = raster::extract(qtl[[k]], v[k,])
         if(!is.na(rv)){
           prption_byArea[i, n] <- prption_byArea[i, n] + rv
         }

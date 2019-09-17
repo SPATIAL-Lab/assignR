@@ -27,12 +27,12 @@ plot.QA = function(obj, savePNG = FALSE){
       precision[,i] <- apply(obj$precision[[i]],1, median)
     }
     
-    mean = NULL
+    mean.pre = NULL
     for(i in 1:101){
-      mean = append(mean, mean(precision[i,]))
+      mean.pre = append(mean.pre, mean(precision[i,]))
     }
     
-    pre = data.frame(xx, 1-mean)
+    pre = data.frame(xx, 1 - mean.pre)
 
     pd <- data.frame(as.numeric(obj$pd_val) / obj$random_prob_density)
     
@@ -109,12 +109,12 @@ plot.QA = function(obj, savePNG = FALSE){
       precision[,i] <- apply(obj[[1]]$precision[[i]],1, median)
     }
     
-    mean = NULL
+    mean.pre = NULL
     for(i in 1:101){
-      mean = append(mean, mean(precision[i,]))
+      mean.pre = append(mean.pre, mean(precision[i,]))
     }
     
-    pre = data.frame(xx, 1-mean)
+    pre = data.frame(xx, 1 - mean.pre)
     
     pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
     pd[1:(niter[1]*vali[1]),1] = as.numeric(obj[[1]]$pd_val) / obj[[1]]$random_prob_density
@@ -129,12 +129,12 @@ plot.QA = function(obj, savePNG = FALSE){
         precision[,j] <- apply(obj[[i]]$precision[[j]],1, median)
       }
       
-      mean = NULL
+      mean.pre = NULL
       for(j in 1:101){
-        mean = append(mean, mean(precision[j,]))
+        mean.pre = append(mean.pre, mean(precision[j,]))
       }
       
-      pre = cbind(pre, 1-mean)
+      pre = cbind(pre, 1 - mean.pre)
       
       pd[1:(niter[1]*vali[1]),i] = as.numeric(obj[[i]]$pd_val) / obj[[i]]$random_prob_density
       
