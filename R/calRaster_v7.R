@@ -105,13 +105,6 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     print(summary(lmResult))
   }
 
-  #pull slope and intercept
-  intercept <- as.numeric(coef(lmResult)[1])
-  slope <- as.numeric(coef(lmResult)[2])
-
-  #create rescaled prediction isoscape
-  isoscape.rescale = isoscape[[1]] * slope + intercept
-
   #create data object for return
   x = isoscape.iso[, 1]
   y = tissue.iso
@@ -138,7 +131,14 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     abline(lmResult)
     text(xl, yl, equation(lmResult), pos=2)
   }
-
+  
+  #pull slope and intercept
+  intercept <- as.numeric(coef(lmResult)[1])
+  slope <- as.numeric(coef(lmResult)[2])
+  
+  #create rescaled prediction isoscape
+  isoscape.rescale = isoscape[[1]] * slope + intercept
+  
   #combine uncertainties of isoscape and rescaling function
   sd <- (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2)^0.5
 
