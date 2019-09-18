@@ -157,7 +157,7 @@ qtlRaster(asn, threshold = 0.1)
 Extract 80% of the posterior probability density, giving maps that show the smallest region within which there is an 80% chance each sample originated.
 
 ```{r qtlRaster2}
-qtlRaster(asn, threshold = 0.8, thresholdType = 1)
+qtlRaster(asn, threshold = 0.8, thresholdType = "prob")
 ```
 
 Comapring the two results, the probability-based assignment regions are broader. This suggests that we'll need to assign to more than 10% of the study area if we want to correctly assign 80% or more of our samples. We'll revisit this below and see how we can chose thresholds that are as specific as possible while achieving a desired level of assignment 'quality'.
