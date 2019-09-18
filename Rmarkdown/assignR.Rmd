@@ -23,7 +23,7 @@ library(devtools)
 Now *assignR* can be installed from the GitHub repository.
 
 ```{r install, message=FALSE, warning=FALSE, results="hide"}
-install_github("SPATIAL-Lab/assignR", force = TRUE)
+install_github("SPATIAL-Lab/assignR@v1.0.1", force = TRUE)
 library(assignR)
 ```
 
