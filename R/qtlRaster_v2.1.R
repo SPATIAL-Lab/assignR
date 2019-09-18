@@ -1,4 +1,4 @@
-qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF = FALSE){
+qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, savePDF = FALSE){
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
   }
@@ -11,11 +11,8 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
   if(threshold < 0 | threshold > 1){
     stop("threshold must be one number between 0 and 1")
   }
-  if(length(thresholdType) != 1){
-    stop("thresholdType must be 1 or 2. See help page for further information")
-  }
-  if(thresholdType != 1 & thresholdType != 2){
-    stop("thresholdType must be 1 or 2. See help page for further information")
+  if(thresholdType != "area" & thresholdType != "prob"){
+    stop("thresholdType must be 'area' or 'prob'. See help page for further information")
   }
   if(class(genplot) != "logical"){
     stop("genplot must be logical (T/F)")
@@ -26,7 +23,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
   
   result <- pdR
   n = nlayers(result)  
-  if(thresholdType == 1){
+  if(thresholdType == "prob"){
     for(i in 1:n){
       if(threshold == 0){
         cut = 1
@@ -59,7 +56,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF
     title1 <- "probability"
   }
   
-  if(thresholdType == 2){
+  if(thresholdType == "area"){
     for(i in 1:n){
       if(threshold == 0){
         cut = 1

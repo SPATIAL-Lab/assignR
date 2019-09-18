@@ -54,7 +54,7 @@ oddsRatio(asn, pp12)
 qtlRaster(asn, threshold = 0.1)
 
 # Top 10% of probability surface (defined by % probability)
-qtlRaster(asn, threshold = 0.1, thresholdType = 1)
+qtlRaster(asn, threshold = 0.1, thresholdType = "prob")
 
 #### Joint probability for individuals of common origin ####
 jointP(asn)

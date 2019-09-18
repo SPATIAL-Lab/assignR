@@ -8,7 +8,7 @@ Binary reclassification
 Select top X percent of probability surface (defined by area percentage or cumulative probability)
 }
 \usage{
-qtlRaster(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF = FALSE)
+qtlRaster(pdR, threshold, thresholdType = "area", genplot = TRUE, savePDF = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,10 +16,10 @@ qtlRaster(pdR, threshold, thresholdType = 2, genplot = TRUE, savePDF = FALSE)
 probability density map which must be raster or RasterLayer
 }
   \item{threshold}{
-numeric from 0 to 1, top percentage to choose
+numeric from 0 to 1, top percentage to select
 }
   \item{thresholdType}{
-numeric 1 or 2. 1 selects the top percentage by probability; 2 selects the top percentage by area
+'area' (default) or 'prob'. 'area' selects the top percentage by area; 'prob' selects the top percentage by probability
 }
   \item{genplot}{
 generate summary plot? (TRUE or FALSE)
@@ -52,5 +52,5 @@ asn = pdRaster(r,unknown=un,mask=naMap)
 qtlRaster(asn, threshold = 0.1, savePDF = TRUE)
 
 # top 10% of probability surface (defined by % probability)
-qtlRaster(asn, threshold = 0.1, thresholdType = 1)
+qtlRaster(asn, threshold = 0.1, thresholdType = "prob")
 }

@@ -87,7 +87,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
     # spatial precision and accuracy by checking top percentage by cumulative prob.
     precision[[i]] <- matrix(0, 101, valiStation) # precision
     for(j in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, savePDF = FALSE, thresholdType = 1, genplot = FALSE)
+      qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, savePDF = FALSE, thresholdType = "prob", genplot = FALSE)
       prption_byProb[i, j] <- 0
       for(k in 1:nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,])
@@ -100,7 +100,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
 
     # sensitivity by checking top percentage by cumulative area
     for(n in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, savePDF = FALSE, thresholdType = 2, genplot = FALSE)
+      qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, savePDF = FALSE, thresholdType = "area", genplot = FALSE)
       prption_byArea[i, n] <- 0
       for(k in 1:nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,])
