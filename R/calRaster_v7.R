@@ -1,5 +1,6 @@
 calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
-          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF = FALSE, verboseLM = TRUE)
+          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF = FALSE, 
+          verboseLM = TRUE)
 {
   #check that isoscape is valid and has defined CRS
   if(class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
@@ -139,8 +140,21 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #create rescaled prediction isoscape
   isoscape.rescale = isoscape[[1]] * slope + intercept
   
+  #simulate covariance
+  isoscape.sim = matrix(0, nrow = nSample, ncol = 100)
+  for(i in 1:nSample){
+    isoscape.sim[i,] = rnorm(100, isoscape.iso[i, 1], isoscape.iso[i, 2])
+  }
+  isoscape.dev = tissue.dev = double()
+  for(i in 1:100){
+    lm.sim = lm(tissue.iso ~ isoscape.sim[,i])
+    isoscape.dev = c(isoscape.dev, isoscape.sim[,i] - isoscape.iso[,1])
+    tissue.dev = c(tissue.dev, lm.sim$residuals)
+  }
+  iso.cov = cov(isoscape.dev, tissue.dev)
+  
   #combine uncertainties of isoscape and rescaling function
-  sd <- (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2)^0.5
+  sd <- (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2 + iso.cov)^0.5
 
   #stack the output rasters and apply names
   isoscape.rescale <- stack(isoscape.rescale, sd)
