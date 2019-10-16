@@ -17,7 +17,7 @@ SpatialPointsDataFrame. Known-origin data that should contain only one feature: 
  raster. Isoscape raster with two layers. The first one is the mean and the second standard deviation.
 }
   \item{mask}{
- SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is provided, the entire area of isoscape is returned.
+ SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of isoscape is returned.
 }
   \item{interpMethod}{
 numeric. 1 or 2. Designate one of two methods for extracting values from isoscape. If 1, values for the cell in which a point falls are returned. If 2 the returned values are interpolated (bilinear interpolation) from the values of the four nearest raster cells.

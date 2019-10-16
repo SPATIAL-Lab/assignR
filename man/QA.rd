@@ -21,6 +21,9 @@ SpatialPointsDataFrame. known-origin data that should contain one feature: tissu
   \item{valiTime}{
 numeric. How many times do you want to randomly draw validation stations and run the validation. Must be an integer greater than one. 
 }
+  \item{mask}{
+ SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of isoscape is returned.
+}
   \item{setSeed}{
 Do you want to set.seed() when you run the randomly draw validation stations? If yes and your input data are the same, the output would be exactely the same.
 }
