@@ -1,4 +1,3 @@
-#' @export
 qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, savePDF = FALSE){
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
@@ -23,7 +22,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, sa
   }
   
   result <- pdR
-  n = nlayers(result)  
+  n = raster::nlayers(result)  
   if(thresholdType == "prob"){
     for(i in 1:n){
       if(threshold == 0){
@@ -31,7 +30,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, sa
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values <- na.omit(getValues(pdR[[i]]))
+        pdR.values <- stats::na.omit(raster::getValues(pdR[[i]]))
         pdR.values <- sort(pdR.values)
         k <- length(pdR.values)
         left <- 1
@@ -64,7 +63,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, sa
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values <- na.omit(getValues(pdR[[i]]))
+        pdR.values <- stats::na.omit(raster::getValues(pdR[[i]]))
         k <- length(pdR.values)
         cut <- sort(pdR.values)[round((1-threshold)*k)]
       }
@@ -89,17 +88,17 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, sa
   
   if(genplot){
     for(i in 1:n){
-      plot(result[[i]], legend=FALSE)
-      title(tls[i])
+      graphics::plot(result[[i]], legend=FALSE)
+      graphics::title(tls[i])
     }
   }
   if(savePDF){
-    pdf("qtlRaster_result.pdf")
+    grDevices::pdf("qtlRaster_result.pdf")
     for(i in 1:n){
-      plot(result[[i]], legend=FALSE)
-      title(tls[i])
+      graphics::plot(result[[i]], legend=FALSE)
+      graphics::title(tls[i])
     }
-    dev.off()
+    grDevices::dev.off()
   }
   return(result)
 }

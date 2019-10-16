@@ -1,19 +1,18 @@
-#' @export
 jointP <- function(pdR){
   if(class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be RasterStack or RasterBrick")
   }
-  n <- nlayers(pdR)
-  result <- pdR[[1]]*pdR[[2]]
+  n <- raster::nlayers(pdR)
+  result <- pdR[[1]] * pdR[[2]]
   if(n > 2){
     for(i in 3:n){
-      result <- result*pdR[[i]]
+      result <- result * pdR[[i]]
     }
   }
-  result <- result/cellStats(result,sum)
+  result <- result / raster::cellStats(result,sum)
   names(result) <- "Joint_Probability"
   options(scipen = -2)
-  plot(result)
-  title("Joint Probability")
+  raster::plot(result)
+  graphics::title("Joint Probability")
   return(result)
 }

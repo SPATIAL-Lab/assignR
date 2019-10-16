@@ -1,4 +1,3 @@
-#' @export
 pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFiles = FALSE) {
   if(class(r) == "rescale"){
     r <- r$isoscape.rescale
@@ -7,7 +6,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
   if(class(r) != "RasterStack" & class(r) != "RasterBrick"){
     stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
   } 
-  if(nlayers(r) != 2) {
+  if(raster::nlayers(r) != 2) {
     stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
   }
   
@@ -22,11 +21,11 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
     if(class(prior) != "RasterLayer"){
       stop("prior should be a raster with one layer")
     } 
-    if(proj4string(prior) != proj4string(r[[1]])) {
-      prior <- projectRaster(prior, crs=crs(r[[1]]))
+    if(sp::proj4string(prior) != sp::proj4string(r[[1]])) {
+      prior <- sp::projectRaster(prior, crs = raster::crs(r[[1]]))
       warning("prior was reprojected")
     }
-    compareRaster(r[[1]], prior)
+    raster::compareRaster(r[[1]], prior)
   }
   
   if(class(genplot) != "logical"){
@@ -42,15 +41,15 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
   
   if (!is.null(mask)) {
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
-      if (is.na(proj4string(mask))){
+      if (is.na(sp::proj4string(mask))){
         stop("mask must have coord. ref.")
       } 
-      if(proj4string(mask) != proj4string(r[[1]])) {
-        mask <- spTransform(mask, crs(r[[1]]))
+      if(sp::proj4string(mask) != sp::proj4string(r[[1]])) {
+        mask <- sp::spTransform(mask, raster::crs(r[[1]]))
         warning("mask was reprojected")
       }
-      rescaled.mean <- crop(rescaled.mean, mask)
-      rescaled.sd <- crop(rescaled.sd, mask)
+      rescaled.mean <- raster::crop(rescaled.mean, mask)
+      rescaled.sd <- raster::crop(rescaled.sd, mask)
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
@@ -80,28 +79,28 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
     dir.create("output/pdRaster_Gtif")
   }
   
-  errorV <- getValues(rescaled.sd)
-  meanV <- getValues(rescaled.mean)
+  errorV <- raster::getValues(rescaled.sd)
+  meanV <- raster::getValues(rescaled.mean)
   result <- NULL
   temp <- list()
   
   for (i in 1:n) {
     indv.data <- data[i, ]
     indv.id <- indv.data[1, 1]
-    assign <- dnorm(indv.data[1, 2], mean = meanV, sd = errorV)
+    assign <- stats::dnorm(indv.data[1, 2], mean = meanV, sd = errorV)
     if(!is.null(prior)){
-      assign <- assign*getValues(prior)
+      assign <- assign * raster::getValues(prior)
     }
-    assign.norm <- assign/sum(assign[!is.na(assign)])
-    assign.norm <- setValues(rescaled.mean,assign.norm)
+    assign.norm <- assign / sum(assign[!is.na(assign)])
+    assign.norm <- raster::setValues(rescaled.mean, assign.norm)
     if (i == 1){
       result <- assign.norm
     } else {
-      result <- stack(result, assign.norm)
+      result <- raster::stack(result, assign.norm)
     }
     if(saveFiles == TRUE){
       filename <- paste("output/pdRaster_Gtif/", indv.id, ".like", ".tif", sep = "")
-      writeRaster(assign.norm, filename = filename, format = "GTiff",
+      raster::writeRaster(assign.norm, filename = filename, format = "GTiff",
                   overwrite = TRUE)
     }
   }
@@ -109,26 +108,26 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
 
   if(saveFiles == TRUE){
     if (n > 5){
-      pdf("./output/output_pdRaster.pdf", width = 10, height = 10)
-      par(mfrow = c(ceiling(n/5), 5))
+      grDevices::pdf("./output/output_pdRaster.pdf", width = 10, height = 10)
+      graphics::par(mfrow = c(ceiling(n/5), 5))
     } else {
-      pdf("./output/output_pdRaster.pdf", width = 10, height = 10)
+      grDevices::pdf("./output/output_pdRaster.pdf", width = 10, height = 10)
     }
   }
 
   if (genplot == TRUE){
     if (n == 1){
-      pp <- spplot(result)
+      pp <- sp::spplot(result)
       print(pp)
     } else {
       for (i in 1:n){
-        print(spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
+        print(sp::spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
       }
     }
   }
   
   if(saveFiles == TRUE){
-    dev.off()
+    grDevices::dev.off()
   }
 
   return(result)

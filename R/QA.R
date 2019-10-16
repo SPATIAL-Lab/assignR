@@ -1,9 +1,8 @@
-#' @export
 QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, mask = NULL, setSeed = TRUE){
 
   #check that isoscape is valid and has defined CRS
   if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
-    if (is.na(proj4string(isoscape))) {
+    if (is.na(sp::proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
   } else {
@@ -17,11 +16,11 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
   if(any(is.na(known@data[,1])) || any(is.nan(known@data[,1])) || any(is.null(known@data[,1]))){
     stop("Missing values detected in known")
   }
-  if (is.na(proj4string(known))) {
+  if (is.na(sp::proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != proj4string(isoscape)){
-    known = spTransform(known, crs(isoscape))
+  if(sp::proj4string(known) != sp::proj4string(isoscape)){
+    known = sp::spTransform(known, raster::crs(isoscape))
     warning("known was reprojected")
   } else if(ncol(known@data) != 1){
     stop("known must include a 1-column data frame containing only the isotope values")
@@ -37,11 +36,11 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
   
   if(!is.null(mask)) {
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
-      if(is.na(proj4string(mask))){
+      if(is.na(sp::proj4string(mask))){
         stop("mask must have coordinate reference system")
       }
-      if(proj4string(mask) != proj4string(isoscape)){
-        mask <- spTransform(mask, crs(isoscape))
+      if(sp::proj4string(mask) != sp::proj4string(isoscape)){
+        mask <- sp::spTransform(mask, raster::crs(isoscape))
         warning("mask was reprojected")
       }
     } else {
@@ -67,7 +66,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
   precision <- list() 
   
   # create progress bar
-  pb <- txtProgressBar(min = 0, max = valiTime, style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = valiTime, style = 3)
   
   for (i in 1:valiTime){
     v <- known[val_stations[i,],]
@@ -76,7 +75,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
     pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(v@data), v@data[,1]), genplot = FALSE)
 
     # pd value for each validation location
-    for(j in 1:nlayers(pd)){
+    for(j in 1:raster::nlayers(pd)){
       pd_v[i, j] <- raster::extract(pd[[j]], v[j,])
     }
 
@@ -113,10 +112,10 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
    
     #update progress bar
     Sys.sleep(0.1)
-    setTxtProgressBar(pb, i)
+    utils::setTxtProgressBar(pb, i)
   }
 
-  random_prob_density=1/length(na.omit(getValues(isoscape[[1]])))
+  random_prob_density=1/length(stats::na.omit(raster::getValues(isoscape[[1]])))
 
   result <- list(val_stations, pd_v, prption_byArea, prption_byProb, precision, random_prob_density)
   names(result) <- c("val_stations", "pd_val", "prption_byArea", "prption_byProb", "precision", "random_prob_density")
