@@ -1,3 +1,4 @@
+#' @export
 oddsRatio <- function(pdR, inputP){
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")

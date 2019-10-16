@@ -1,3 +1,4 @@
+#' @export
 plot.QA = function(obj, savePNG = FALSE){
 
   if(class(obj) == "QA"){

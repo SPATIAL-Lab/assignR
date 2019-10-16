@@ -1,3 +1,4 @@
+#' @export
 jointP <- function(pdR){
   if(class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be RasterStack or RasterBrick")

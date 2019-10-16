@@ -1,3 +1,4 @@
+#' @export
 qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, savePDF = FALSE){
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")

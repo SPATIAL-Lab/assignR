@@ -1,3 +1,4 @@
+#' @export
 calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
           NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF = FALSE, 
           verboseLM = TRUE)

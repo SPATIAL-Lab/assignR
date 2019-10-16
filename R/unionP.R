@@ -1,3 +1,4 @@
+#' @export
 unionP <- function(pdR){
   if(class(pdR) != "RasterStack"){
     stop("input probability density map (pdR) should be RasterLayer")

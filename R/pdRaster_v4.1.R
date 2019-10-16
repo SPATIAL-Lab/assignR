@@ -1,3 +1,4 @@
+#' @export
 pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFiles = FALSE) {
   if(class(r) == "rescale"){
     r <- r$isoscape.rescale
