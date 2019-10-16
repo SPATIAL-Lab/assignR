@@ -56,7 +56,6 @@ d4 = subOrigData(marker = "d2H", taxon = "Homo sapiens")
 summary(d4)
 
 ## WITH mask
-d5 = subOrigData(taxon = "Turdus merula", mask = naMap) # No isotope data found in mask
-d6 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", "Turdus migratorius"), mask = naMap)
-d7 = subOrigData(group = "human", mask = naMap)
+d5 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", "Turdus migratorius"), mask = naMap)
+d6 = subOrigData(group = "human", mask = naMap)
 }

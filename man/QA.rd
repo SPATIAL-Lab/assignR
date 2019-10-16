@@ -2,7 +2,7 @@
 \alias{QA}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Test the efficacy of geographic assignment using a certain type of isoscape
+Test the efficacy of geographic assignment
 }
 \description{
 What is the power of a certain isoscape used for geographic assignment? Using the known origin data and the isoscape as input to test it. You will get the population accuracy, precision and probability density (see returned ).
@@ -67,10 +67,10 @@ data(knownOrig) # hydrogen isotopes of known-origin samples
 # extract some known-origin data
 bird_d2h <- subOrigData(taxon = "Lanius ludovicianus")
 
-# run quality assessment based hydrogen isotope from precipitation and known-origin bird
-d2h_QA <- QA(isoscape = r, known = bird_d2h, valiStation = 2, 
+\donttest{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
+d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
                     valiTime = 5, mask = naMap)
                     
 # plot the QA result
-plot(d2h_QA)
+plot(d2h_QA)}
 }

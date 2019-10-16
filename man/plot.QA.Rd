@@ -37,10 +37,10 @@ data(knownOrig) # isotopes of known-origin samples
 # extract some known-origin data
 bird_d2h <- subOrigData(taxon = "Lanius ludovicianus")
 
-# run quality assessment based hydrogen isotope from precipitation and known-origin bird
-d2h_QA <- QA(isoscape = r, known = bird_d2h, valiStation = 2, 
+\donttest{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
+d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
                     valiTime = 5, mask = naMap)
                     
 # plot the QA result
-plot(d2h_QA)
+plot(d2h_QA)}
 }
