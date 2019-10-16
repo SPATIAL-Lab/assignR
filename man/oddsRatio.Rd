@@ -52,7 +52,8 @@ oddsRatio(asn, p34)
 # Create SpatialPoints for two points of interest
 pp1 <- c(-108,42)
 pp2 <- c(-103,25)
-pp12 <- SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+pp12 <- SpatialPoints(coords = rbind(pp1,pp2), 
+  proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
 points(pp12, pch = 21, bg = "light blue")
 
 # Get odds ratio for two points using SpatialPoints method

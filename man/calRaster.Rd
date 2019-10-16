@@ -7,7 +7,8 @@ Function to rescale isoscape
 This function uses known-origin tissue data to rescale a map of environmental isotope values to a map of tissue value (and associated uncertainty) using a linear regression model.
 }
 \usage{
-calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF =  FALSE, verboseLM = TRUE)
+calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA, 
+  ignore.NA = TRUE, genplot = TRUE, savePDF =  FALSE, verboseLM = TRUE)
 }
 \arguments{
   \item{known}{

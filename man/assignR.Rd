@@ -1,8 +1,9 @@
 \name{assignR}
 \alias{assignR}
-
-\title{assignR}
-
+\title{Tools for inferring geographic origin from isotopic data}
+\description{
+Routines for rescaling isoscapes using known-origin tissue isotope data, assigning origin of unknown samples, and summarizing and assessing assignment results.
+}
 \examples{
 #### Load library ####
 library(assignR)
@@ -43,7 +44,8 @@ oddsRatio(asn, p12)
 #### Create SpatialPoints for two points of interest ####
 pp1 <- c(-108,42)
 pp2 <- c(-103,25)
-pp12 <- SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+pp12 <- SpatialPoints(coords = rbind(pp1,pp2), 
+  proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
 points(pp12, pch = 21, bg = "light blue")
 
 #### Get odds ratio for two points using SpatialPoints method ####

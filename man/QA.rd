@@ -8,7 +8,8 @@ Test the efficacy of geographic assignment
 What is the power of a certain isoscape used for geographic assignment? Using the known origin data and the isoscape as input to test it. You will get the population accuracy, precision and probability density (see returned ).
 }
 \usage{
-QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, mask = NULL, setSeed = TRUE)
+QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, 
+  mask = NULL, setSeed = TRUE)
 }
 \arguments{
   \item{isoscape}{raster. Environmental isoscape. Two layers: the first one is mean and the second one is standard deviation.}
@@ -72,7 +73,7 @@ bird_d2h <- subOrigData(taxon = "Lanius ludovicianus")
 
 \donttest{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
 d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
-                    valiTime = 5, mask = naMap)
+  valiTime = 5, mask = naMap)
                     
 # plot the QA result
 plot(d2h_QA)}
