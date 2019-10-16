@@ -82,19 +82,19 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
     xx <- seq(1, 101, 1)
 
     # total area
-    Tarea <- length(na.omit(pd[[1]][]))
+    Tarea <- length(stats::na.omit(pd[[1]][]))
 
     # spatial precision and accuracy by checking top percentage by cumulative prob.
     precision[[i]] <- matrix(0, 101, valiStation) # precision
     for(j in xx){
       qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, savePDF = FALSE, thresholdType = "prob", genplot = FALSE)
       prption_byProb[i, j] <- 0
-      for(k in 1:nlayers(qtl)){
+      for(k in 1:raster::nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,])
         if(!is.na(rv)){
           prption_byProb[i, j] <- prption_byProb[i, j] + rv
         }
-        precision[[i]][j, k] <- sum(na.omit(qtl[[k]][]))/Tarea # precision
+        precision[[i]][j, k] <- sum(stats::na.omit(qtl[[k]][]))/Tarea # precision
       }
     }
 
@@ -102,7 +102,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
     for(n in xx){
       qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, savePDF = FALSE, thresholdType = "area", genplot = FALSE)
       prption_byArea[i, n] <- 0
-      for(k in 1:nlayers(qtl)){
+      for(k in 1:raster::nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,])
         if(!is.na(rv)){
           prption_byArea[i, n] <- prption_byArea[i, n] + rv

@@ -22,7 +22,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, save
       stop("prior should be a raster with one layer")
     } 
     if(sp::proj4string(prior) != sp::proj4string(r[[1]])) {
-      prior <- sp::projectRaster(prior, crs = raster::crs(r[[1]]))
+      prior <- raster::projectRaster(prior, crs = raster::crs(r[[1]]))
       warning("prior was reprojected")
     }
     raster::compareRaster(r[[1]], prior)

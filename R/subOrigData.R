@@ -1,6 +1,7 @@
 subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
                         age_code = NULL, mask = NULL) {
   
+  usethis::use_data(knownOrig, internal = TRUE)
   result <- NULL
   
   if(!marker %in% colnames(knownOrig@data)){

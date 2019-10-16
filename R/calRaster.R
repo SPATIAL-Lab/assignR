@@ -116,7 +116,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     equation <- function(mod) {
       lm_coef <- list(a = as.numeric(round(stats::coef(mod)[1], digits = 2)),
                       b = as.numeric(round(stats::coef(mod)[2], digits = 2)), 
-                      r2 = round(stats::summary(mod)$r.squared, digits = 2))
+                      r2 = round(summary(mod)$r.squared, digits = 2))
       lm_eq <- substitute(italic(y) == a + b %.% italic(x) *
                             "," ~ ~italic(R)^2 ~ "=" ~ r2, lm_coef)
       as.expression(lm_eq)
@@ -154,7 +154,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   iso.cov = stats::cov(isoscape.dev, tissue.dev)
   
   #combine uncertainties of isoscape and rescaling function
-  sd <- (isoscape[[2]]^2 + (stats::summary(lmResult)$sigma)^2 + iso.cov)^0.5
+  sd <- (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2 + iso.cov)^0.5
 
   #stack the output rasters and apply names
   isoscape.rescale <- raster::stack(isoscape.rescale, sd)
