@@ -41,3 +41,7 @@ For step-by-step examples demonstrating all functions see https://spatial-lab.gi
 *QA* - Quality analysis of geographic assignment
 
 *plot.QA* - Plot results of one or more quality analyses from QA function
+
+<!-- badges: start -->
+  [![Travis build status](https://travis-ci.org/SPATIAL-Lab/assignR.svg?branch=master)](https://travis-ci.org/SPATIAL-Lab/assignR)
+  <!-- badges: end -->
