@@ -1,4 +1,5 @@
-QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, mask = NULL, setSeed = TRUE){
+QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, 
+               mask = NULL, setSeed = TRUE, name = NULL){
 
   #check that isoscape is valid and has defined CRS
   if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
@@ -25,15 +26,12 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
   } else if(ncol(known@data) != 1){
     stop("known must include a 1-column data frame containing only the isotope values")
   }
-
   if(!valiStation<nrow(known)){
     stop("valiStation must be smaller than the number of known-origin stations in known")
   }
-  
   if(valiTime<2){
     stop("valiTime must be an integer greater than 1")
   }
-  
   if(!is.null(mask)) {
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
       if(is.na(sp::proj4string(mask))){
@@ -45,6 +43,11 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
       }
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
+    }
+  }
+  if(!is.null(name)){
+    if(class(name) != "character"){
+      stop("name must be a character string")
     }
   }
   
@@ -117,8 +120,9 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
 
   random_prob_density=1/length(stats::na.omit(raster::getValues(isoscape[[1]])))
 
-  result <- list(val_stations, pd_v, prption_byArea, prption_byProb, precision, random_prob_density)
-  names(result) <- c("val_stations", "pd_val", "prption_byArea", "prption_byProb", "precision", "random_prob_density")
+  result <- list(name, val_stations, pd_v, prption_byArea, prption_byProb, precision, random_prob_density)
+  names(result) <- c("name", "val_stations", "pd_val", "prption_byArea", "prption_byProb", "precision", 
+                     "random_prob_density")
   class(result) <- "QA"
   return(result)
 }

@@ -1,18 +1,16 @@
 plot.QA = function(x, ..., savePNG = FALSE){
 
-  if(class(x) == "QA"){
-    n=1
-  } else if (class(x) == "list"){
-    n = length(x)
-    for(i in 1:n){
-      if(class(x[[i]]) != "QA"){
-        stop("x must be either a single QA object or a list of QA objects")
-      }
-    }
-  } else {
-    stop("x must be either a single QA object or a list of QA objects")
+  a = list(x, ...)
+
+  if(class(a[[1]]) != "QA"){
+    stop("x must be one or more QA objects")
   }
   
+  n = 0
+  for(i in 1:length(a)){
+    if(class(a[[i]]) == "QA") n = n+1
+  }
+
   xx <- seq(0.00, 1, 0.01)
   
   if(n == 1){
@@ -84,29 +82,29 @@ plot.QA = function(x, ..., savePNG = FALSE){
       grDevices::dev.off()
     }
     
-  } else {
+  } else{
 
     nm = rep("", n)
     vali = niter = rep(0, n)
     
     for(i in 1:n){
-      if(is.null(names(x[i]))){
+      if(is.null(a[[i]]$name)){
         nm[i] = as.character(i)
-      } else if(names(x[i]) == "") {
+      } else if(a[[i]]$name == "") {
         nm[i] = as.character(i)
       } else {
-        nm[i] = names(x[i])
+        nm[i] = a[[i]]$name
       } 
-      vali[i] = ncol(x[[i]]$val_stations)
-      niter[i] = nrow(x[[i]]$val_stations)
+      vali[i] = ncol(a[[i]]$val_stations)
+      niter[i] = nrow(a[[i]]$val_stations)
     }
     
-    means.p = data.frame(xx, apply(x[[1]]$prption_byProb, 2, mean)/vali[1])
-    means.a = data.frame(xx, apply(x[[1]]$prption_byArea, 2, mean)/vali[1])
+    means.p = data.frame(xx, apply(a[[1]]$prption_byProb, 2, mean)/vali[1])
+    means.a = data.frame(xx, apply(a[[1]]$prption_byArea, 2, mean)/vali[1])
     
     precision = matrix(rep(0, niter[1] * 101), ncol=niter[1], nrow=101)
     for (i in 1:niter[1]){
-      precision[,i] <- apply(x[[1]]$precision[[i]],1, stats::median)
+      precision[,i] <- apply(a[[1]]$precision[[i]],1, stats::median)
     }
     
     mean.pre = NULL
@@ -117,16 +115,16 @@ plot.QA = function(x, ..., savePNG = FALSE){
     pre = data.frame(xx, 1 - mean.pre)
     
     pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
-    pd[1:(niter[1]*vali[1]),1] = as.numeric(x[[1]]$pd_val) / x[[1]]$random_prob_density
+    pd[1:(niter[1]*vali[1]),1] = as.numeric(a[[1]]$pd_val) / a[[1]]$random_prob_density
     
     for(i in 2:n){
 
-      means.p = cbind(means.p, apply(x[[i]]$prption_byProb, 2, mean)/vali[i])
-      means.a = cbind(means.a, apply(x[[i]]$prption_byArea, 2, mean)/vali[i])
+      means.p = cbind(means.p, apply(a[[i]]$prption_byProb, 2, mean)/vali[i])
+      means.a = cbind(means.a, apply(a[[i]]$prption_byArea, 2, mean)/vali[i])
       
       precision = matrix(rep(0, niter[i] * 101), ncol=niter[i], nrow=101)
       for (j in 1:niter[i]){
-        precision[,j] <- apply(x[[i]]$precision[[j]],1, stats::median)
+        precision[,j] <- apply(a[[i]]$precision[[j]],1, stats::median)
       }
       
       mean.pre = NULL
@@ -136,7 +134,7 @@ plot.QA = function(x, ..., savePNG = FALSE){
       
       pre = cbind(pre, 1 - mean.pre)
       
-      pd[1:(niter[1]*vali[1]),i] = as.numeric(x[[i]]$pd_val) / x[[i]]$random_prob_density
+      pd[1:(niter[1]*vali[1]),i] = as.numeric(a[[i]]$pd_val) / a[[i]]$random_prob_density
       
     }
     

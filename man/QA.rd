@@ -9,50 +9,41 @@ What is the power of a certain isoscape used for geographic assignment? Using th
 }
 \usage{
 QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, 
-  mask = NULL, setSeed = TRUE)
+  mask = NULL, setSeed = TRUE, name = NULL)
 }
 \arguments{
   \item{isoscape}{raster. Environmental isoscape. Two layers: the first one is mean and the second one is standard deviation.}
-  \item{known}{
-SpatialPointsDataFrame. known-origin data that should contain one feature: tissue isotope value that should be the same isotope as the environmental isoscape. This input must have a coordinate reference system as that in isoscape
+  \item{known}{SpatialPointsDataFrame. known-origin data that should contain one feature: tissue isotope value that should be the same isotope as the environmental isoscape. This input must have a coordinate reference system as that in isoscape.
 }
-  \item{valiStation}{
-  numeric. How many stations of the known origin with tissue isotope are used for validation. This must be smaller than the total number of known origin.
+  \item{valiStation}{numeric. How many stations of the known origin with tissue isotope are used for validation. This must be smaller than the total number of known origin.
 }
-  \item{valiTime}{
-numeric. How many times do you want to randomly draw validation stations and run the validation. Must be an integer greater than one. 
+  \item{valiTime}{numeric. How many times do you want to randomly draw validation stations and run the validation. Must be an integer greater than one. 
 }
-  \item{mask}{
- SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of isoscape is returned.
+  \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of isoscape is returned.
 }
-  \item{setSeed}{
-Do you want to set.seed() when you run the randomly draw validation stations? If yes and your input data are the same, the output would be exactely the same.
+  \item{setSeed}{logical. Do you want to set.seed() when you randomly draw validation stations? Yes gives the same sequence of random draws each time the function is called.
 }
+  \item{name}{character. Useful for identifying the QA output in subsequent plotting.
+  }
 }
 
 \value{
-\item{val_stations}{numeric. An X*Y data.frame of validation station IDs for all valiTime. X is the valiTime and Y is the validation station IDs.}
-\item{pd_bird_val}{
-numeric. An X*Y data.frame containing the posterior probability density for the validation stations. X is the simulation numbers = valiTime and Y is the total number of validation stations (valiStation).
+\item{val_stations}{numeric. An X*Y data.frame of validation station IDs for all valiTime. X = valiTime and Y contains the validation station row IDs.}
+\item{pd_val}{numeric. An X*Y data.frame containing the posterior probability density for the validation stations. X = valiTime and Y = valiStation.
 }
-  \item{prption_byArea}{
-  numeric. An X*Y data.frame shows the population-level accuracy that is measured as the proportion of validation individuals in which the known origin is contained within the top probability ranging from 0.01 to 0.99 with increment of 0.01 (99 probabilities which is Y). X is the valiTime. Higher proportion with lower top probability means higher accuracy.
+  \item{prption_byArea}{numeric. An X*Y data.frame showing the proportion of validation individuals for which the known origin is contained within the top 0.00 to 1.00 area quantile (with increment of 0.01; Y = 101). X = valiTime.
 }
-  \item{prption_byProb}{
-numeric. An X*Y data.frame shows the population-level accuracy that is measured as the proportion of validation individuals in which the known origin is contained within the top percent of area ranging from 0.01 to 0.99 with increment of 0.01 (99 percentage which is Y). X is the valiTime.
+  \item{prption_byProb}{numeric. An X*Y data.frame showing the proportion of validation individuals for which the known origin is contained within the top 0.00 to 1.00 probability quantile (with increment of 0.01; Y = 101). X = valiTime.
 }
-  \item{precision}{
-list. The length of the list is valiTime which reprsents the population-level precision for each validation. It is assessed by the areal proportion of the total surface area covered by the assignment region for each top percent of probability density (threshold). Thresholds from 0.01 to 0.99 with increment of 0.01 are tested. Each elements of the list is a numerical data.frame with dimention of X*Y. X is the 99 threshold. The length of Y is valiStation. Lower proportion with lower threshold in this assessment suggests higher precision.
+  \item{precision}{list. The length of the list is valiTime. Each element is an X*Y matrix showing the proportional area of the total assignment surface covered by the assignment region at a given probability quantile from 0.00 to 1.00 *with increment of 0.01; X = 101) for each validation sample (Y = valiStation).}
+  \item{random_prob_density}{Random probability of assignment to any given gridcell on the assignment surface(i.e. 1 divided by the total number of grid cells).
 }
-  \item{random_prob_density}{
-   Random probability density based on the size of the environmental isoscape (i.e. 1 divided by the total number of grid cells of the isoscape).
-}
+  \item{name}{character. Name assigned to the QA object.}
 }
 
 \note{
 Please see Ma et al., 2019 for details of these values returned and the methodology.
 }
-
 
 \references{
 Vander Zanden, H.B., Wunder, M.B., Hobson, K.A., Van Wilgenburg, S.L., Wassenaar, L.I., Welker, J.M. and Bowen, G.J., 2014. Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. Methods in Ecology and Evolution, 5(9), pp.891-900.
@@ -69,12 +60,16 @@ data("d2h_world") # precipitation hydrogen isotope of the world
 data("knownOrig") # hydrogen isotopes of known-origin samples
 
 # extract some known-origin data
-bird_d2h = subOrigData(taxon = "Lanius ludovicianus")
+d1 = subOrigData(taxon = "Lanius ludovicianus")
+d2 = subOrigData(taxon = "Buteo lagopus")
 
 \dontrun{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
-d2h_QA = QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
-  valiTime = 5, mask = naMap)
+qa1 = QA(isoscape = d2h_world, known = d1, valiStation = 2, 
+                    valiTime = 5, mask = naMap, name = "Lanius")
                     
+qa2 = QA(isoscape = d2h_world, known = d2, valiStation = 2, 
+                    valiTime = 5, mask = naMap, name = "Buteo")
+
 # plot the QA result
-plot(d2h_QA)}
+plot(qa1, qa2)}
 }

@@ -11,7 +11,7 @@ Plot the output from QA results. Spatial precision, accuracy, sensitivity and od
 }
 \arguments{
   \item{x}{
-    Either a single QA object or a list of QA objects
+    One or more QA objects
   }
   \item{...}{
     Other arguments to be passed to plot
@@ -27,7 +27,6 @@ Vander Zanden, H.B., Wunder, M.B., Hobson, K.A., Van Wilgenburg, S.L., Wassenaar
 }
 
 \seealso{
-\code{\link[ggplot2]{ggplot}}
 \code{\link[assignR]{QA}}
 }
 
@@ -38,12 +37,16 @@ data("d2h_world") # precipitation hydrogen isotope of the world
 data("knownOrig") # isotopes of known-origin samples
 
 # extract some known-origin data
-bird_d2h = subOrigData(taxon = "Lanius ludovicianus")
+d1 = subOrigData(taxon = "Lanius ludovicianus")
+d2 = subOrigData(taxon = "Buteo lagopus")
 
 \dontrun{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
-d2h_QA = QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
-                    valiTime = 5, mask = naMap)
+qa1 = QA(isoscape = d2h_world, known = d1, valiStation = 2, 
+                    valiTime = 5, mask = naMap, name = "Lanius")
                     
+qa2 = QA(isoscape = d2h_world, known = d2, valiStation = 2, 
+                    valiTime = 5, mask = naMap, name = "Buteo")
+
 # plot the QA result
-plot(d2h_QA)}
+plot(qa1, qa2)}
 }
