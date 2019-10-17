@@ -5,7 +5,7 @@
 data: d18o_world
 }
 \description{
-Global growing season precipitation δ18O isoscape from waterisotopes.org
+Global growing season precipitation O isoscape from waterisotopes.org
 }
 \usage{data("d18o_world")}
 \format{

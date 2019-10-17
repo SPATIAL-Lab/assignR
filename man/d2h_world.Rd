@@ -5,7 +5,7 @@
 data: d2h_world
 }
 \description{
-Global growing season precipitation δ2H isoscape from waterisotopes.org
+Global growing season precipitation H isoscape from waterisotopes.org
 }
 \usage{data("d2h_world")}
 \format{
