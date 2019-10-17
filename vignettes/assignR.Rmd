@@ -1,8 +1,12 @@
 ---
 title: "assignR Examples"
 author: "Gabe Bowen, Chao Ma"
-date: "October 17, 2019"
-output: html_document
+date: "August 29, 2019"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{assigR}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}
