@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This vignette introduces the basic functionality of the *assignR* package using data bundled with the package. We'll review how to access compiled data for known-origin biological samples and enviornmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate an assignment quality analysis tool useful in study design, method comparison, and uncertainty analysis. 
+This vignette introduces the basic functionality of the *assignR* package using data bundled with the package. We'll review how to access compiled data for known-origin biological samples and environmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate an assignment quality analysis tool useful in study design, method comparison, and uncertainty analysis. 
 
 *****
 Let's load the package 
@@ -100,7 +100,7 @@ Check out the help page for *pdRaster* for additional options, including the use
 # Post-hoc Analysis
 ## Odds Ratio
 
-The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likley from France or Spain?", or "how likley is this hypothesized location relative to other possibilities?". 
+The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likely from France or Spain?", or "how likely is this hypothesized location relative to other possibilities?". 
 
 Let's compare probabilities for two spatial areas defined by the summer and winter ranges of the Mountain Plover. Yes, this is a different species than we are working with, and in most cases we would not be trying to distinguish between winter and summer habitats, but this will illustrate the point!
 
@@ -124,10 +124,10 @@ p12 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
 oddsRatio(asn, p12)
 ```
 
-Here you can see that even though the summer range is a bit smaller the isotopic evidence suggests it's much more likley to be the origin of each sample. This result is consistent with what you might infer from a first-order comparison of the range map with the posterior probability maps, above.
+Here you can see that even though the summer range is a bit smaller the isotopic evidence suggests it's much more likely to be the origin of each sample. This result is consistent with what you might infer from a first-order comparison of the range map with the posterior probability maps, above.
 
 *****
-Comparisons can also be made using points. Let's create two points (one in each of the Plover regions) and compare their odds. This result also shows the odds ratio for each point relative to the most- and least-likley gridcells on the posterior probability map.
+Comparisons can also be made using points. Let's create two points (one in each of the Plover regions) and compare their odds. This result also shows the odds ratio for each point relative to the most- and least-likely grid cells on the posterior probability map.
 
 ```{r oddsRatio2}
 pp1 = c(-108,42)
@@ -140,7 +140,7 @@ The odds of the first point being the location of origin are pretty high for eac
 
 ## Assignment
 
-Researchers often want to classify their study area in to regions that are and are not likley to be the origin of the sample (effectively 'assigning' the sample to a part of the area). This requires choosing a subjective threshold to define how much of the study domain is represented in the assignment region. *qtlRaster* offers two choices.
+Researchers often want to classify their study area in to regions that are and are not likely to be the origin of the sample (effectively 'assigning' the sample to a part of the area). This requires choosing a subjective threshold to define how much of the study domain is represented in the assignment region. *qtlRaster* offers two choices.
 
 Extract 10% of the study area, giving maps that show the 10% of grid cells with the highest posterior probability for each sample.
 
@@ -155,20 +155,20 @@ Extract 80% of the posterior probability density, giving maps that show the smal
 qtlRaster(asn, threshold = 0.8, thresholdType = "prob")
 ```
 
-Comapring the two results, the probability-based assignment regions are broader. This suggests that we'll need to assign to more than 10% of the study area if we want to correctly assign 80% or more of our samples. We'll revisit this below and see how we can chose thresholds that are as specific as possible while achieving a desired level of assignment 'quality'.
+Comparing the two results, the probability-based assignment regions are broader. This suggests that we'll need to assign to more than 10% of the study area if we want to correctly assign 80% or more of our samples. We'll revisit this below and see how we can chose thresholds that are as specific as possible while achieving a desired level of assignment 'quality'.
 
 ## Summarization
 
-Most studies involve assigning multiple individuals, and often it is desireable to summarize the results from these individuals. *jointP* and *unionP* offer two options for summarizing posterior probabilities from multiple samples.
+Most studies involve assigning multiple individuals, and often it is desirable to summarize the results from these individuals. *jointP* and *unionP* offer two options for summarizing posterior probabilities from multiple samples.
 
-Calculate the probability that **all** samples came from any given gridcell in the analysis area. Note that this summarization will only be useful if all samples are truly derived from a single population of common gegraphic origin.
+Calculate the probability that **all** samples came from any given grid cell in the analysis area. Note that this summarization will only be useful if all samples are truly derived from a single population of common geographic origin.
 
 ```{r jointP}
 jointP(asn)
 ```
 
 *****
-Calculate the probability that **any** sample came from any given gridcell in the analysis area. In this case we'll save the output to a variable for later use.
+Calculate the probability that **any** sample came from any given grid cell in the analysis area. In this case we'll save the output to a variable for later use.
 
 ```{r unionP}
 up = unionP(asn)
@@ -177,7 +177,7 @@ up = unionP(asn)
 The results from *unionP* highlight a broader region, as you might expect.
 
 *****
-Any of the other post-hoc analysis tools can be applied to the summarized results. Here we'll use *qtlRaster* to identify the 10% of the study area that is most likley to be the origin of one or more samples.
+Any of the other post-hoc analysis tools can be applied to the summarized results. Here we'll use *qtlRaster* to identify the 10% of the study area that is most likely to be the origin of one or more samples.
 
 ```{r qtlRaster3}
 qtlRaster(up, threshold = 0.1)
@@ -201,7 +201,7 @@ Plot the result.
 plot(qa1)
 ```
 
-The first three panels show three metrics, granularity (higher is better), bias (closer to 1:1 is better), and sensitivity (higher is better). The second plot shows the poterior probabilities at the known locations of origin relative to random (=1, higher is better). More information is provided in Ma et al., in review.
+The first three panels show three metrics, granularity (higher is better), bias (closer to 1:1 is better), and sensitivity (higher is better). The second plot shows the posterior probabilities at the known locations of origin relative to random (=1, higher is better). More information is provided in Ma et al., in review.
 
 A researcher might refer to the sensitivity plot, for example, to assess what *qtlRaster* area threshold would be required to obtain 90% correct assignments in their study system. Here it's somewhere between 0.25 and 0.3.
 

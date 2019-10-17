@@ -41,7 +41,7 @@ numeric. 1 or 2. Designate one of two methods for extracting values from isoscap
 }
 
 \value{
-\item{isoscape.rescale }{RasterBrick. Rescaled isoscape based on known origin data and isosape; first layer is the mean prediction and the second the standard deviation}
+\item{isoscape.rescale }{RasterBrick. Rescaled isoscape based on known origin data and isoscape; first layer is the mean prediction and the second the standard deviation}
 \item{lm.data }{data.frame. Known origin data and extracted isoscape value used for linear regression modeling}
 \item{lm.model}{list. Linear regression model}
 }

@@ -36,7 +36,7 @@ QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50,
   \item{prption_byProb}{numeric. An X*Y data.frame showing the proportion of validation individuals for which the known origin is contained within the top 0.00 to 1.00 probability quantile (with increment of 0.01; Y = 101). X = valiTime.
 }
   \item{precision}{list. The length of the list is valiTime. Each element is an X*Y matrix showing the proportional area of the total assignment surface covered by the assignment region at a given probability quantile from 0.00 to 1.00 *with increment of 0.01; X = 101) for each validation sample (Y = valiStation).}
-  \item{random_prob_density}{Random probability of assignment to any given gridcell on the assignment surface(i.e. 1 divided by the total number of grid cells).
+  \item{random_prob_density}{Random probability of assignment to any given grid cell on the assignment surface(i.e. 1 divided by the total number of grid cells).
 }
   \item{name}{character. Name assigned to the QA object.}
 }
