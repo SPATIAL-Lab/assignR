@@ -42,9 +42,9 @@ p12 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
 oddsRatio(asn, p12)                      
 
 #### Create SpatialPoints for two points of interest ####
-pp1 <- c(-108,42)
-pp2 <- c(-103,25)
-pp12 <- SpatialPoints(coords = rbind(pp1,pp2), 
+pp1 = c(-108,42)
+pp2 = c(-103,25)
+pp12 = SpatialPoints(coords = rbind(pp1,pp2), 
   proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
 points(pp12, pch = 21, bg = "light blue")
 
@@ -69,9 +69,9 @@ unionP(asn)
 bird_d2h = subOrigData(taxon = "Setophaga ruticilla", mask = naMap)
 
 # run quality assessment using precipitation hydrogen isoscape
-d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2,
+\dontrun{d2h_QA = QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2,
              valiTime = 5, mask = naMap)
 
 # plot the QA result
-plot(d2h_QA)
+plot(d2h_QA)}
 }

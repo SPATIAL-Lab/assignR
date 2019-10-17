@@ -64,15 +64,15 @@ Vander Zanden, H.B., Wunder, M.B., Hobson, K.A., Van Wilgenburg, S.L., Wassenaar
 
 \examples{
 # load data
-data(naMap) # North America 
-data(d2h_world) # precipitation hydrogen isotope of the world
-data(knownOrig) # hydrogen isotopes of known-origin samples
+data("naMap") # North America 
+data("d2h_world") # precipitation hydrogen isotope of the world
+data("knownOrig") # hydrogen isotopes of known-origin samples
 
 # extract some known-origin data
-bird_d2h <- subOrigData(taxon = "Lanius ludovicianus")
+bird_d2h = subOrigData(taxon = "Lanius ludovicianus")
 
-\donttest{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
-d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
+\dontrun{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
+d2h_QA = QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
   valiTime = 5, mask = naMap)
                     
 # plot the QA result

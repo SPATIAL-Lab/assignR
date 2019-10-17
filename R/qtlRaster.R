@@ -88,14 +88,14 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, sa
   
   if(genplot){
     for(i in 1:n){
-      graphics::plot(result[[i]], legend=FALSE)
+      raster::plot(result[[i]], legend=FALSE)
       graphics::title(tls[i])
     }
   }
   if(savePDF){
     grDevices::pdf("qtlRaster_result.pdf")
     for(i in 1:n){
-      graphics::plot(result[[i]], legend=FALSE)
+      raster::plot(result[[i]], legend=FALSE)
       graphics::title(tls[i])
     }
     grDevices::dev.off()

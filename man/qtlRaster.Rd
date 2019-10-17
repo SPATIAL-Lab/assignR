@@ -32,7 +32,7 @@ save summary plot as PDF? (TRUE or FALSE)
 \examples{
 # load North America SpatialPolygonsDataFrame data in assignR package
 data("naMap")
-data(d2h_world)
+data("d2h_world")
 
 #### Load hydrogen isotope for human hair in North America ####
 d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)

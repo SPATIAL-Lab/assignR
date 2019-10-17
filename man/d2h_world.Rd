@@ -16,7 +16,7 @@ Bowen, G. J. (2018) Gridded maps of the isotopic composition of meteoric waters.
 Bowen, G.J., Wassenaar, L.I. and Hobson, K.A., 2005. Global application of stable hydrogen and oxygen isotopes to wildlife forensics. Oecologia, 143(3), pp.337-348.
 }
 \examples{
-data(d2h_world)
+data("d2h_world")
 plot(d2h_world)
 }
 

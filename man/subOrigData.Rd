@@ -54,7 +54,10 @@ d4 = subOrigData(marker = "d2H", taxon = "Homo sapiens")
 summary(d4)
 
 ## WITH mask
-d5 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", "Turdus migratorius"), 
-  mask = naMap)
-d6 = subOrigData(group = "human", mask = naMap)
+# error - no samples found
+\dontrun{d5 = subOrigData(taxon = "Turdus philomelos", mask = naMap)}
+# these work OK
+d6 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", 
+  "Turdus migratorius"), mask = naMap)
+d7 = subOrigData(group = "human", mask = naMap)
 }

@@ -15,7 +15,6 @@ This dataset consists of hydrogen and oxygen isotope values of human hair, insec
 \code{\link[assignR]{subOrigData}}
 }
 \examples{
-library(maptools)
 data("knownOrig")
 data("wrld_simpl")
 plot(wrld_simpl)

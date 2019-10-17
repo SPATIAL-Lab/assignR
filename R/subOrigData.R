@@ -1,9 +1,8 @@
 subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
                         age_code = NULL, mask = NULL) {
   
-  usethis::use_data(knownOrig, internal = TRUE)
-  result <- NULL
-  
+  result = NULL
+
   if(!marker %in% colnames(knownOrig@data)){
     stop("marker must be column name for isotope data field")
   }
@@ -75,7 +74,6 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
     result <- overlap
     
   } else {
-    utils::data(wrld_simpl)
     sp::plot(wrld_simpl, axes = TRUE)
     sp::plot(result, add = TRUE, col = "red", cex = 0.5)
     

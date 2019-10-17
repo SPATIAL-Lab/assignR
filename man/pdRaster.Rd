@@ -37,8 +37,8 @@ returns an object of class RasterStack or RasterLayer that includes a probabilit
 \code{\link[assignR]{calRaster}}
 }
 \examples{
-data(naMap)
-data(d2h_world)
+data("naMap")
+data("d2h_world")
 
 #### Load hydrogen isotope for human hair in North America ####
 d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
@@ -47,9 +47,9 @@ d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", ma
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 
 #### Sample to assign
-id <- "smile"
-d2H <- -80
-un <- data.frame(id,d2H)
+id = "smile"
+d2H = 80
+un = data.frame(id,d2H)
 
-asn <- pdRaster(r, unknown = un, mask = naMap, saveFiles = TRUE)
+asn = pdRaster(r, unknown = un, mask = naMap)
 }

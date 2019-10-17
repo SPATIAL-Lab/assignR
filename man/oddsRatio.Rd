@@ -22,7 +22,7 @@ SpatialPoints or SpatialPolygons (or *DataFrame equivalent) of length 2
 \examples{
 # load North America SpatialPolygonsDataFrame data in assignR package
 data("naMap")
-data(d2h_world)
+data("d2h_world")
 
 #### Load hydrogen isotope for human hair in North America ####
 d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
@@ -42,17 +42,17 @@ asn = pdRaster(r, unknown = un, mask = naMap)
 data("plover_range_BreedingSeason")
 data("plover_range_NonBreedingSeason")
 plot(naMap)
-lines(plover_range_BreedingSeason, col = c("red"))
-lines(plover_range_NonBreedingSeason, col = c("blue"))
+plot(plover_range_BreedingSeason, col = c("red"), add = TRUE)
+plot(plover_range_NonBreedingSeason, col = c("blue"), add = TRUE)
 
 # Get odds ratio for two regions using SpatialPolygon method
 p34 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
 oddsRatio(asn, p34)                      
 
 # Create SpatialPoints for two points of interest
-pp1 <- c(-108,42)
-pp2 <- c(-103,25)
-pp12 <- SpatialPoints(coords = rbind(pp1,pp2), 
+pp1 = c(-108,42)
+pp2 = c(-103,25)
+pp12 = SpatialPoints(coords = rbind(pp1,pp2), 
   proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
 points(pp12, pch = 21, bg = "light blue")
 

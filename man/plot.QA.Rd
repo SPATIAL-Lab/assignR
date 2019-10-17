@@ -7,11 +7,14 @@ Plot quality assessment metrics for geographic assignment.
 Plot the output from QA results. Spatial precision, accuracy, sensitivity and odds ratio of known locations for validation samples.
 }
 \usage{
-plot.QA(obj, savePNG = FALSE)
+  \method{plot}{QA}(x, ..., savePNG = FALSE)
 }
 \arguments{
-  \item{obj}{
+  \item{x}{
     Either a single QA object or a list of QA objects
+  }
+  \item{...}{
+    Other arguments to be passed to plot
   }
   \item{savePNG}{
     logical. Save the plots as PNG file (TRUE) or not (FALSE [default]).
@@ -30,15 +33,15 @@ Vander Zanden, H.B., Wunder, M.B., Hobson, K.A., Van Wilgenburg, S.L., Wassenaar
 
 \examples{
 # load data
-data(naMap) # North America 
-data(d2h_world) # precipitation hydrogen isotope of the world
-data(knownOrig) # isotopes of known-origin samples
+data("naMap") # North America 
+data("d2h_world") # precipitation hydrogen isotope of the world
+data("knownOrig") # isotopes of known-origin samples
 
 # extract some known-origin data
-bird_d2h <- subOrigData(taxon = "Lanius ludovicianus")
+bird_d2h = subOrigData(taxon = "Lanius ludovicianus")
 
-\donttest{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
-d2h_QA <- QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
+\dontrun{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
+d2h_QA = QA(isoscape = d2h_world, known = bird_d2h, valiStation = 2, 
                     valiTime = 5, mask = naMap)
                     
 # plot the QA result
