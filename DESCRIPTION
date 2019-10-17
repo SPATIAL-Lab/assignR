@@ -6,6 +6,8 @@ Author: Chao Ma, Gabe Bowen
 Maintainer: Gabe Bowen <gabe.bowen@utah.edu>
 Description: Routines for rescaling isoscapes using known-origin tissue isotope data, assigning origin of unknown samples, and summarizing and assessing assignment results.
 Depends: raster, sp, rgdal, maptools
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

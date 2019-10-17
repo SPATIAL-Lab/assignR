@@ -13,26 +13,17 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-*****
-# Getting Started
-
-Install *assignR*. If necessary first install and load the *devtools* package from CRAN.
-
-```{r devtools, message=FALSE, warning=FALSE, results="hide"}
-install.packages("devtools", repos = "https://cloud.r-project.org")
-library(devtools)
-```
+This vignette introduces the basic functionality of the *assignR* package using data bundled with the package. We'll review how to access compiled data for known-origin biological samples and enviornmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate an assignment quality analysis tool useful in study design, method comparison, and uncertainty analysis. 
 
 *****
-Now *assignR* can be installed from the GitHub repository.
+Let's load the package 
 
 ```{r install, message=FALSE, warning=FALSE, results="hide"}
-install_github("SPATIAL-Lab/assignR", force = TRUE)
 library(assignR)
 ```
 
 *****
-Let's add some data from the package to your local environment. Load and plot the North America boundary mask.
+Now add some data from the package to your local environment. Load and plot the North America boundary mask.
 
 ```{r boundary}
 data("naMap")
@@ -55,10 +46,10 @@ data("knownOrig")
 names(knownOrig)
 ```
 
-Now lets look at a list of species names and the number of samples available for them. We won't show the result here since it's a long table, but here's the code:
+Now lets look at a list of species names available.
 
-```{r knownOrig_taxa, results="hide"}
-View(summary(knownOrig$Taxon))
+```{r knownOrig_taxa}
+unique(knownOrig$Taxon)
 ```
 
 *****
