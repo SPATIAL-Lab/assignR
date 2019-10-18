@@ -1,14 +1,19 @@
 \name{plot.QA}
+
 \alias{plot.QA}
+
 \title{
-Plot quality assessment metrics for geographic assignment.
+Plot quality metrics for geographic assignments
 }
+
 \description{
-Plot the output from QA results. Spatial precision, accuracy, sensitivity and odds ratio of known locations for validation samples.
+Plot the output from \code{QA}, including spatial precision, bias, sensitivity and odds ratio of known locations for validation samples.
 }
+
 \usage{
   \method{plot}{QA}(x, ..., savePNG = FALSE)
 }
+
 \arguments{
   \item{x}{
     One or more QA objects
@@ -20,10 +25,11 @@ Plot the output from QA results. Spatial precision, accuracy, sensitivity and od
     logical. Save the plots as PNG file (TRUE) or not (FALSE [default]).
   }
 }
-\references{
-Ma et al., 2019
 
-Vander Zanden, H.B., Wunder, M.B., Hobson, K.A., Van Wilgenburg, S.L., Wassenaar, L.I., Welker, J.M. and Bowen, G.J., 2014. Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. Methods in Ecology and Evolution, 5(9), pp.891-900.
+\references{
+Ma et al. (in review) Does transpiration matter? Comparing geographic assignment with precipitation- and plant-based isoscapes using IsoMAP and assignR software. \emph{Movement Ecology}.
+
+Vander Zanden, H. B. et. al (2014) Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. \emph{Methods in Ecology and Evolution} \strong{5} 891--900.
 }
 
 \seealso{

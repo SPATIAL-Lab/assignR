@@ -1,31 +1,35 @@
 \name{unionP}
+
 \alias{unionP}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Union probability of origin
 }
+
 \description{
-Probability that at least one individual came from the location (union of probabilities)
+Probabilities that at least one individual came from each location in the assignment area (union of probabilities)
 }
+
 \usage{
 unionP(pdR)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{pdR}{
-probability density map which must be raster or RasterLayer
+RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{calRaster}. All layers must have common spatial extent and projection.
 }
 }
 
 \examples{
-# load North America SpatialPolygonsDataFrame data in assignR package
+# load North America boundary and global isoscape
 data("naMap")
 data("d2h_world")
 
-#### Load hydrogen isotope for human hair in North America ####
-d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+# load hydrogen isotope data for human hair in North America
+d = subOrigData(taxon = "Homo sapiens", 
+  reference = "Ehleringer et al. 2008", mask = naMap)
 
-#### Rescale from environmental isoscape to tissue isoscape ####
+# rescale from environmental isoscape to tissue isoscape
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 
 # four unknown-origin examples
@@ -36,6 +40,6 @@ un = data.frame(id,d2H)
 # assignment
 asn = pdRaster(r, unknown = un, mask = naMap)
 
-# joint probability for individuals of common origin
+# probability that one or more individuals are from a given location
 unionP(asn)
 }

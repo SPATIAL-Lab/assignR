@@ -1,18 +1,22 @@
 \name{oddsRatio}
+
 \alias{oddsRatio}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Odds ratio of points or regions
 }
+
 \description{
 Calculate ratio of odds for two locations (points or polygons)
 }
+
 \usage{
 oddsRatio(pdR, inputP)
 }
+
 \arguments{
   \item{pdR}{
-probability density map which must be raster or RasterLayer
+RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{calRaster}. All layers must have common projection.
 }
   \item{inputP}{
 SpatialPoints or SpatialPolygons (or *DataFrame equivalent) of length 2
@@ -20,14 +24,15 @@ SpatialPoints or SpatialPolygons (or *DataFrame equivalent) of length 2
 }
 
 \examples{
-# load North America SpatialPolygonsDataFrame data in assignR package
+# load North America boundary and global isoscape
 data("naMap")
 data("d2h_world")
 
-#### Load hydrogen isotope for human hair in North America ####
-d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+# load hydrogen isotope data for human hair in North America
+d = subOrigData(taxon = "Homo sapiens", 
+  reference = "Ehleringer et al. 2008", mask = naMap)
 
-#### Rescale from environmental isoscape to tissue isoscape ####
+# rescale from environmental isoscape to tissue isoscape
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 
 # four unknown-origin examples

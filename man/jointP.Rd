@@ -1,29 +1,35 @@
 \name{jointP}
+
 \alias{jointP}
+
 \title{
 Joint probability of origin
 }
+
 \description{
 Joint probability for individuals of common origin (product of probabilities)
 }
+
 \usage{
 jointP(pdR)
 }
+
 \arguments{
   \item{pdR}{
-probability density map which must be raster or RasterLayer
+RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{calRaster}. All layers must have common spatial extent and projection.
 }
 }
 
 \examples{
-# load North America SpatialPolygonsDataFrame data in assignR package
+# load North America boundary and global isoscape
 data("naMap")
 data("d2h_world")
 
-#### Load hydrogen isotope for human hair in North America ####
-d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+# load hydrogen isotope data for human hair in North America
+d = subOrigData(taxon = "Homo sapiens", 
+  reference = "Ehleringer et al. 2008", mask = naMap)
 
-#### Rescale from environmental isoscape to tissue isoscape ####
+# rescale from environmental isoscape to tissue isoscape
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 
 # four unknown-origin examples

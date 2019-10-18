@@ -1,3 +1,4 @@
 ^Rmarkdown$
 ^docs$
+^cran-comments\.md$
 ^\.travis\.yml$

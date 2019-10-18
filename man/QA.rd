@@ -1,23 +1,28 @@
 \name{QA}
+
 \alias{QA}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-Test the efficacy of geographic assignment
+Quality assessment of geographic assignments
 }
+
 \description{
-What is the power of a certain isoscape used for geographic assignment? Using the known origin data and the isoscape as input to test it. You will get the population accuracy, precision and probability density (see returned ).
+How well does a given isoscape and known origin data set constrain the geographic origin of samples? Uses iterative re-sampling of the known origin data set to evaluate sample assignments and reports a suite of quality metrics.
 }
+
 \usage{
 QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, 
   mask = NULL, setSeed = TRUE, name = NULL)
 }
+
 \arguments{
-  \item{isoscape}{raster. Environmental isoscape. Two layers: the first one is mean and the second one is standard deviation.}
-  \item{known}{SpatialPointsDataFrame. known-origin data that should contain one feature: tissue isotope value that should be the same isotope as the environmental isoscape. This input must have a coordinate reference system as that in isoscape.
+  \item{isoscape}{RasterStack or RasterBrick with two layers, e.g., as created by \code{calRaster}. The first layer is the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
 }
-  \item{valiStation}{numeric. How many stations of the known origin with tissue isotope are used for validation. This must be smaller than the total number of known origin.
+  \item{known}{SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Known-origin data can be queried using \code{knownOrig}.
 }
-  \item{valiTime}{numeric. How many times do you want to randomly draw validation stations and run the validation. Must be an integer greater than one. 
+  \item{valiStation}{numeric. How many samples from known are withheld  for validation? Must be two or more smaller than the length of known.
+}
+  \item{valiTime}{numeric. How many times do you want to randomly draw validation stations and run the validation? Must be an integer greater than one. 
 }
   \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of isoscape is returned.
 }
@@ -42,11 +47,13 @@ QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50,
 }
 
 \note{
-Please see Ma et al., 2019 for details of these values returned and the methodology.
+Please see Ma et al., 2019 for methodological details.
 }
 
 \references{
-Vander Zanden, H.B., Wunder, M.B., Hobson, K.A., Van Wilgenburg, S.L., Wassenaar, L.I., Welker, J.M. and Bowen, G.J., 2014. Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. Methods in Ecology and Evolution, 5(9), pp.891-900.
+Ma et al. (in review) Does transpiration matter? Comparing geographic assignment with precipitation- and plant-based isoscapes using IsoMAP and assignR software. \emph{Movement Ecology}.
+
+Vander Zanden, H. B. et. al (2014) Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. \emph{Methods in Ecology and Evolution} \strong{5} 891--900.
 }
 
 \seealso{

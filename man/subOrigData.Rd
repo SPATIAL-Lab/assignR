@@ -1,39 +1,44 @@
 \name{subOrigData}
+
 \alias{subOrigData}
+
 \title{
-subOrigData function
+Extract known origin sample data
 }
+
 \description{
-This function subsets the known-origin isotope dataset included in this package
+This function subsets the known-origin isotope dataset included in this package.
 }
+
 \usage{
 subOrigData(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
   age_code = NULL, mask = NULL)
 }
+
 \arguments{
   \item{marker}{
-String. Column name for isotopic data to be extracted. Possible values include "d2H" and "d18O".
+character string. Column name for isotopic data to be extracted, either \dQuote{d2H} or \dQuote{d18O}.
 }
   \item{taxon}{
-String or a string vector. Species names for data to be extracted. Details can be seen in \code{\link[assignR]{knownOrig}}
+character string or string vector. Species name(s) for data to be extracted.
 }
   \item{group}{
-String or a string vector. Organism groups for data to be extracted. Details can be seen in \code{\link[assignR]{knownOrig}}
+character string or string vector. Taxonomic groups for data to be extracted.
 }
   \item{reference}{
-String or a string vector. Bibliographic reference for data to be extracted. Details can be seen in \code{\link[assignR]{knownOrig}}
+character string or string vector. Bibliographic reference for data to be extracted.
 }
   \item{age_code}{
-String or a string vector. Animal age code for data to be extracted. Details can be seen in \code{\link[assignR]{knownOrig}}
+character string or string vector. Animal age code for data to be extracted. 
 }
   \item{mask}{
-SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, default of whole world is used.
+SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, default of global is used.
 }
-}
-\value{
-Data selected will be returned as SpatialPointsDataFrame with a single feature corresponding to the selected marker. Output is formatted for use in calRaster or QA functions.
 }
 
+\value{
+SpatialPointsDataFrame including the location and a single feature corresponding to the marker for each selected sample. Output is formatted for use in calRaster or QA functions.
+}
 
 \examples{
 ## WITHOUT mask
@@ -41,7 +46,7 @@ Data selected will be returned as SpatialPointsDataFrame with a single feature c
 d1 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", "Turdus migratorius"))
 summary(d1)
 
-# extract d2H data for [1]insects and [2]birds
+# extract d2H data for insects and birds
 d2 = subOrigData(group = c("insect","bird"))
 summary(d2)
 

@@ -1,56 +1,60 @@
 \name{qtlRaster}
+
 \alias{qtlRaster}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-Binary reclassification
+Sample assignment using thresholds
 }
+
 \description{
-Select top X percent of probability surface (defined by area percentage or cumulative probability)
+Selects the grid cells of probability density rasters with the highest probability and returns rasters with these cell values set to 1. Cells are selected based on the user-specified quantile threshold so that the most-probable cells representing a given fraction of the assignment area or posterior probability are returned.
 }
+
 \usage{
 qtlRaster(pdR, threshold, thresholdType = "area", genplot = TRUE, savePDF = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{pdR}{
-probability density map which must be raster or RasterLayer
+RasterLayer, RasterStack, or RasterBrick. Probability density maps for individual samples, e.g., as output by \code{pdRaster}.
 }
   \item{threshold}{
-numeric from 0 to 1, top percentage to select
+numeric from 0 to 1. Quantile to be selected. 
 }
   \item{thresholdType}{
-'area' (default) or 'prob'. 'area' selects the top percentage by area; 'prob' selects the top percentage by probability
+character. Either \dQuote{area} (default) or \dQuote{prob}. If area, the most probable cells constituting threshold percent of the assignment area are selected. If prob, the most probable cells consituting threshold percent of the posterior probability are selected.
 }
   \item{genplot}{
-generate summary plot? (TRUE or FALSE)
+logical.Plot results in R.
 }
   \item{savePDF}{
-save summary plot as PDF? (TRUE or FALSE)
+logical. Save plots to disk as PDF.
 }
 }
 
 \examples{
-# load North America SpatialPolygonsDataFrame data in assignR package
+# load North America boundary and global isoscape
 data("naMap")
 data("d2h_world")
 
-#### Load hydrogen isotope for human hair in North America ####
-d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+# load hydrogen isotope data for human hair in North America
+d = subOrigData(taxon = "Homo sapiens", 
+  reference = "Ehleringer et al. 2008", mask = naMap)
 
-#### Rescale from environmental isoscape to tissue isoscape ####
+# rescale from environmental isoscape to tissue isoscape
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 
 # four unknown-origin examples
 id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
-un = data.frame(id,d2H)
+un = data.frame(id, d2H)
 
-# assignment
+# posterior probability surface
 asn = pdRaster(r,unknown=un,mask=naMap)
 
-# top 10% of probability surface (defined by % area)
-qtlRaster(asn, threshold = 0.1, savePDF = TRUE)
+# assign to most probable 10 percent of area
+\dontrun{qtlRaster(asn, threshold = 0.1, savePDF = TRUE)}
 
-# top 10% of probability surface (defined by % probability)
+# assign to most probable 10 percent of proabability distribution
 qtlRaster(asn, threshold = 0.1, thresholdType = "prob")
 }

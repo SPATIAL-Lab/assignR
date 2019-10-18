@@ -1,17 +1,23 @@
 \name{plover_range_BreedingSeason}
+
 \alias{plover_range_BreedingSeason}
+
 \docType{data}
+
 \title{
-plover_range_BreedingSeason}
+Mountain plover breeding range}
+
 \description{
-Mountain plover range for breeding season
+Geographic range of North American mountain plover (\emph{Charadrius montanus}) during the breeding season.
 }
+
 \usage{data("plover_range_BreedingSeason")}
-\format{
-Formal class 'SpatialPolygonsDataFrame' with coordinate reference system of "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-}
+
+\format{SpatialPolygonsDataFrame}
+
 \examples{
 data("plover_range_BreedingSeason")
 plot(plover_range_BreedingSeason)
 }
+
 \keyword{datasets}
