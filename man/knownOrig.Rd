@@ -44,7 +44,7 @@ Hobson, K. A., Van Wilgenburg, S. L., Wassenaar, L. I. and Larson, K. (2012) Lin
 
 Hobson, K. A. and Wassenaar, L. I. (1997) Linking breeding and wintering grounds of neotropical migrant songbirds using stable hydrogen isotopic analysis of feathers. \emph{Oecologia} \strong{109} 142--148.
 
-Hobson, K. A., Wassenaar, L. I. and Taylor, O. R. (1999) Stable isotopes (dD and d13C) are geographic indicators of natal origins of monarch butterflies in easthern North America. \emph{Oecologia} \strong{120} 397--404.
+Hobson, K. A., Wassenaar, L. I. and Taylor, O. R. (1999) Stable isotopes (dD and d13C) are geographic indicators of natal origins of monarch butterflies in eastern North America. \emph{Oecologia} \strong{120} 397--404.
 
 Lott, C. A. and Smith, J. P. (2006) A geographic-information-system approach to estimating the origin of migratory raptors in North America using stable hydrogen isotope ratios in feathers. \emph{The Auk} \strong{123} 822--835.
 
@@ -52,13 +52,16 @@ Thompson, A. H. et al. (2010) Stable isotope analysis of modern human hair colle
 
 Wunder, M.B., 2007. Geographic structure and dynamics in Mountain Plover. Doctoral dissertation, Colorado State University.
 }
+
 \seealso{
 \code{\link[assignR]{subOrigData}}
 }
+
 \examples{
 data("knownOrig")
 data("wrld_simpl")
 plot(wrld_simpl)
 plot(knownOrig, add = TRUE, col = "red", cex = 0.5)
 }
+
 \keyword{datasets}

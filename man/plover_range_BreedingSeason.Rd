@@ -15,6 +15,14 @@ Geographic range of North American mountain plover (\emph{Charadrius montanus}) 
 
 \format{SpatialPolygonsDataFrame}
 
+\source{
+\url{http://explorer.natureserve.org/servlet/NatureServe?searchName=Charadrius+montanus}
+}
+
+\references{
+Ridgely, R. S. et. al (2003) Digital Distribution Maps of the Birds of the Western Hemisphere, version 1.0. NatureServe, Arlington, Virginia, USA.
+}
+
 \examples{
 data("plover_range_BreedingSeason")
 plot(plover_range_BreedingSeason)

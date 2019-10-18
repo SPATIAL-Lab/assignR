@@ -22,7 +22,7 @@ Plot the output from \code{QA}, including spatial precision, bias, sensitivity a
     Other arguments to be passed to plot
   }
   \item{savePNG}{
-    logical. Save the plots as PNG file (TRUE) or not (FALSE [default]).
+    logical. Save the plots as PNG file.
   }
 }
 

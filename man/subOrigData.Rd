@@ -32,12 +32,12 @@ character string or string vector. Bibliographic reference for data to be extrac
 character string or string vector. Animal age code for data to be extracted. 
 }
   \item{mask}{
-SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, default of global is used.
+SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, global.
 }
 }
 
 \value{
-SpatialPointsDataFrame including the location and a single feature corresponding to the marker for each selected sample. Output is formatted for use in calRaster or QA functions.
+SpatialPointsDataFrame including the location and a single feature corresponding to the marker for each selected sample. Output is formatted for use in \code{calRaster} or \code{QA} functions.
 }
 
 \examples{

@@ -20,19 +20,19 @@ calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA,
 SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Known-origin data can be queried using \code{knownOrig}.
 }
   \item{isoscape}{
-raster. Isoscape raster with two layers. The first one is the mean and the second standard deviation.
+raster. Isoscape raster with two layers. The first one is the mean and the second is one standard deviation.
 }
   \item{mask}{
-SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of isoscape is returned.
+SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
 }
   \item{interpMethod}{
-numeric. 1 or 2. Designate one of two methods for extracting values from isoscape. If 1, values for the cell in which a point falls are returned. If 2 the returned values are interpolated (bilinear interpolation) from the values of the four adjacent raster cells.
+numeric. 1 or 2. Designate one of two methods for extracting values from \code{isoscape}. If 1, values for the cell in which a point falls are returned. If 2 the returned values are interpolated (bilinear interpolation) from the values of the four adjacent grid cells.
 }
 \item{NA.value}{
-NA or numeric. Value representing the absence of data in isoscape. Commonly used values include NA, -9999, and 9999.
+NA or numeric. Value representing the absence of data in \code{isoscape}. Commonly used values include NA, -9999, and 9999.
 }
 \item{ignore.NA}{
-logical. If NA values are extracted from isoscape at the location of samples in known, ignore these values and proceed with calRaster.
+logical. If NA values are extracted from \code{isoscape} at the location of samples in known, ignore these values and proceed with \code{calRaster}.
 }
 \item{genplot}{
 logical. Plot the results.
@@ -46,8 +46,8 @@ logical. Print out the linear regression results.
 }
 
 \value{
-\item{isoscape.rescale}{RasterBrick. Isoscape rescaled using a linear regression model between values of known and isoscape. The first layer is the mean prediction and the second the standard deviation.}
-\item{lm.data}{data.frame. Known origin data and extracted isoscape values used for linear regression modeling.}
+\item{isoscape.rescale}{RasterBrick. \code{isoscape} rescaled using a linear regression model between values of \code{known} and \code{isoscape}. The first layer is the mean prediction and the second the standard deviation.}
+\item{lm.data}{data.frame. Known origin data and extracted \code{isoscape} values used for linear regression modeling.}
 \item{lm.model}{list. Linear regression model.}
 }
 

@@ -20,27 +20,28 @@ QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50,
 }
   \item{known}{SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Known-origin data can be queried using \code{knownOrig}.
 }
-  \item{valiStation}{numeric. How many samples from known are withheld  for validation? Must be two or more smaller than the length of known.
+  \item{valiStation}{numeric. How many samples from known are withheld for validation? Must be two or more smaller than the length of \code{known}.
 }
-  \item{valiTime}{numeric. How many times do you want to randomly draw validation stations and run the validation? Must be an integer greater than one. 
+  \item{valiTime}{numeric. How many times do you want to randomly draw validation stations and run the validation? Must be an integer equal to or greater than one. 
 }
-  \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of isoscape is returned.
+  \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
 }
-  \item{setSeed}{logical. Do you want to set.seed() when you randomly draw validation stations? Yes gives the same sequence of random draws each time the function is called.
+  \item{setSeed}{logical. Do you want to \code{set.seed()} when you randomly draw validation stations? Yes gives the same sequence of random draws each time the function is called.
 }
   \item{name}{character. Useful for identifying the QA output in subsequent plotting.
   }
 }
 
 \value{
-\item{val_stations}{numeric. An X*Y data.frame of validation station IDs for all valiTime. X = valiTime and Y contains the validation station row IDs.}
-\item{pd_val}{numeric. An X*Y data.frame containing the posterior probability density for the validation stations. X = valiTime and Y = valiStation.
+\item{val_stations}{numeric. An X*Y data.frame of validation station IDs for all valiTime. X = \code{valiTime} and Y = \code{valiStation}.
 }
-  \item{prption_byArea}{numeric. An X*Y data.frame showing the proportion of validation individuals for which the known origin is contained within the top 0.00 to 1.00 area quantile (with increment of 0.01; Y = 101). X = valiTime.
+\item{pd_val}{numeric. An X*Y data.frame containing the posterior probability density for the validation stations. X = \code{valiTime} and Y = \code{valiStation}.
 }
-  \item{prption_byProb}{numeric. An X*Y data.frame showing the proportion of validation individuals for which the known origin is contained within the top 0.00 to 1.00 probability quantile (with increment of 0.01; Y = 101). X = valiTime.
+  \item{prption_byArea}{numeric. An X*Y data.frame showing the proportion of validation individuals for which the known origin is contained within the top 0.00 to 1.00 area quantile (with increment of 0.01; Y = 101). X = \code{valiTime}.
 }
-  \item{precision}{list. The length of the list is valiTime. Each element is an X*Y matrix showing the proportional area of the total assignment surface covered by the assignment region at a given probability quantile from 0.00 to 1.00 *with increment of 0.01; X = 101) for each validation sample (Y = valiStation).}
+  \item{prption_byProb}{numeric. An X*Y data.frame showing the proportion of validation individuals for which the known origin is contained within the top 0.00 to 1.00 probability quantile (with increment of 0.01; Y = 101). X = \code{valiTime}.
+}
+  \item{precision}{list. The length of the list is \code{valiTime}. Each element is an X*Y matrix showing the proportional area of the total assignment surface covered by the assignment region at a given probability quantile from 0.00 to 1.00 *with increment of 0.01; X = 101) for each validation sample (Y = \code{valiStation}).}
   \item{random_prob_density}{Random probability of assignment to any given grid cell on the assignment surface(i.e. 1 divided by the total number of grid cells).
 }
   \item{name}{character. Name assigned to the QA object.}

@@ -22,7 +22,7 @@ RasterLayer, RasterStack, or RasterBrick. Probability density maps for individua
 numeric from 0 to 1. Quantile to be selected. 
 }
   \item{thresholdType}{
-character. Either \dQuote{area} (default) or \dQuote{prob}. If area, the most probable cells constituting threshold percent of the assignment area are selected. If prob, the most probable cells consituting threshold percent of the posterior probability are selected.
+character. Either \dQuote{area} (default) or \dQuote{prob}. If \dQuote{area}, the most probable cells constituting \code{threshold} percent of the assignment area are selected. If \dQuote{prob}, the most probable cells constituting \code{threshold} percent of the posterior probability are selected.
 }
   \item{genplot}{
 logical.Plot results in R.

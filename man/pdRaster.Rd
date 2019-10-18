@@ -22,20 +22,20 @@ RasterStack or RasterBrick with two layers, e.g., as created by \code{calRaster}
 data.frame. First column should be unique sample IDs, and second column should be tissue isotope values for the individuals for which the assignments will be made.
 }
 \item{prior}{
-raster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \emph{r}.
+raster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{r}.
 }
 \item{mask}{
-SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this is not provided, a default of mask of the extent of \emph{r} is used.
+SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this is not provided, a default of mask of the extent of \code{r} is used.
 }
 \item{genplot}{
-logical. Plot results in R?
+logical. Plot results in R.
 }
 \item{saveFiles}{
-logical. Save results?
+logical. Save results to disk.
 }
 }
 \value{
-RasterStack or RasterLayer including a probability density surface for each individual in unknown. If saveFiles == TRUE writes individual rasters in GTiff format to disk in the working directory and a single pdf file with images for each probability density raster.
+RasterStack or RasterLayer including a probability density surface for each individual in unknown. If \code{saveFiles} == TRUE writes individual rasters in GeoTIFF format and a single PDF file with images for each probability density raster to the working directory.
 }
 
 \seealso{
