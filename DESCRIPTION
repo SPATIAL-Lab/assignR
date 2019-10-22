@@ -4,7 +4,10 @@ Title: Infer Geographic Origin from Isotopic Data
 Version: 1.1.0
 Author: Chao Ma, Gabe Bowen
 Maintainer: Gabe Bowen <gabe.bowen@utah.edu>
-Description: Routines for re-scaling isotope maps using known-origin tissue isotope data, assigning origin of unknown samples, and summarizing and assessing assignment results.
+Description: Routines for re-scaling isotope maps using known-origin tissue isotope data, 
+assigning origin of unknown samples, and summarizing and assessing assignment results. 
+Wunder (2010) <https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf>; 
+Vander Zanden, H. B. et. al (2014) <doi:10.1111/2041-210X.12229>
 Depends: raster, sp, rgdal, maptools, R (>= 2.10)
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
