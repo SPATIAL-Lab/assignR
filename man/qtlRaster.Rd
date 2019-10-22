@@ -11,25 +11,25 @@ Selects the grid cells of probability density rasters with the highest probabili
 }
 
 \usage{
-qtlRaster(pdR, threshold, thresholdType = "area", genplot = TRUE, savePDF = FALSE)
+qtlRaster(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL)
 }
 
 \arguments{
   \item{pdR}{
-RasterLayer, RasterStack, or RasterBrick. Probability density maps for individual samples, e.g., as output by \code{pdRaster}.
-}
+  RasterLayer, RasterStack, or RasterBrick. Probability density maps for individual samples, e.g., as output by \code{pdRaster}.
+  }
   \item{threshold}{
-numeric from 0 to 1. Quantile to be selected. 
-}
+  numeric from 0 to 1. Quantile to be selected. 
+  }
   \item{thresholdType}{
-character. Either \dQuote{area} (default) or \dQuote{prob}. If \dQuote{area}, the most probable cells constituting \code{threshold} percent of the assignment area are selected. If \dQuote{prob}, the most probable cells constituting \code{threshold} percent of the posterior probability are selected.
-}
+  character. Either \dQuote{area} (default) or \dQuote{prob}. If \dQuote{area}, the most probable cells constituting \code{threshold} percent of the assignment area are selected. If \dQuote{prob}, the most probable cells constituting \code{threshold} percent of the posterior probability are selected.
+  }
   \item{genplot}{
-logical.Plot results in R.
-}
-  \item{savePDF}{
-logical. Save plots to disk as PDF.
-}
+  logical.Plot results in R.
+  }
+  \item{outDir}{
+  character string. Directory path to which output will be saved. If NULL no files are written.
+  }
 }
 
 \examples{

@@ -1,5 +1,5 @@
 calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
-          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, savePDF = FALSE, 
+          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, outDir = NULL, 
           verboseLM = TRUE)
 {
   #check that isoscape is valid and has defined CRS
@@ -51,8 +51,14 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   if(class(genplot) != "logical") {
     stop("genplot should be logical (T or F)")
   }
-  if (class(savePDF) != "logical") {
-    stop("savePDF should be logical (T or F)")
+  if(!is.null(outDir)){
+    if(class(outDir) != "character"){
+      stop("outDir should be a character string")
+    }
+    if(!dir.exists(outDir)){
+      warning("outDir does not exist, creating")
+      dir.create(outDir)
+    }
   }
   
   #extract with mask
@@ -120,7 +126,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   y = tissue.iso
   xy = data.frame(x, y)
 
-  if (genplot == TRUE || savePDF == TRUE) {
+  if (genplot == TRUE || !is.null(outDir) ) {
     #formatted lm equation for plotting
     equation <- function(mod) {
       lm_coef <- list(a = as.numeric(round(stats::coef(mod)[1], digits = 2)),
@@ -183,9 +189,8 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #pdf output
-  if (savePDF == TRUE) {
-    dir.create("output")
-    grDevices::pdf("./output/rescale.result.pdf", width = 6, height = 4)
+  if (!is.null(outDir)) {
+    grDevices::pdf(paste0(outDir, "/rescale_result.pdf"), width = 6, height = 4)
     
     #plot
     graphics::plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", 

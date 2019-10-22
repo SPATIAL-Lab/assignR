@@ -13,3 +13,8 @@ New submission
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package
+
+## Resubmission changes
+* 'Tools for' removed from title, now 'Infer Geographic Origin from Isotopic Data'
+* All print()/cat() removed from functions and replaced with message() or warning(): subOrigData.R, oddsRatio.R, and calRaster.R
+* Writing to files has been removed from all functions unless user specifies a directory in the function call: calRaster.R, pdRaster.R, qtlRaster.R, plot.QA.R; verified examples and vignettes do not write to disk

@@ -1,4 +1,4 @@
-qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, savePDF = FALSE){
+qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL){
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
   }
@@ -17,8 +17,14 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, sa
   if(class(genplot) != "logical"){
     stop("genplot must be logical (T/F)")
   }
-  if(class(savePDF) != "logical"){
-    stop("pdf must be logical (T/F)")
+  if(!is.null(outDir)){
+    if(class(outDir) != "character"){
+      stop("outDir should be a character string")
+    }
+    if(!dir.exists(outDir)){
+      warning("outDir does not exist, creating")
+      dir.create(outDir)
+    }
   }
   
   result <- pdR
@@ -92,8 +98,8 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, sa
       graphics::title(tls[i])
     }
   }
-  if(savePDF){
-    grDevices::pdf("qtlRaster_result.pdf")
+  if(!is.null(outDir)){
+    grDevices::pdf(paste0(outDir, "/qtlRaster_result.pdf"))
     for(i in 1:n){
       raster::plot(result[[i]], legend=FALSE)
       graphics::title(tls[i])

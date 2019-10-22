@@ -11,7 +11,7 @@ Plot the output from \code{QA}, including spatial precision, bias, sensitivity a
 }
 
 \usage{
-  \method{plot}{QA}(x, ..., savePNG = FALSE)
+  \method{plot}{QA}(x, ..., outDir = NULL)
 }
 
 \arguments{
@@ -21,8 +21,8 @@ Plot the output from \code{QA}, including spatial precision, bias, sensitivity a
   \item{...}{
     Other arguments to be passed to plot
   }
-  \item{savePNG}{
-    logical. Save the plots as PNG file.
+  \item{outDir}{
+  character string. Directory path to which output will be saved. If NULL no files are written.
   }
 }
 

@@ -11,7 +11,7 @@ Calculate posterior probabilities of origin for a sample based on its isotope ra
 }
 
 \usage{
-pdRaster(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, saveFiles = FALSE)
+pdRaster(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDir = NULL)
 }
 
 \arguments{
@@ -30,8 +30,8 @@ SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this 
 \item{genplot}{
 logical. Plot results in R.
 }
-\item{saveFiles}{
-logical. Save results to disk.
+\item{outDir}{
+character string. Directory path to which output will be saved. If NULL no files are written.
 }
 }
 \value{

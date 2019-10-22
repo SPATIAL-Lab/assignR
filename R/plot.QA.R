@@ -1,14 +1,23 @@
-plot.QA = function(x, ..., savePNG = FALSE){
+plot.QA = function(x, ..., outDir = NULL){
 
   a = list(x, ...)
 
   if(class(a[[1]]) != "QA"){
     stop("x must be one or more QA objects")
   }
+  if(!is.null(outDir)){
+    if(class(outDir) != "character"){
+      stop("outDir should be a character string")
+    }
+    if(!dir.exists(outDir)){
+      warning("outDir does not exist, creating")
+      dir.create(outDir)
+    }
+  }
   
   n = 0
   for(i in 1:length(a)){
-    if(class(a[[i]]) == "QA") n = n+1
+    if(class(a[[i]]) == "QA") n = n + 1
   }
 
   xx <- seq(0.00, 1, 0.01)
@@ -52,9 +61,9 @@ plot.QA = function(x, ..., savePNG = FALSE){
     graphics::boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
     graphics::abline(1,0, col="dark grey", lwd=2, lty=3)
     
-    if(savePNG){
+    if(!is.null(outDir)){
       
-      grDevices::png("QA1.png", units = "in", width = 8, height = 3, res = 600)
+      grDevices::png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
       graphics::layout(matrix(c(1,2,3), ncol=3))
       
       graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
@@ -74,7 +83,7 @@ plot.QA = function(x, ..., savePNG = FALSE){
       
       grDevices::dev.off()
       
-      grDevices::png("QA2.png", units = "in", width = 6, height = 4, res = 600)
+      grDevices::png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
       
       graphics::boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
       graphics::abline(1,0, col="dark grey", lwd=2, lty=3)
@@ -166,8 +175,8 @@ plot.QA = function(x, ..., savePNG = FALSE){
             ylab = "Odds ratio (known origin:random)", outline = FALSE)
     graphics::abline(1, 0, col="dark grey", lwd=2, lty=3)
     
-    if(savePNG){
-      grDevices::png("QA1.png", units = "in", width = 8, height = 3, res = 600)
+    if(!is.null(outDir)){
+      grDevices::png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
       graphics::layout(matrix(c(1,2,3), ncol=3))
       
       graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
@@ -201,7 +210,7 @@ plot.QA = function(x, ..., savePNG = FALSE){
       
       grDevices::dev.off()
 
-      grDevices::png("QA2.png", units = "in", width = 6, height = 4, res = 600)
+      grDevices::png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
 
       graphics::boxplot(pd, col=seq(2,n+1), names = nm,
               ylab = "Odds ratio (known origin:random)", outline = FALSE)

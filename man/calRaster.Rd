@@ -12,7 +12,7 @@ This function uses known-origin tissue data to rescale a map of environmental is
 
 \usage{
 calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA, 
-  ignore.NA = TRUE, genplot = TRUE, savePDF =  FALSE, verboseLM = TRUE)
+  ignore.NA = TRUE, genplot = TRUE, outDir =  NULL, verboseLM = TRUE)
 }
 
 \arguments{
@@ -37,8 +37,8 @@ logical. If NA values are extracted from \code{isoscape} at the location of samp
 \item{genplot}{
 logical. Plot the results.
 }
-\item{savePDF}{
-logical. Save the results as pdf.
+\item{outDir}{
+character string. Directory path to which output will be saved. If NULL no files are written.
 }
 \item{verboseLM}{
 logical. Print out the linear regression results.
