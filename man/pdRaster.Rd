@@ -56,7 +56,7 @@ r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 
 # sample to assign
 id = "smile"
-d2H = 80
+d2H = -80
 un = data.frame(id, d2H)
 
 # posterior probability surface

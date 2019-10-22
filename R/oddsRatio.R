@@ -17,7 +17,6 @@ oddsRatio <- function(pdR, inputP){
     result2 <- data.frame(ratioToMax = extrVals/raster::maxValue(pdR), ratioToMin = extrVals/raster::minValue(pdR))
     if(n == 1){
       result = result2
-      names(result) = "Odds relative to the max/min pixel"
     }
     else if(n == 2){
       if(class(pdR) == "RasterStack" | class(pdR) == "RasterBrick"){
@@ -27,6 +26,7 @@ oddsRatio <- function(pdR, inputP){
       }
       result <- list(oddsRatio = result1, ratioToMaxMin = result2)
       names(result) <- c("P1/P2 odds ratio", "Odds relative to the max/min pixel")
+      row.names(result[[2]]) = c("P1", "P2")
     }
     else{
       stop("input points (inputP) should be one or two points")
