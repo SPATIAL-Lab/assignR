@@ -54,6 +54,12 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   if (class(savePDF) != "logical") {
     stop("savePDF should be logical (T or F)")
   }
+  
+  #extract with mask
+  if(!is.null(mask)){
+    known = known[mask,]
+    isoscape = crop(isoscape, mask)
+  }
 
   #check and set isoscape NA value if necessary
   if(!is.na(NA.value)) {
@@ -83,9 +89,11 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #warn if some known site have NA isoscape values
   if (any(is.na(isoscape.iso[, 1]))) {
     na <- which(is.na(isoscape.iso[, 1]))
-    cat("\n\n----------------------------------------------------------------\n")
-    cat("Warning: NO isoscape values found at the following locations:\n")
-    print(known@coords[na])
+    wtxt = "NO isoscape values found at the following locations:\n"
+    for(i in na){
+      wtxt = paste0(wtxt, known@coords[i, 1], ", ", known@coords[i, 2], "\n")
+    }
+    warning(wtxt)
     if (!ignore.NA) {
       stop("Delete these data in known origin data or use a different isoscape that has values at these locations")
     }
@@ -93,6 +101,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     #remove na values before continuing
     tissue.iso <- tissue.iso[!is.na(isoscape.iso[,1])]
     isoscape.iso <- isoscape.iso[!is.na(isoscape.iso[,1]), ]
+    nSample = length(tissue.iso)
   }
 
   #fit the regression model
@@ -142,7 +151,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   
   #simulate covariance
   isoscape.sim = matrix(0, nrow = nSample, ncol = 100)
-  for(i in 1:nSample){
+  for(i in 1:nrow(isoscape.iso)){
     isoscape.sim[i,] = stats::rnorm(100, isoscape.iso[i, 1], isoscape.iso[i, 2])
   }
   isoscape.dev = tissue.dev = double()

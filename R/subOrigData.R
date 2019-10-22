@@ -78,6 +78,6 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
     sp::plot(result, add = TRUE, col = "red", cex = 0.5)
     
   }
-  cat(length(result[,1]),"data points are found\n")
+  message(paste(length(result[,1]),"data points are found"))
   return(result[,marker])
 }

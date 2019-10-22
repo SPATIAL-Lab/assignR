@@ -17,7 +17,7 @@ oddsRatio <- function(pdR, inputP){
     result2 <- data.frame(ratioToMax = extrVals/raster::maxValue(pdR), ratioToMin = extrVals/raster::minValue(pdR))
     if(n == 1){
       result = result2
-      print("Odds relative to the max/min pixel")
+      names(result) = "Odds relative to the max/min pixel"
     }
     else if(n == 2){
       if(class(pdR) == "RasterStack" | class(pdR) == "RasterBrick"){
