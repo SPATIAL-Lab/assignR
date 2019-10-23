@@ -4,12 +4,7 @@
 * Windows x64 (on win-builder), R 3.7.0
 
 ## R CMD check results
-No ERRORs or WARNINGs 
-
-There was 1 NOTE (win-builder):
-
-Maintainer: 'Gabe Bowen <gabe.bowen@utah.edu>'
-New submission
+No ERRORs, WARNINGs or NOTEs 
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package
