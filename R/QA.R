@@ -1,5 +1,5 @@
-QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, 
-               mask = NULL, setSeed = TRUE, name = NULL){
+QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), 
+               valiTime = 50, mask = NULL, setSeed = TRUE, name = NULL){
 
   #check that isoscape is valid and has defined CRS
   if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
@@ -33,7 +33,8 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
     stop("valiTime must be an integer greater than 1")
   }
   if(!is.null(mask)) {
-    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+    if(class(mask) == "SpatialPolygonsDataFrame" || 
+       class(mask) == "SpatialPolygons"){
       if(is.na(sp::proj4string(mask))){
         stop("mask must have coordinate reference system")
       }
@@ -58,7 +59,9 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
   rowLength <- nrow(known)
   val_stations <- sort(sample(1:rowLength,valiStation,replace = FALSE))
   for (i in 2:valiTime){
-    val_stations <- rbind(val_stations,sort(sample(1:rowLength,valiStation,replace = FALSE)))
+    val_stations <- rbind(val_stations, 
+                          sort(sample(1:rowLength, valiStation, 
+                                      replace = FALSE)))
   }
 
 
@@ -74,8 +77,11 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
   for (i in 1:valiTime){
     v <- known[val_stations[i,],]
     m <- known[-val_stations[i,],]
-    rescale <- assignR::calRaster(m, isoscape, mask, genplot = FALSE, verboseLM = FALSE)
-    pd <- assignR::pdRaster(rescale, unknown = data.frame(row.names(v@data), v@data[,1]), genplot = FALSE)
+    rescale <- assignR::calRaster(m, isoscape, mask, genplot = FALSE, 
+                                  verboseLM = FALSE)
+    pd <- assignR::pdRaster(rescale, 
+                            unknown = data.frame(row.names(v@data), 
+                                                 v@data[,1]), genplot = FALSE)
 
     # pd value for each validation location
     for(j in 1:raster::nlayers(pd)){
@@ -90,7 +96,8 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
     # spatial precision and accuracy by checking top percentage by cumulative prob.
     precision[[i]] <- matrix(0, 101, valiStation) # precision
     for(j in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, savePDF = FALSE, thresholdType = "prob", genplot = FALSE)
+      qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, 
+                                thresholdType = "prob", genplot = FALSE)
       prption_byProb[i, j] <- 0
       for(k in 1:raster::nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,])
@@ -103,7 +110,8 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
 
     # sensitivity by checking top percentage by cumulative area
     for(n in xx){
-      qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, savePDF = FALSE, thresholdType = "area", genplot = FALSE)
+      qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, 
+                                thresholdType = "area", genplot = FALSE)
       prption_byArea[i, n] <- 0
       for(k in 1:raster::nlayers(qtl)){
         rv = raster::extract(qtl[[k]], v[k,])
@@ -120,7 +128,8 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), valiTime
 
   random_prob_density=1/length(stats::na.omit(raster::getValues(isoscape[[1]])))
 
-  result <- list(name, val_stations, pd_v, prption_byArea, prption_byProb, precision, random_prob_density)
+  result <- list(name, val_stations, pd_v, prption_byArea, prption_byProb, 
+                 precision, random_prob_density)
   names(result) <- c("name", "val_stations", "pd_val", "prption_byArea", "prption_byProb", "precision", 
                      "random_prob_density")
   class(result) <- "QA"
