@@ -11,6 +11,8 @@ jointP <- function(pdR){
   }
   result <- result / raster::cellStats(result,sum)
   names(result) <- "Joint_Probability"
+  p = options("scipen")
+  on.exit(options(scipen = p))
   options(scipen = -2)
   raster::plot(result)
   graphics::title("Joint Probability")

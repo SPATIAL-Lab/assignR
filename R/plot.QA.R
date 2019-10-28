@@ -64,7 +64,9 @@ plot.QA = function(x, ..., outDir = NULL){
     if(!is.null(outDir)){
       
       grDevices::png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
-      graphics::layout(matrix(c(1,2,3), ncol=3))
+      p = graphics::par(no.readonly = TRUE)
+      on.exit(graphics::par(p))
+      graphics::par(mfrow = c(1, 3))
       
       graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Probability quantile", 
@@ -113,7 +115,7 @@ plot.QA = function(x, ..., outDir = NULL){
     
     precision = matrix(rep(0, niter[1] * 101), ncol=niter[1], nrow=101)
     for (i in 1:niter[1]){
-      precision[,i] <- apply(a[[1]]$precision[[i]],1, stats::median)
+      precision[,i] = apply(a[[1]]$precision[[i]],1, stats::median)
     }
     
     mean.pre = NULL
@@ -133,7 +135,7 @@ plot.QA = function(x, ..., outDir = NULL){
       
       precision = matrix(rep(0, niter[i] * 101), ncol=niter[i], nrow=101)
       for (j in 1:niter[i]){
-        precision[,j] <- apply(a[[i]]$precision[[j]],1, stats::median)
+        precision[,j] = apply(a[[i]]$precision[[j]],1, stats::median)
       }
       
       mean.pre = NULL
@@ -177,7 +179,9 @@ plot.QA = function(x, ..., outDir = NULL){
     
     if(!is.null(outDir)){
       grDevices::png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
-      graphics::layout(matrix(c(1,2,3), ncol=3))
+      p = graphics::par(no.readonly = TRUE)
+      on.exit(graphics::par(p))
+      graphics::par(mfrow = c(1, 3))      
       
       graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Probability quantile", 
