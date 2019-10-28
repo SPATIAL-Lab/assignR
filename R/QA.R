@@ -53,7 +53,11 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1),
   }
   
   if(setSeed == TRUE){
-    set.seed(100, sample.kind = "Rejection")
+    if(R.version$major >= 3 & R.version$minor >= 6){
+      set.seed(100, sample.kind = "Rejection")      
+    } else{
+      set.seed(100)
+    }
   }
   
   rowLength <- nrow(known)
