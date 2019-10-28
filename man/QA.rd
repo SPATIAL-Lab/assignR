@@ -71,13 +71,15 @@ data("knownOrig") # hydrogen isotopes of known-origin samples
 d1 = subOrigData(taxon = "Lanius ludovicianus")
 d2 = subOrigData(taxon = "Buteo lagopus")
 
-\dontrun{# run quality assessment based hydrogen isotope from precipitation and known-origin bird
-qa1 = QA(isoscape = d2h_world, known = d1, valiStation = 2, 
-                    valiTime = 5, mask = naMap, name = "Lanius")
+# run quality assessment based on precipitation hydrogen isotopes and 
+# known-origin birds; small values of valiStation and valiTime used in
+# example to reduce run time
+qa1 = QA(isoscape = d2h_world, known = d1, valiStation = 1, 
+                    valiTime = 2, mask = naMap, name = "Lanius")
                     
-qa2 = QA(isoscape = d2h_world, known = d2, valiStation = 2, 
-                    valiTime = 5, mask = naMap, name = "Buteo")
+qa2 = QA(isoscape = d2h_world, known = d2, valiStation = 1, 
+                    valiTime = 2, mask = naMap, name = "Buteo")
 
 # plot the QA result
-plot(qa1, qa2)}
+plot(qa1, qa2)
 }

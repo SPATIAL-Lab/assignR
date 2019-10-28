@@ -10,7 +10,7 @@ No ERRORs, WARNINGs or NOTEs
 There are currently no downstream dependencies for this package
 
 ## Resubmission changes
-* 'Tools for' removed from title, now 'Infer Geographic Origin from Isotopic Data'
-* Added method citations to description field of DESCRIPTION 
-* All print()/cat() removed from functions and replaced with message() or warning(): subOrigData.R, oddsRatio.R, and calRaster.R
-* Writing to files has been removed from all functions unless user specifies a directory in the function call: calRaster.R, pdRaster.R, qtlRaster.R, plot.QA.R; verified examples and vignettes do not write to disk
+* added on.exit() calls to ensure reversion of values of options(scipen) and par(mfrow) set in jointP() and plot.QA(), resectively
+* removed dontrun{} from examples in QA.Rd and plot.QA.Rd and stripped down examples to ensure run time < 5s
+* added doi in place of url for one citation listed in DESCRIPTION
+* found and fixed backwards compatability issue in QA.R (args to set.seed())
