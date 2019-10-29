@@ -31,7 +31,7 @@ plot(naMap)
 ```
 
 *****
-Load and plot the global growing season precipitation H isoscape. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://waterisotopes.org).
+Load and plot the global growing season precipitation H isoscape. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/).
 
 ```{r isoscape}
 data("d2h_world")

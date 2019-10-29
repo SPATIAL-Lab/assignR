@@ -43,18 +43,22 @@ data("d2h_world") # precipitation hydrogen isotope of the world
 data("knownOrig") # isotopes of known-origin samples
 
 # extract some known-origin data
-d1 = subOrigData(taxon = "Lanius ludovicianus")
+d1 = subOrigData(taxon = "Charadrius montanus")
 d2 = subOrigData(taxon = "Buteo lagopus")
 
 # run quality assessment based on precipitation hydrogen isotopes and 
-# known-origin birds; small values of valiStation and valiTime used in
-# example to reduce run time
-qa1 = QA(isoscape = d2h_world, known = d1, valiStation = 1, 
-                    valiTime = 2, mask = naMap, name = "Lanius")
-                    
-qa2 = QA(isoscape = d2h_world, known = d2, valiStation = 1, 
-                    valiTime = 2, mask = naMap, name = "Buteo")
+# known-origin birds; small values of valiStation and valiTime and aggregated
+# grid used in example to reduce run time
 
-# plot the QA result
-plot(qa1, qa2)
+# first with one example
+qa1 = QA(isoscape = raster::aggregate(d2h_world, 6), known = d1, 
+          valiStation = 1, valiTime = 2, mask = naMap, name = "Charadrius")
+                    
+# plot the qa result
+plot(qa1)
+
+# now compare
+\donttest{qa2 = QA(isoscape = raster::aggregate(d2h_world, 6), known = d2, 
+          valiStation = 1, valiTime = 2, mask = naMap, name = "Buteo")
+plot(qa1, qa2)}
 }
