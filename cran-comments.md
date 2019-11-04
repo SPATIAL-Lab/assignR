@@ -10,7 +10,4 @@ No ERRORs, WARNINGs or NOTEs
 There are currently no downstream dependencies for this package
 
 ## Resubmission changes
-* added on.exit() calls to ensure reversion of values of options(scipen) and par(mfrow) set in jointP() and plot.QA(), resectively
-* removed dontrun{} from examples in QA.Rd and plot.QA.Rd and stripped down examples to ensure run time < 5s
-* added ISBN in place of URL for citation listed in DESCRIPTION
-* found and patched backwards compatability issue in QA.R (args to set.seed())
+* Reduced run-time for vignette by reducing raster resolution and resampling iterations. win-builder (release version) now showing vignette rebuild time of 215s and total build time of 537s.

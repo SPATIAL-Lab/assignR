@@ -1,5 +1,9 @@
 # assignR news
 
+## assignR 1.1.3
+
+* Shorter run-time for vignette examples
+
 ## assignR 1.1.2
 
 * Functional examples for QA
