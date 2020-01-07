@@ -46,8 +46,13 @@ oddsRatio <- function(pdR, inputP){
     }
     
     extrVals <- raster::extract(pdR, inputP)
-    extrVals.p1 <- colSums(extrVals[[1]])
-    extrVals.p2 <- colSums(extrVals[[2]])
+    if(nlayers(pdR) > 1){
+      extrVals.p1 <- colSums(extrVals[[1]])
+      extrVals.p2 <- colSums(extrVals[[2]])
+    } else {
+      extrVals.p1 = sum(extrVals[[1]])
+      extrVals.p2 = sum(extrVals[[2]])
+    }
     result1 <- (extrVals.p1/(1-extrVals.p1))/(extrVals.p2/(1-extrVals.p2))
     result2 <- raster::ncell(raster::crop(pdR, inputP[1,]))/raster::ncell(raster::crop(pdR, inputP[2,]))
     result <- list(oddsRatio = result1, polygonCellRatio = result2)

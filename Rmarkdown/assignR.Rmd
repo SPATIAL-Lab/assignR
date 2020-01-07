@@ -12,18 +12,10 @@ knitr::opts_chunk$set(echo = TRUE)
 *****
 # Getting Started
 
-Install *assignR*. If necessary first install and load the *devtools* package from CRAN.
+Install *assignR*.
 
 ```{r devtools, message=FALSE, warning=FALSE, results="hide"}
-install.packages("devtools", repos = "https://cloud.r-project.org")
-library(devtools)
-```
-
-*****
-Now *assignR* can be installed from the GitHub repository.
-
-```{r install, message=FALSE, warning=FALSE, results="hide"}
-install_github("SPATIAL-Lab/assignR@v1.1.0", force = TRUE)
+install.packages("assignR", repos = "https://cloud.r-project.org")
 library(assignR)
 ```
 
