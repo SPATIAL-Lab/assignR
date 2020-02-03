@@ -99,36 +99,32 @@ Check out the help page for *pdRaster* for additional options, including the use
 
 The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likley from France or Spain?", or "how likley is this hypothesized location relative to other possibilities?". 
 
-Let's compare probabilities for two spatial areas defined by the summer and winter ranges of the Mountain Plover. Yes, this is a different species than we are working with, and in most cases we would not be trying to distinguish between winter and summer habitats, but this will illustrate the point!
-
-Load the SpatialPolygons and plot them.
+Let's compare probabilities for two spatial areas - the states of Utah and New Mexico. First we'll load the SpatialPolygons and plot them.
 
 ```{r polygons}
-data("plover_range_BreedingSeason")
-data("plover_range_NonBreedingSeason")
+data("states")
+s1 = states[states$STATE_ABBR == "UT",]
+s2 = states[states$STATE_ABBR == "NM",]
 plot(naMap)
-lines(plover_range_BreedingSeason, col = c("red"))
-lines(plover_range_NonBreedingSeason, col = c("blue"))
+lines(s1, col = c("red"))
+lines(s2, col = c("blue"))
 ```
 
-Note that the regions are complex and consist of multiple parts, which is not a problem.
- 
-*****
 Get the odds ratio for the two regions. The result reports the odds ratio for the regions (first relative to second) for each of the 5 unknown samples plus the ratio of the areas of the regions. If the isotope values (& prior) were completely uninformative the odds ratios would equal the ratio of areas.
 
 ```{r oddsRatio1}
-p12 = rbind(plover_range_BreedingSeason, plover_range_NonBreedingSeason)
-oddsRatio(asn, p12)
+s12 = rbind(s1, s2)
+oddsRatio(asn, s12)
 ```
 
-Here you can see that even though the summer range is a bit smaller the isotopic evidence suggests it's much more likley to be the origin of each sample. This result is consistent with what you might infer from a first-order comparison of the range map with the posterior probability maps, above.
+Here you can see that even though Utah is quite a bit smaller the isotopic evidence suggests it's much more likley to be the origin of each sample. This result is consistent with what you might infer from a first-order comparison of the state map with the posterior probability maps, above.
 
 *****
 Comparisons can also be made using points. Let's create two points (one in each of the Plover regions) and compare their odds. This result also shows the odds ratio for each point relative to the most- and least-likley gridcells on the posterior probability map.
 
 ```{r oddsRatio2}
-pp1 = c(-108,42)
-pp2 = c(-103,25)
+pp1 = c(-112,40)
+pp2 = c(-105,33)
 pp12 = SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
 oddsRatio(asn, pp12)
 ```

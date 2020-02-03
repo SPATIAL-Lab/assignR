@@ -22,9 +22,7 @@ library(assignR)
 
 *naMap.rda* - North America outline
 
-*plover_range_BreedingSeason.rda* - Mountain plover breeding season range
-
-*plover_range_NonBreedingSeason.rda* - Mountain plover non-breeding season range
+*states.rda* - 48 contiguous United States
 
 **Functions**
 
