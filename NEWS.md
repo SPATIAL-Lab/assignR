@@ -1,6 +1,6 @@
 # assignR news
 
-## assignR 1.1.4
+## assignR 1.1.3.1
 
 * Data update: remove plover maps, add US states
 
