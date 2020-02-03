@@ -1,5 +1,9 @@
 # assignR news
 
+## assignR 1.1.3.1
+
+* Data update: remove plover maps, add US states
+
 ## assignR 1.1.3
 
 * Shorter run-time for vignette examples
