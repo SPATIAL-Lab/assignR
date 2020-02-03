@@ -15,7 +15,8 @@ knitr::opts_chunk$set(echo = TRUE)
 Install *assignR*.
 
 ```{r devtools, message=FALSE, warning=FALSE, results="hide"}
-install.packages("assignR", repos = "https://cloud.r-project.org")
+library(devtools)
+install_github("SPATIAL-Lab/assignR")
 library(assignR)
 ```
 
