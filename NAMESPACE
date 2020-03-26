@@ -11,3 +11,13 @@ import(sp)
 import(raster)
 import(maptools)
 import(rgdal)
+
+importFrom (sp, proj4string)
+importFrom (sp, spTransform)
+Importfrom (sp, spplot)
+Importfrom (raster, crs)
+Importfrom (raster, crop)
+Importfrom (raster, values)
+Importfrom (raster, extract)
+Importfrom (raster, stack)
+

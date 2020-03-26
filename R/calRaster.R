@@ -64,7 +64,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #extract with mask
   if(!is.null(mask)){
     known = known[mask,]
-    isoscape = crop(isoscape, mask)
+    isoscape = raster::crop(isoscape, mask)
   }
 
   #check and set isoscape NA value if necessary
