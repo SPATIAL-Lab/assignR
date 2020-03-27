@@ -41,7 +41,7 @@ plot.QA = function(x, ..., outDir = NULL){
     
     pre = data.frame(xx, 1 - mean.pre)
 
-    pd <- data.frame(as.numeric(fx$pd_val) / x$random_prob_density)
+    pd <- data.frame(as.numeric(x$pd_val) / x$random_prob_density)
     
     graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
