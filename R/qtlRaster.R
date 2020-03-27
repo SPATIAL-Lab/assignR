@@ -30,7 +30,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
   result <- pdR
   n = raster::nlayers(result)  
   if(thresholdType == "prob"){
-    for(i in 1:n){
+    for(i in seq_len(n)){
       if(threshold == 0){
         cut = 1
       } else if(threshold == 1){
@@ -63,7 +63,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
   }
   
   if(thresholdType == "area"){
-    for(i in 1:n){
+    for(i in seq_len(n)){
       if(threshold == 0){
         cut = 1
       } else if(threshold == 1){
@@ -85,7 +85,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
   names(result) <- names(pdR)
   tls = character(n)
   if(n > 1){
-    for(i in 1:n){
+    for(i in seq_len(n)){
       tls[i] = paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i])
     }
   } else{
@@ -93,14 +93,14 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
   }
   
   if(genplot){
-    for(i in 1:n){
+    for(i in seq_len(n)){
       raster::plot(result[[i]], legend=FALSE)
       graphics::title(tls[i])
     }
   }
   if(!is.null(outDir)){
     grDevices::pdf(paste0(outDir, "/qtlRaster_result.pdf"))
-    for(i in 1:n){
+    for(i in seq_len(n)){
       raster::plot(result[[i]], legend=FALSE)
       graphics::title(tls[i])
     }

@@ -5,7 +5,7 @@ jointP <- function(pdR){
   n <- raster::nlayers(pdR)
   result <- pdR[[1]] * pdR[[2]]
   if(n > 2){
-    for(i in 3:n){
+    for(i in seq_len(n)[-1:-2]){
       result <- result * pdR[[i]]
     }
   }
@@ -24,7 +24,7 @@ unionP <- function(pdR){
     stop("input probability density map (pdR) should be RasterLayer")
   }
   result <- (1 - pdR[[1]])
-  for(i in 2:raster::nlayers(pdR)){
+  for(i in seq_len(n)[-1]){
     result <- raster::overlay(result, pdR[[i]], fun = function(x,y){return(x*(1-y))})
   }
   raster::plot(1-result)

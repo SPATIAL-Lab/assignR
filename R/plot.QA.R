@@ -16,7 +16,7 @@ plot.QA = function(x, ..., outDir = NULL){
   }
   
   n = 0
-  for(i in 1:length(a)){
+  for(i in seq_len(length(a))){
     if(class(a[[i]]) == "QA") n = n + 1
   }
 
@@ -41,7 +41,7 @@ plot.QA = function(x, ..., outDir = NULL){
     
     pre = data.frame(xx, 1 - mean.pre)
 
-    pd <- data.frame(as.numeric(x$pd_val) / x$random_prob_density)
+    pd <- data.frame(as.numeric(fx$pd_val) / x$random_prob_density)
     
     graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
@@ -98,7 +98,7 @@ plot.QA = function(x, ..., outDir = NULL){
     nm = rep("", n)
     vali = niter = rep(0, n)
     
-    for(i in 1:n){
+    for(i in seq_len(n)){
       if(is.null(a[[i]]$name)){
         nm[i] = as.character(i)
       } else if(a[[i]]$name == "") {
@@ -128,7 +128,7 @@ plot.QA = function(x, ..., outDir = NULL){
     pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
     pd[1:(niter[1]*vali[1]),1] = as.numeric(a[[1]]$pd_val) / a[[1]]$random_prob_density
     
-    for(i in 2:n){
+    for(i in seq_len(n)[-1]){
 
       means.p = cbind(means.p, apply(a[[i]]$prption_byProb, 2, mean)/vali[i])
       means.a = cbind(means.a, apply(a[[i]]$prption_byArea, 2, mean)/vali[i])
@@ -152,7 +152,7 @@ plot.QA = function(x, ..., outDir = NULL){
     graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
          ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
-    for(i in 1:n){
+    for(i in seq_len(n)){
       graphics::lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
     }
     graphics::legend(0.01, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")
@@ -160,7 +160,7 @@ plot.QA = function(x, ..., outDir = NULL){
     graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-    for(i in 1:n){
+    for(i in seq_len(n)){
       graphics::lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
     }
     graphics::legend(0.01, 1, nm, lw=2, col=seq(2,n+1), bty="n")
@@ -168,7 +168,7 @@ plot.QA = function(x, ..., outDir = NULL){
     graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
          xlab="Area quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-    for(i in 1:n){
+    for(i in seq_len(n)){
       graphics::lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
     }
     graphics::legend(0.6, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")  
@@ -186,7 +186,7 @@ plot.QA = function(x, ..., outDir = NULL){
       graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Probability quantile", 
            ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
-      for(i in 1:n){
+      for(i in seq_len(n)){
         graphics::lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
       }
       t = graphics::par("usr")[4] * 0.6
@@ -199,7 +199,7 @@ plot.QA = function(x, ..., outDir = NULL){
       graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
            xlab="Probability quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-      for(i in 1:n){
+      for(i in seq_len(n)){
         graphics::lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
       }
       graphics::text(0.05, 0.95, "(b)")
@@ -207,7 +207,7 @@ plot.QA = function(x, ..., outDir = NULL){
       graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Area quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-      for(i in 1:n){
+      for(i in seq_len(n)){
         graphics::lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
       }
       graphics::text(0.05, 0.95, "(c)")

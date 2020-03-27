@@ -157,7 +157,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   
   #simulate covariance
   isoscape.sim = matrix(0, nrow = nSample, ncol = 100)
-  for(i in 1:nrow(isoscape.iso)){
+  for(i in seq_along(isoscape.iso[,1])){
     isoscape.sim[i,] = stats::rnorm(100, isoscape.iso[i, 1], isoscape.iso[i, 2])
   }
   isoscape.dev = tissue.dev = double()

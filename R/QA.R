@@ -61,10 +61,10 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1),
   }
   
   rowLength <- nrow(known)
-  val_stations <- sort(sample(1:rowLength,valiStation,replace = FALSE))
-  for (i in 2:valiTime){
+  val_stations <- sort(sample(seq_len(rowLength),valiStation,replace = FALSE))
+  for (i in seq_len(valiTime)[-1]){
     val_stations <- rbind(val_stations, 
-                          sort(sample(1:rowLength, valiStation, 
+                          sort(sample(seq_len(rowLength), valiStation, 
                                       replace = FALSE)))
   }
 
@@ -78,7 +78,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1),
   # create progress bar
   pb <- utils::txtProgressBar(min = 0, max = valiTime, style = 3)
   
-  for (i in 1:valiTime){
+  for (i in seq_len(valiTime)){
     v <- known[val_stations[i,],]
     m <- known[-val_stations[i,],]
     rescale <- assignR::calRaster(m, isoscape, mask, genplot = FALSE, 
@@ -88,7 +88,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1),
                                                  v@data[,1]), genplot = FALSE)
 
     # pd value for each validation location
-    for(j in 1:raster::nlayers(pd)){
+    for(j in seq_len(raster::nlayers(pd))){
       pd_v[i, j] <- raster::extract(pd[[j]], v[j,])
     }
 
@@ -103,7 +103,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1),
       qtl <- assignR::qtlRaster(pd, threshold = (j-1)/100, 
                                 thresholdType = "prob", genplot = FALSE)
       prption_byProb[i, j] <- 0
-      for(k in 1:raster::nlayers(qtl)){
+      for(k in seq_len(raster::nlayers(qtl))){
         rv = raster::extract(qtl[[k]], v[k,])
         if(!is.na(rv)){
           prption_byProb[i, j] <- prption_byProb[i, j] + rv
@@ -117,7 +117,7 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1),
       qtl <- assignR::qtlRaster(pd, threshold = (n-1)/100, 
                                 thresholdType = "area", genplot = FALSE)
       prption_byArea[i, n] <- 0
-      for(k in 1:raster::nlayers(qtl)){
+      for(k in seq_len(raster::nlayers(qtl))){
         rv = raster::extract(qtl[[k]], v[k,])
         if(!is.na(rv)){
           prption_byArea[i, n] <- prption_byArea[i, n] + rv

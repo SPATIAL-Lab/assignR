@@ -85,7 +85,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
   result <- NULL
   temp <- list()
   
-  for (i in 1:n) {
+  for (i in seq_len(n)) {
     indv.data <- data[i, ]
     indv.id <- indv.data[1, 1]
     assign <- stats::dnorm(indv.data[1, 2], mean = meanV, sd = errorV)
@@ -120,7 +120,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
       pp <- sp::spplot(result)
       print(pp)
     } else {
-      for (i in 1:n){
+      for (i in seq_len(n)){
         print(sp::spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
       }
     }
