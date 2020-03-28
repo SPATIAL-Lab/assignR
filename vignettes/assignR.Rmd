@@ -20,6 +20,8 @@ Let's load the package
 
 ```{r install, message=FALSE, warning=FALSE, results="hide"}
 library(assignR)
+library(raster)
+library(sp)
 ```
 
 *****
