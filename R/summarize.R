@@ -24,6 +24,7 @@ unionP <- function(pdR){
     stop("input probability density map (pdR) should be RasterLayer")
   }
   result <- (1 - pdR[[1]])
+  n <- raster::nlayers(pdR)
   for(i in seq_len(n)[-1]){
     result <- raster::overlay(result, pdR[[i]], fun = function(x,y){return(x*(1-y))})
   }
