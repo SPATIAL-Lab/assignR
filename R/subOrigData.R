@@ -74,6 +74,7 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
     result <- overlap
     
   } else {
+    data("wrld_simpl")
     sp::plot(wrld_simpl, axes = TRUE)
     sp::plot(result, add = TRUE, col = "red", cex = 0.5)
     
