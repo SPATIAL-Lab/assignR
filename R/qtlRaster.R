@@ -28,7 +28,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
   }
   
   result <- pdR
-  n = raster::nlayers(result)  
+  n = nlayers(result)  
   if(thresholdType == "prob"){
     for(i in seq_len(n)){
       if(threshold == 0){
@@ -36,7 +36,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values <- stats::na.omit(raster::getValues(pdR[[i]]))
+        pdR.values <- na.omit(getValues(pdR[[i]]))
         pdR.values <- sort(pdR.values)
         k <- length(pdR.values)
         left <- 1
@@ -69,7 +69,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values <- stats::na.omit(raster::getValues(pdR[[i]]))
+        pdR.values <- na.omit(getValues(pdR[[i]]))
         k <- length(pdR.values)
         cut <- sort(pdR.values)[round((1-threshold)*k)]
       }
@@ -94,17 +94,17 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
   
   if(genplot){
     for(i in seq_len(n)){
-      raster::plot(result[[i]], legend=FALSE)
-      graphics::title(tls[i])
+      plot(result[[i]], legend=FALSE)
+      title(tls[i])
     }
   }
   if(!is.null(outDir)){
-    grDevices::pdf(paste0(outDir, "/qtlRaster_result.pdf"))
+    pdf(paste0(outDir, "/qtlRaster_result.pdf"))
     for(i in seq_len(n)){
-      raster::plot(result[[i]], legend=FALSE)
-      graphics::title(tls[i])
+      plot(result[[i]], legend=FALSE)
+      title(tls[i])
     }
-    grDevices::dev.off()
+    dev.off()
   }
   return(result)
 }

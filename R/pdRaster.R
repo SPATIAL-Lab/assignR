@@ -6,7 +6,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
   if(class(r) != "RasterStack" & class(r) != "RasterBrick"){
     stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
   } 
-  if(raster::nlayers(r) != 2) {
+  if(nlayers(r) != 2) {
     stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
   }
   
@@ -21,11 +21,11 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
     if(class(prior) != "RasterLayer"){
       stop("prior should be a raster with one layer")
     } 
-    if(sp::proj4string(prior) != sp::proj4string(r[[1]])) {
-      prior <- raster::projectRaster(prior, crs = raster::crs(r[[1]]))
+    if(proj4string(prior) != proj4string(r[[1]])) {
+      prior <- projectRaster(prior, crs = crs(r[[1]]))
       warning("prior was reprojected")
     }
-    raster::compareRaster(r[[1]], prior)
+    compareRaster(r[[1]], prior)
   }
   
   if(class(genplot) != "logical"){
@@ -47,15 +47,15 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
   
   if (!is.null(mask)) {
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
-      if (is.na(sp::proj4string(mask))){
+      if (is.na(proj4string(mask))){
         stop("mask must have coord. ref.")
       } 
-      if(sp::proj4string(mask) != sp::proj4string(r[[1]])) {
-        mask <- sp::spTransform(mask, raster::crs(r[[1]]))
+      if(proj4string(mask) != proj4string(r[[1]])) {
+        mask <- spTransform(mask, crs(r[[1]]))
         warning("mask was reprojected")
       }
-      rescaled.mean <- raster::crop(rescaled.mean, mask)
-      rescaled.sd <- raster::crop(rescaled.sd, mask)
+      rescaled.mean <- crop(rescaled.mean, mask)
+      rescaled.sd <- crop(rescaled.sd, mask)
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
@@ -80,54 +80,54 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
   
   n <- nrow(data)
   
-  errorV <- raster::getValues(rescaled.sd)
-  meanV <- raster::getValues(rescaled.mean)
+  errorV <- getValues(rescaled.sd)
+  meanV <- getValues(rescaled.mean)
   result <- NULL
   temp <- list()
   
   for (i in seq_len(n)) {
     indv.data <- data[i, ]
     indv.id <- indv.data[1, 1]
-    assign <- stats::dnorm(indv.data[1, 2], mean = meanV, sd = errorV)
+    assign <- dnorm(indv.data[1, 2], mean = meanV, sd = errorV)
     if(!is.null(prior)){
-      assign <- assign * raster::getValues(prior)
+      assign <- assign * getValues(prior)
     }
     assign.norm <- assign / sum(assign[!is.na(assign)])
-    assign.norm <- raster::setValues(rescaled.mean, assign.norm)
+    assign.norm <- setValues(rescaled.mean, assign.norm)
     if (i == 1){
       result <- assign.norm
     } else {
-      result <- raster::stack(result, assign.norm)
+      result <- stack(result, assign.norm)
     }
     if(!is.null(outDir)){
       filename <- paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
-      raster::writeRaster(assign.norm, filename = filename, format = "GTiff", overwrite = TRUE)
+      writeRaster(assign.norm, filename = filename, format = "GTiff", overwrite = TRUE)
     }
   }
   names(result) <- data[,1]
 
   if(!is.null(outDir)){
     if (n > 5){
-      grDevices::pdf(paste0(outDir, "/output_pdRaster.pdf"), width = 10, height = 10)
-      graphics::par(mfrow = c(ceiling(n/5), 5))
+      pdf(paste0(outDir, "/output_pdRaster.pdf"), width = 10, height = 10)
+      par(mfrow = c(ceiling(n/5), 5))
     } else {
-      grDevices::pdf(paste0(outDir, "/output_pdRaster.pdf"), width = 10, height = 10)
+      pdf(paste0(outDir, "/output_pdRaster.pdf"), width = 10, height = 10)
     }
   }
 
   if (genplot == TRUE){
     if (n == 1){
-      pp <- sp::spplot(result)
+      pp <- spplot(result)
       print(pp)
     } else {
       for (i in seq_len(n)){
-        print(sp::spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
+        print(spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
       }
     }
   }
   
   if(!is.null(outDir)){
-    grDevices::dev.off()
+    dev.off()
   }
 
   return(result)

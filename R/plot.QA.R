@@ -31,7 +31,7 @@ plot.QA = function(x, ..., outDir = NULL){
     
     precision = matrix(rep(0, niter*101), ncol=niter, nrow=101)
     for (i in 1:niter){
-      precision[,i] <- apply(x$precision[[i]], 1, stats::median)
+      precision[,i] <- apply(x$precision[[i]], 1, median)
     }
     
     mean.pre = NULL
@@ -43,54 +43,54 @@ plot.QA = function(x, ..., outDir = NULL){
 
     pd <- data.frame(as.numeric(x$pd_val) / x$random_prob_density)
     
-    graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+    plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
          ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
-    graphics::lines(pre[,1], pre[,2], lwd=2)
+    lines(pre[,1], pre[,2], lwd=2)
 
-    graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-    graphics::lines(means.p[,1], means.p[,2], lwd=2)
+    lines(means.p[,1], means.p[,2], lwd=2)
 
-    graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Area quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-    graphics::lines(means.a[,1], means.a[,2], lwd=2)
+    lines(means.a[,1], means.a[,2], lwd=2)
     
-    graphics::boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
-    graphics::abline(1,0, col="dark grey", lwd=2, lty=3)
+    boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
+    abline(1,0, col="dark grey", lwd=2, lty=3)
     
     if(!is.null(outDir)){
       
-      grDevices::png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
-      p = graphics::par(no.readonly = TRUE)
-      on.exit(graphics::par(p))
-      graphics::par(mfrow = c(1, 3))
+      png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
+      p = par(no.readonly = TRUE)
+      on.exit(par(p))
+      par(mfrow = c(1, 3))
       
-      graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+      plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Probability quantile", 
            ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
-      graphics::lines(pre[,1], pre[,2], lwd=2)
+      lines(pre[,1], pre[,2], lwd=2)
       
-      graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Probability quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-      graphics::lines(means.p[,1], means.p[,2], lwd=2)
+      lines(means.p[,1], means.p[,2], lwd=2)
       
-      graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Area quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
-      graphics::lines(means.a[,1], means.a[,2], lwd=2)
+      lines(means.a[,1], means.a[,2], lwd=2)
       
-      grDevices::dev.off()
+      dev.off()
       
-      grDevices::png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
+      png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
       
-      graphics::boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
-      graphics::abline(1,0, col="dark grey", lwd=2, lty=3)
+      boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
+      abline(1,0, col="dark grey", lwd=2, lty=3)
       
-      grDevices::dev.off()
+      dev.off()
     }
     
   } else{
@@ -115,7 +115,7 @@ plot.QA = function(x, ..., outDir = NULL){
     
     precision = matrix(rep(0, niter[1] * 101), ncol=niter[1], nrow=101)
     for (i in 1:niter[1]){
-      precision[,i] = apply(a[[1]]$precision[[i]],1, stats::median)
+      precision[,i] = apply(a[[1]]$precision[[i]],1, median)
     }
     
     mean.pre = NULL
@@ -135,7 +135,7 @@ plot.QA = function(x, ..., outDir = NULL){
       
       precision = matrix(rep(0, niter[i] * 101), ncol=niter[i], nrow=101)
       for (j in 1:niter[i]){
-        precision[,j] = apply(a[[i]]$precision[[j]],1, stats::median)
+        precision[,j] = apply(a[[i]]$precision[[j]],1, median)
       }
       
       mean.pre = NULL
@@ -149,78 +149,78 @@ plot.QA = function(x, ..., outDir = NULL){
       
     }
     
-    graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+    plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
          ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
     for(i in seq_len(n)){
-      graphics::lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
+      lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
     }
-    graphics::legend(0.01, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")
+    legend(0.01, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")
 
-    graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
     for(i in seq_len(n)){
-      graphics::lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
+      lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
     }
-    graphics::legend(0.01, 1, nm, lw=2, col=seq(2,n+1), bty="n")
+    legend(0.01, 1, nm, lw=2, col=seq(2,n+1), bty="n")
       
-    graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
+    plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
          xlab="Area quantile", 
          ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
     for(i in seq_len(n)){
-      graphics::lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
+      lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
     }
-    graphics::legend(0.6, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")  
+    legend(0.6, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")  
     
-    graphics::boxplot(pd, col=seq(2,n+1), names = nm,
+    boxplot(pd, col=seq(2,n+1), names = nm,
             ylab = "Odds ratio (known origin:random)", outline = FALSE)
-    graphics::abline(1, 0, col="dark grey", lwd=2, lty=3)
+    abline(1, 0, col="dark grey", lwd=2, lty=3)
     
     if(!is.null(outDir)){
-      grDevices::png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
-      p = graphics::par(no.readonly = TRUE)
-      on.exit(graphics::par(p))
-      graphics::par(mfrow = c(1, 3))      
+      png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
+      p = par(no.readonly = TRUE)
+      on.exit(par(p))
+      par(mfrow = c(1, 3))      
       
-      graphics::plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
+      plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Probability quantile", 
            ylab="Proportion of area excluded", xlim=c(0,1), ylim=c(0,1))
       for(i in seq_len(n)){
-        graphics::lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
+        lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
       }
-      t = graphics::par("usr")[4] * 0.6
-      b = graphics::par("usr")[3]
+      t = par("usr")[4] * 0.6
+      b = par("usr")[3]
       yp1 = mean(c(t,b))
       yp = yp1 + (n-1) / 6 * yp1 
-      graphics::legend(0, yp, nm, lw=2, col=seq(2,n+1), bty="n")
-      graphics::text(0.95, 0.95, "(a)")
+      legend(0, yp, nm, lw=2, col=seq(2,n+1), bty="n")
+      text(0.95, 0.95, "(a)")
       
-      graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
            xlab="Probability quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
       for(i in seq_len(n)){
-        graphics::lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
+        lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
       }
-      graphics::text(0.05, 0.95, "(b)")
+      text(0.05, 0.95, "(b)")
 
-      graphics::plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
+      plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Area quantile", 
            ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
       for(i in seq_len(n)){
-        graphics::lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
+        lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
       }
-      graphics::text(0.05, 0.95, "(c)")
+      text(0.05, 0.95, "(c)")
       
-      grDevices::dev.off()
+      dev.off()
 
-      grDevices::png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
+      png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
 
-      graphics::boxplot(pd, col=seq(2,n+1), names = nm,
+      boxplot(pd, col=seq(2,n+1), names = nm,
               ylab = "Odds ratio (known origin:random)", outline = FALSE)
-      graphics::abline(1, 0, col="dark grey", lwd=2, lty=3)
+      abline(1, 0, col="dark grey", lwd=2, lty=3)
       
-      grDevices::dev.off()
+      dev.off()
     }
     
     return()

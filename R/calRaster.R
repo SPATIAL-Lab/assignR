@@ -4,7 +4,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
 {
   #check that isoscape is valid and has defined CRS
   if(class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
-    if(is.na(sp::proj4string(isoscape))) {
+    if(is.na(proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
   } else {
@@ -18,11 +18,11 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   if(any(is.na(known@data[,1])) || any(is.nan(known@data[,1])) || any(is.null(known@data[,1]))){
     stop("Missing values detected in known")
   }
-  if(is.na(sp::proj4string(known))) {
+  if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } 
-  if(sp::proj4string(known) != sp::proj4string(isoscape)){
-    known = sp::spTransform(known, raster::crs(isoscape))
+  if(proj4string(known) != proj4string(isoscape)){
+    known = spTransform(known, crs(isoscape))
     warning("known was reprojected")
   } 
   if(ncol(known@data) != 1){
@@ -32,11 +32,11 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #check that mask is valid and has defined, correct CRS
   if(!is.null(mask)) {
     if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
-      if(is.na(sp::proj4string(mask))) {
+      if(is.na(proj4string(mask))) {
         stop("mask must have valid coordinate reference system")
       }
-      if(sp::proj4string(mask) != sp::proj4string(isoscape)){
-        mask = sp::spTransform(mask, raster::crs(isoscape))
+      if(proj4string(mask) != proj4string(isoscape)){
+        mask = spTransform(mask, crs(isoscape))
         warning("mask was reprojected")
       }
     } else {
@@ -64,12 +64,12 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #extract with mask
   if(!is.null(mask)){
     known = known[mask,]
-    isoscape = raster::crop(isoscape, mask)
+    isoscape = crop(isoscape, mask)
   }
 
   #check and set isoscape NA value if necessary
   if(!is.na(NA.value)) {
-    raster::values(isoscape)[raster::values(isoscape) == NA.value] <- NA
+    values(isoscape)[values(isoscape) == NA.value] <- NA
   }
 
   #get dimensions
@@ -85,10 +85,10 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #populate the independent variable values
   if (interpMethod == 1) {
-    isoscape.iso <- raster::extract(isoscape, known,
+    isoscape.iso <- extract(isoscape, known,
                                     method = "simple")
   } else {
-    isoscape.iso <- raster::extract(isoscape, known,
+    isoscape.iso <- extract(isoscape, known,
                                     method = "bilinear")
   }
 
@@ -111,7 +111,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #fit the regression model
-  lmResult <- stats::lm(tissue.iso ~ isoscape.iso[, 1])
+  lmResult <- lm(tissue.iso ~ isoscape.iso[, 1])
 
   #output
   if (verboseLM){
@@ -129,8 +129,8 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   if (genplot == TRUE || !is.null(outDir) ) {
     #formatted lm equation for plotting
     equation <- function(mod) {
-      lm_coef <- list(a = as.numeric(round(stats::coef(mod)[1], digits = 2)),
-                      b = as.numeric(round(stats::coef(mod)[2], digits = 2)), 
+      lm_coef <- list(a = as.numeric(round(coef(mod)[1], digits = 2)),
+                      b = as.numeric(round(coef(mod)[2], digits = 2)), 
                       r2 = round(summary(mod)$r.squared, digits = 2))
       lm_eq <- substitute(italic(y) == a + b %.% italic(x) *
                             "," ~ ~italic(R)^2 ~ "=" ~ r2, lm_coef)
@@ -143,14 +143,14 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   
   if(genplot == TRUE){  
     #plot
-    graphics::plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", ylab="Tissue value", main="Rescale regression model")
-    graphics::abline(lmResult)
-    graphics::text(xl, yl, equation(lmResult), pos=2)
+    plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", ylab="Tissue value", main="Rescale regression model")
+    abline(lmResult)
+    text(xl, yl, equation(lmResult), pos=2)
   }
   
   #pull slope and intercept
-  intercept <- as.numeric(stats::coef(lmResult)[1])
-  slope <- as.numeric(stats::coef(lmResult)[2])
+  intercept <- as.numeric(coef(lmResult)[1])
+  slope <- as.numeric(coef(lmResult)[2])
   
   #create rescaled prediction isoscape
   isoscape.rescale = isoscape[[1]] * slope + intercept
@@ -158,51 +158,51 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   #simulate covariance
   isoscape.sim = matrix(0, nrow = nSample, ncol = 100)
   for(i in seq_along(isoscape.iso[,1])){
-    isoscape.sim[i,] = stats::rnorm(100, isoscape.iso[i, 1], isoscape.iso[i, 2])
+    isoscape.sim[i,] = rnorm(100, isoscape.iso[i, 1], isoscape.iso[i, 2])
   }
   isoscape.dev = tissue.dev = double()
   for(i in 1:100){
-    lm.sim = stats::lm(tissue.iso ~ isoscape.sim[,i])
+    lm.sim = lm(tissue.iso ~ isoscape.sim[,i])
     isoscape.dev = c(isoscape.dev, isoscape.sim[,i] - isoscape.iso[,1])
     tissue.dev = c(tissue.dev, lm.sim$residuals)
   }
-  iso.cov = stats::cov(isoscape.dev, tissue.dev)
+  iso.cov = cov(isoscape.dev, tissue.dev)
   
   #combine uncertainties of isoscape and rescaling function
   sd <- (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2 + iso.cov)^0.5
 
   #stack the output rasters and apply names
-  isoscape.rescale <- raster::stack(isoscape.rescale, sd)
+  isoscape.rescale <- stack(isoscape.rescale, sd)
   names(isoscape.rescale) <- c("mean", "sd")
 
   #crop output if required
   if (!is.null(mask)) {
-    isoscape.rescale <- raster::crop(isoscape.rescale, mask)
+    isoscape.rescale <- crop(isoscape.rescale, mask)
   }
 
   #plot the output rasters
   if (genplot == TRUE) {
-    print(sp::spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
+    print(spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
                  main = "Rescaled mean"))
-    print(sp::spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
+    print(spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
                  main = "Rescaled sd"))
   }
 
   #pdf output
   if (!is.null(outDir)) {
-    grDevices::pdf(paste0(outDir, "/rescale_result.pdf"), width = 6, height = 4)
+    pdf(paste0(outDir, "/rescale_result.pdf"), width = 6, height = 4)
     
     #plot
-    graphics::plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", 
+    plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", 
                    ylab="Tissue value", main="Rescale regression model")
-    graphics::abline(lmResult)
-    graphics::text(xl, yl, equation(lmResult), pos=2)
+    abline(lmResult)
+    text(xl, yl, equation(lmResult), pos=2)
     
-    print(sp::spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
+    print(spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
                  main = "Rescaled mean"))
-    print(sp::spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
+    print(spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
                  main = "Rescaled sd"))
-    grDevices::dev.off()
+    dev.off()
   }
 
   #set names for return data object
