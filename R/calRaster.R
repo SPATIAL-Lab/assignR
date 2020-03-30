@@ -69,7 +69,7 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check and set isoscape NA value if necessary
   if(!is.na(NA.value)) {
-    values(isoscape)[values(isoscape) == NA.value] <- NA
+    setValues(isoscape)[values(isoscape) == NA.value] <- NA
   }
 
   #get dimensions
