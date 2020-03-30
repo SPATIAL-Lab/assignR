@@ -155,7 +155,7 @@ plot.QA = function(x, ..., outDir = NULL){
     for(i in seq_len(n)){
       lines(pre[,1], pre[,i+1], lwd=2, col=i+1)
     }
-    legend(0.01, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")
+    legend(0.01, 0.55, nm, lwd=2, col=seq(2,n+1), bty="n")
 
     plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
@@ -163,7 +163,7 @@ plot.QA = function(x, ..., outDir = NULL){
     for(i in seq_len(n)){
       lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
     }
-    legend(0.01, 1, nm, lw=2, col=seq(2,n+1), bty="n")
+    legend(0.01, 1, nm, lwd=2, col=seq(2,n+1), bty="n")
       
     plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
          xlab="Area quantile", 
@@ -171,7 +171,7 @@ plot.QA = function(x, ..., outDir = NULL){
     for(i in seq_len(n)){
       lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
     }
-    legend(0.6, 0.55, nm, lw=2, col=seq(2,n+1), bty="n")  
+    legend(0.6, 0.55, nm, lwd=2, col=seq(2,n+1), bty="n")  
     
     boxplot(pd, col=seq(2,n+1), names = nm,
             ylab = "Odds ratio (known origin:random)", outline = FALSE)
@@ -193,7 +193,7 @@ plot.QA = function(x, ..., outDir = NULL){
       b = par("usr")[3]
       yp1 = mean(c(t,b))
       yp = yp1 + (n-1) / 6 * yp1 
-      legend(0, yp, nm, lw=2, col=seq(2,n+1), bty="n")
+      legend(0, yp, nm, lwd=2, col=seq(2,n+1), bty="n")
       text(0.95, 0.95, "(a)")
       
       plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
