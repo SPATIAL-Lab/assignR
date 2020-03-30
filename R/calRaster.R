@@ -13,9 +13,11 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check that known is valid and has defined, correct CRS
   if(class(known) != "SpatialPointsDataFrame") {
-    stop("known should be a SpatialPointsDataFrame, see help page of calRaster function")
+    stop("known should be a SpatialPointsDataFrame, see help page of 
+         calRaster function")
   }
-  if(any(is.na(known@data[,1])) || any(is.nan(known@data[,1])) || any(is.null(known@data[,1]))){
+  if(any(is.na(known@data[,1])) || any(is.nan(known@data[,1])) || 
+     any(is.null(known@data[,1]))){
     stop("Missing values detected in known")
   }
   if(is.na(proj4string(known))) {
@@ -26,12 +28,14 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     warning("known was reprojected")
   } 
   if(ncol(known@data) != 1){
-    stop("known must include a 1-column data frame containing only the isotope values")
+    stop("known must include a 1-column data frame containing only 
+         the isotope values")
   }
 
   #check that mask is valid and has defined, correct CRS
   if(!is.null(mask)) {
-    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+    if(class(mask) == "SpatialPolygonsDataFrame" || 
+       class(mask) == "SpatialPolygons"){
       if(is.na(proj4string(mask))) {
         stop("mask must have valid coordinate reference system")
       }
@@ -69,7 +73,9 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check and set isoscape NA value if necessary
   if(!is.na(NA.value)) {
-    setValues(isoscape)[values(isoscape) == NA.value] <- NA
+    tempVals = getValues(isoscape)
+    tempVals[tempVals == NA.value] = NA
+    isoscape = setValues(isoscape, tempVals)
   }
 
   #get dimensions
@@ -101,7 +107,8 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     }
     warning(wtxt)
     if (!ignore.NA) {
-      stop("Delete these data in known origin data or use a different isoscape that has values at these locations")
+      stop("Delete these data in known origin data or use a different 
+           isoscape that has values at these locations")
     }
 
     #remove na values before continuing
@@ -115,9 +122,12 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #output
   if (verboseLM){
-    cat("\n\n---------------------------------------------------------------------------------\n")
-    cat("rescale function uses linear regression model, the summary of this model is:\n")
-    cat("---------------------------------------------------------------------------------\n")
+    cat("\n\n---------------------------------------
+        ------------------------------------------\n")
+    cat("rescale function uses linear regression model, 
+        the summary of this model is:\n")
+    cat("-------------------------------------------
+        --------------------------------------\n")
     print(summary(lmResult))
   }
 
@@ -143,7 +153,8 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   
   if(genplot == TRUE){  
     #plot
-    plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", ylab="Tissue value", main="Rescale regression model")
+    plot(x, y, pch = 21, bg="grey", xlab="Isoscape value", 
+         ylab="Tissue value", main="Rescale regression model")
     abline(lmResult)
     text(xl, yl, equation(lmResult), pos=2)
   }
