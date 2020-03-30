@@ -74,8 +74,7 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
     result <- overlap
     
   } else {
-    data("wrld_simpl")
-    plot(wrld_simpl, axes = TRUE)
+    plot(assignR::wrld_simpl, axes = TRUE)
     plot(result, add = TRUE, col = "red", cex = 0.5)
     
   }
