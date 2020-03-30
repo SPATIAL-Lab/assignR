@@ -53,11 +53,13 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
   }
 
   if(!is.null(mask)) {
-    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+    if(class(mask) == "SpatialPolygonsDataFrame" || 
+       class(mask) == "SpatialPolygons"){
       if(is.na(proj4string(mask))){
         stop("mask must have coordinate reference system")
       } else {
-        mask <- spTransform(mask, "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+        mask <- spTransform(mask, "+proj=longlat +datum=WGS84 +no_defs 
+                            +ellps=WGS84 +towgs84=0,0,0")
       }
       overlap <- result[mask,]
     } else {
@@ -74,7 +76,7 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
     result <- overlap
     
   } else {
-    plot(assignR::wrld_simpl, axes = TRUE)
+    plot(wrld_simpl, axes = TRUE)
     plot(result, add = TRUE, col = "red", cex = 0.5)
     
   }
