@@ -4,17 +4,17 @@ oddsRatio <- function(pdR, inputP){
   }
 
   if(class(inputP) == "SpatialPoints" || class(inputP) == "SpatialPointsDataFrame"){
-    if(is.na(sp::proj4string(inputP))){
+    if(is.na(proj4string(inputP))){
       stop("inputP must have coord. ref.")
     }
-    if(sp::proj4string(inputP) != sp::proj4string(pdR)){
-      inputP = sp::spTransform(inputP, raster::crs(pdR))
+    if(proj4string(inputP) != proj4string(pdR)){
+      inputP = spTransform(inputP, crs(pdR))
       warning("inputP was reprojected")
     }
     
     n <- length(inputP)
-    extrVals <- raster::extract(pdR, inputP)
-    result2 <- data.frame(ratioToMax = extrVals/raster::maxValue(pdR), ratioToMin = extrVals/raster::minValue(pdR))
+    extrVals <- extract(pdR, inputP)
+    result2 <- data.frame(ratioToMax = extrVals/maxValue(pdR), ratioToMin = extrVals/minValue(pdR))
     if(n == 1){
       result = result2
     }
@@ -37,15 +37,15 @@ oddsRatio <- function(pdR, inputP){
     if(length(inputP) != 2){
       stop("input polygons (inputP) should be two polygons")
     }
-    if(is.na(sp::proj4string(inputP))){
+    if(is.na(proj4string(inputP))){
       stop("inputP must have coord. ref.")
     }
-    if(sp::proj4string(inputP) != sp::proj4string(pdR)){
-      inputP = sp::spTransform(inputP, raster::crs(pdR))
+    if(proj4string(inputP) != proj4string(pdR)){
+      inputP = spTransform(inputP, crs(pdR))
       warning("inputP was reprojected")
     }
     
-    extrVals <- raster::extract(pdR, inputP)
+    extrVals <- extract(pdR, inputP)
     if(nlayers(pdR) > 1){
       extrVals.p1 <- colSums(extrVals[[1]])
       extrVals.p2 <- colSums(extrVals[[2]])
@@ -54,7 +54,7 @@ oddsRatio <- function(pdR, inputP){
       extrVals.p2 = sum(extrVals[[2]])
     }
     result1 <- (extrVals.p1/(1-extrVals.p1))/(extrVals.p2/(1-extrVals.p2))
-    result2 <- raster::ncell(raster::crop(pdR, inputP[1,]))/raster::ncell(raster::crop(pdR, inputP[2,]))
+    result2 <- ncell(crop(pdR, inputP[1,]))/ncell(crop(pdR, inputP[2,]))
     result <- list(oddsRatio = result1, polygonCellRatio = result2)
     names(result) <- c("P1/P2 odds ratio", "Ratio of numbers of cells in two polygons")
   }

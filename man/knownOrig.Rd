@@ -59,9 +59,8 @@ Wunder, M.B., 2007. Geographic structure and dynamics in Mountain Plover. Doctor
 
 \examples{
 data("knownOrig")
-data("wrld_simpl")
-plot(wrld_simpl)
-plot(knownOrig, add = TRUE, col = "red", cex = 0.5)
+class(knownOrig)
+summary(knownOrig@data)
 }
 
 \keyword{datasets}
