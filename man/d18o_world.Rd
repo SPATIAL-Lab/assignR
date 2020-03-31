@@ -28,6 +28,8 @@ IAEA/WMO (2018) Global Network of Isotopes in Precipitation. The GNIP Database. 
 }
 
 \examples{
+library(raster)
+
 data("d18o_world")
 plot(d18o_world)
 }

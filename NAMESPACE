@@ -8,7 +8,7 @@ export(qtlRaster)
 export(subOrigData)
 export(unionP)
 import(maptools)
-importFrom(sp, proj4string, spTransform, spplot)
+importFrom(sp, proj4string, spTransform, spplot, plot)
 importFrom(raster, crs, crop, plot, values, getValues, setValues, minValue, 
             maxValue, extract, stack, ncell, nlayers, writeRaster, cellStats, 
            overlay, projectRaster, compareRaster)

@@ -20,6 +20,8 @@ SpatialPolygonsDataFrame
 }
 
 \examples{
+library(sp)
+
 data("states")
 plot(states)
 }

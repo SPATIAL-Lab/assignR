@@ -20,6 +20,8 @@ SpatialPolygonsDataFrame
 }
 
 \examples{
+library(sp)
+
 data("naMap")
 plot(naMap)
 }
