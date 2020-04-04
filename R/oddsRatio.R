@@ -40,10 +40,6 @@ oddsRatio <- function(pdR, inputP){
     if(is.na(proj4string(inputP))){
       stop("inputP must have coord. ref.")
     }
-    if(proj4string(inputP) != proj4string(pdR)){
-      inputP = spTransform(inputP, crs(pdR))
-      warning("inputP was reprojected")
-    }
     
     extrVals <- extract(pdR, inputP)
     if(nlayers(pdR) > 1){
