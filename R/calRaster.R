@@ -105,8 +105,9 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     for(i in na){
       wtxt = paste0(wtxt, known@coords[i, 1], ", ", known@coords[i, 2], "\n")
     }
-    warning(wtxt)
+    if (ignore.NA) warning(wtxt)
     if (!ignore.NA) {
+      cat(wtxt)
       stop("Delete these data in known origin data or use a different 
            isoscape that has values at these locations")
     }
