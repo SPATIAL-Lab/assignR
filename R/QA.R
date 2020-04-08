@@ -1,4 +1,4 @@
-QA <- function(isoscape, known, valiStation = floor(length(known)*0.1), 
+QA <- function(isoscape, known, valiStation = ceiling(length(known)*0.1), 
                valiTime = 50, mask = NULL, setSeed = TRUE, name = NULL){
 
   #check that isoscape is valid and has defined CRS
@@ -25,6 +25,12 @@ QA <- function(isoscape, known, valiStation = floor(length(known)*0.1),
     warning("known was reprojected")
   } else if(ncol(known@data) != 1){
     stop("known must include a 1-column data frame containing only the isotope values")
+  }
+  if(nrow(known) < 10){
+    warning("The number of known stations are less than 10")
+  }
+  if(nrow(known) < 3){
+    stop("QA requires at least 3 known samples")
   }
   if(!valiStation<nrow(known)){
     stop("valiStation must be smaller than the number of known-origin stations in known")

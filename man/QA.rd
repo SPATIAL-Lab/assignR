@@ -11,14 +11,14 @@ How well does a given isoscape and known origin data set constrain the geographi
 }
 
 \usage{
-QA(isoscape, known, valiStation = floor(length(known)*0.1), valiTime = 50, 
+QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50, 
   mask = NULL, setSeed = TRUE, name = NULL)
 }
 
 \arguments{
   \item{isoscape}{RasterStack or RasterBrick with two layers, e.g., as created by \code{calRaster}. The first layer is the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
 }
-  \item{known}{SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Known-origin data can be queried using \code{knownOrig}.
+  \item{known}{SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Its length must be larger or equal to 3. Known-origin data can be queried using \code{knownOrig}.
 }
   \item{valiStation}{numeric. How many samples from known are withheld for validation? Must be two or more smaller than the length of \code{known}.
 }
