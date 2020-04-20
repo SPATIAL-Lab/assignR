@@ -7,7 +7,7 @@ Data and tools supporting geographic assignment of materials based on their isot
 For step-by-step examples demonstrating all functions see [https://spatial-lab.github.io/assignR/](https://spatial-lab.github.io/assignR/).
 
 ## Install and load
-install.packages("assignR")
+install.packages("assignR")     
 library(assignR)
 
 ## Package contents
