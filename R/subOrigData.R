@@ -1,4 +1,4 @@
-subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
+subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
                         age_code = NULL, mask = NULL) {
   
   result = NULL
@@ -58,10 +58,10 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
       if(is.na(proj4string(mask))){
         stop("mask must have coordinate reference system")
       } else {
-        mask <- spTransform(mask, "+proj=longlat +datum=WGS84 +no_defs 
+        mask = spTransform(mask, "+proj=longlat +datum=WGS84 +no_defs 
                             +ellps=WGS84 +towgs84=0,0,0")
       }
-      overlap <- result[mask,]
+      overlap = result[mask,]
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
@@ -73,7 +73,7 @@ subOrigData <- function(marker = "d2H", taxon = NULL, group = NULL, reference = 
       stop("No samples found in mask\n")
     }
     
-    result <- overlap
+    result = overlap
     
   } else {
     plot(wrld_simpl, axes = TRUE)

@@ -20,7 +20,7 @@ plot.QA = function(x, ..., outDir = NULL){
     if(class(a[[i]]) == "QA") n = n + 1
   }
 
-  xx <- seq(0.00, 1, 0.01)
+  xx = seq(0.00, 1, 0.01)
   
   if(n == 1){
     vali = ncol(x$val_stations)
@@ -31,7 +31,7 @@ plot.QA = function(x, ..., outDir = NULL){
     
     precision = matrix(rep(0, niter*101), ncol=niter, nrow=101)
     for (i in 1:niter){
-      precision[,i] <- apply(x$precision[[i]], 1, median)
+      precision[,i] = apply(x$precision[[i]], 1, median)
     }
     
     mean.pre = NULL
@@ -41,7 +41,7 @@ plot.QA = function(x, ..., outDir = NULL){
     
     pre = data.frame(xx, 1 - mean.pre)
 
-    pd <- data.frame(as.numeric(x$pd_val) / x$random_prob_density)
+    pd = data.frame(as.numeric(x$pd_val) / x$random_prob_density)
     
     plot(c(0,1), c(1,0), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 

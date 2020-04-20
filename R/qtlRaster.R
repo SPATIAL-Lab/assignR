@@ -1,4 +1,4 @@
-qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL){
+qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL){
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
   }
@@ -27,7 +27,7 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
     }
   }
   
-  result <- pdR
+  result = pdR
   n = nlayers(result)  
   if(thresholdType == "prob"){
     for(i in seq_len(n)){
@@ -36,30 +36,30 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values <- na.omit(getValues(pdR[[i]]))
-        pdR.values <- sort(pdR.values)
-        k <- length(pdR.values)
-        left <- 1
-        right <-  k
+        pdR.values = na.omit(getValues(pdR[[i]]))
+        pdR.values = sort(pdR.values)
+        k = length(pdR.values)
+        left = 1
+        right =  k
         while((right-left) > 2){
-          start <- round((left+right)/2)
-          total <- sum(pdR.values[start:k])
+          start = round((left+right)/2)
+          total = sum(pdR.values[start:k])
           if(total > threshold){
-            left <- start
+            left = start
           }
           if(total < threshold){
-            right <- start
+            right = start
           }
         }
         cut = pdR.values[start]        
       }
       if(n == 1){
-        result <- pdR[[i]] > cut
+        result = pdR[[i]] > cut
       }else{
-        result[[i]] <- pdR[[i]] > cut
+        result[[i]] = pdR[[i]] > cut
       }
     }
-    title1 <- "probability"
+    title1 = "probability"
   }
   
   if(thresholdType == "area"){
@@ -69,20 +69,20 @@ qtlRaster <- function(pdR, threshold, thresholdType = "area", genplot = TRUE, ou
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values <- na.omit(getValues(pdR[[i]]))
-        k <- length(pdR.values)
-        cut <- sort(pdR.values)[round((1-threshold)*k)]
+        pdR.values = na.omit(getValues(pdR[[i]]))
+        k = length(pdR.values)
+        cut = sort(pdR.values)[round((1-threshold)*k)]
       }
       if(n == 1){
-        result <- pdR[[i]] > cut
+        result = pdR[[i]] > cut
       }else{
-        result[[i]] <- pdR[[i]]>cut
+        result[[i]] = pdR[[i]]>cut
       }
     }
-    title1 <- "area"
+    title1 = "area"
   }
   
-  names(result) <- names(pdR)
+  names(result) = names(pdR)
   tls = character(n)
   if(n > 1){
     for(i in seq_len(n)){

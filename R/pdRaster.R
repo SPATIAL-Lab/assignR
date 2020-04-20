@@ -1,6 +1,6 @@
-pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDir = NULL) {
+pdRaster = function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDir = NULL) {
   if(class(r) == "rescale"){
-    r <- r$isoscape.rescale
+    r = r$isoscape.rescale
   }
   
   if(class(r) != "RasterStack" & class(r) != "RasterBrick"){
@@ -19,7 +19,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
       stop("prior should be a raster with one layer")
     } 
     if(proj4string(prior) != proj4string(r[[1]])) {
-      prior <- projectRaster(prior, crs = crs(r[[1]]))
+      prior = projectRaster(prior, crs = crs(r[[1]]))
       warning("prior was reprojected")
     }
     compareRaster(r[[1]], prior)
@@ -48,11 +48,11 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
         stop("mask must have coord. ref.")
       } 
       if(proj4string(mask) != proj4string(r[[1]])) {
-        mask <- spTransform(mask, crs(r[[1]]))
+        mask = spTransform(mask, crs(r[[1]]))
         warning("mask was reprojected")
       }
-      rescaled.mean <- crop(rescaled.mean, mask)
-      rescaled.sd <- crop(rescaled.sd, mask)
+      rescaled.mean = crop(rescaled.mean, mask)
+      rescaled.sd = crop(rescaled.sd, mask)
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
@@ -65,7 +65,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
   if (class(unknown) == "data.frame"){
     if(ncol(unknown) == 2){
       if(is.numeric(unknown[,2])){
-        data <- unknown
+        data = unknown
       } else {
         stop("unknown column 2 must contain numeric values")
       }
@@ -75,33 +75,33 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
 
   }
   
-  n <- nrow(data)
+  n = nrow(data)
   
-  errorV <- getValues(rescaled.sd)
-  meanV <- getValues(rescaled.mean)
-  result <- NULL
-  temp <- list()
+  errorV = getValues(rescaled.sd)
+  meanV = getValues(rescaled.mean)
+  result = NULL
+  temp = list()
   
   for (i in seq_len(n)) {
-    indv.data <- data[i, ]
-    indv.id <- indv.data[1, 1]
-    assign <- dnorm(indv.data[1, 2], mean = meanV, sd = errorV)
+    indv.data = data[i, ]
+    indv.id = indv.data[1, 1]
+    assign = dnorm(indv.data[1, 2], mean = meanV, sd = errorV)
     if(!is.null(prior)){
-      assign <- assign * getValues(prior)
+      assign = assign * getValues(prior)
     }
-    assign.norm <- assign / sum(assign[!is.na(assign)])
-    assign.norm <- setValues(rescaled.mean, assign.norm)
+    assign.norm = assign / sum(assign[!is.na(assign)])
+    assign.norm = setValues(rescaled.mean, assign.norm)
     if (i == 1){
-      result <- assign.norm
+      result = assign.norm
     } else {
-      result <- stack(result, assign.norm)
+      result = stack(result, assign.norm)
     }
     if(!is.null(outDir)){
-      filename <- paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
+      filename = paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
       writeRaster(assign.norm, filename = filename, format = "GTiff", overwrite = TRUE)
     }
   }
-  names(result) <- data[,1]
+  names(result) = data[,1]
 
   if(!is.null(outDir)){
     if (n > 5){
@@ -114,7 +114,7 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
 
   if (genplot == TRUE){
     if (n == 1){
-      pp <- spplot(result)
+      pp = spplot(result)
       print(pp)
     } else {
       for (i in seq_len(n)){

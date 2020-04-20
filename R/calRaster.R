@@ -1,4 +1,4 @@
-calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
+calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
           NA.value = NA, ignore.NA = TRUE, genplot = TRUE, outDir = NULL, 
           verboseLM = TRUE)
 {
@@ -79,28 +79,28 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #get dimensions
-  nSample <- nrow(known)
+  nSample = nrow(known)
 
   #create space for regression variables
-  tissue.iso <- vector("numeric", length = nSample)
-  isoscape.iso <- vector("numeric", length = nSample)
-  null.iso <- NULL
+  tissue.iso = vector("numeric", length = nSample)
+  isoscape.iso = vector("numeric", length = nSample)
+  null.iso = NULL
 
   #populate the dependent variable values
-  tissue.iso <- known@data[, 1]
+  tissue.iso = known@data[, 1]
 
   #populate the independent variable values
   if (interpMethod == 1) {
-    isoscape.iso <- extract(isoscape, known,
+    isoscape.iso = extract(isoscape, known,
                                     method = "simple")
   } else {
-    isoscape.iso <- extract(isoscape, known,
+    isoscape.iso = extract(isoscape, known,
                                     method = "bilinear")
   }
 
   #warn if some known site have NA isoscape values
   if (any(is.na(isoscape.iso[, 1]))) {
-    na <- which(is.na(isoscape.iso[, 1]))
+    na = which(is.na(isoscape.iso[, 1]))
     wtxt = "NO isoscape values found at the following locations:\n"
     for(i in na){
       wtxt = paste0(wtxt, known@coords[i, 1], ", ", known@coords[i, 2], "\n")
@@ -113,13 +113,13 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
     }
 
     #remove na values before continuing
-    tissue.iso <- tissue.iso[!is.na(isoscape.iso[,1])]
-    isoscape.iso <- isoscape.iso[!is.na(isoscape.iso[,1]), ]
+    tissue.iso = tissue.iso[!is.na(isoscape.iso[,1])]
+    isoscape.iso = isoscape.iso[!is.na(isoscape.iso[,1]), ]
     nSample = length(tissue.iso)
   }
 
   #fit the regression model
-  lmResult <- lm(tissue.iso ~ isoscape.iso[, 1])
+  lmResult = lm(tissue.iso ~ isoscape.iso[, 1])
 
   #output
   if (verboseLM){
@@ -139,11 +139,11 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
 
   if (genplot == TRUE || !is.null(outDir) ) {
     #formatted lm equation for plotting
-    equation <- function(mod) {
-      lm_coef <- list(a = as.numeric(round(coef(mod)[1], digits = 2)),
+    equation = function(mod) {
+      lm_coef = list(a = as.numeric(round(coef(mod)[1], digits = 2)),
                       b = as.numeric(round(coef(mod)[2], digits = 2)), 
                       r2 = round(summary(mod)$r.squared, digits = 2))
-      lm_eq <- substitute(italic(y) == a + b %.% italic(x) *
+      lm_eq = substitute(italic(y) == a + b %.% italic(x) *
                             "," ~ ~italic(R)^2 ~ "=" ~ r2, lm_coef)
       as.expression(lm_eq)
     }
@@ -161,8 +161,8 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   }
   
   #pull slope and intercept
-  intercept <- as.numeric(coef(lmResult)[1])
-  slope <- as.numeric(coef(lmResult)[2])
+  intercept = as.numeric(coef(lmResult)[1])
+  slope = as.numeric(coef(lmResult)[2])
   
   #create rescaled prediction isoscape
   isoscape.rescale = isoscape[[1]] * slope + intercept
@@ -181,15 +181,15 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   iso.cov = cov(isoscape.dev, tissue.dev)
   
   #combine uncertainties of isoscape and rescaling function
-  sd <- (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2 + iso.cov)^0.5
+  sd = (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2 + iso.cov)^0.5
 
   #stack the output rasters and apply names
-  isoscape.rescale <- stack(isoscape.rescale, sd)
-  names(isoscape.rescale) <- c("mean", "sd")
+  isoscape.rescale = stack(isoscape.rescale, sd)
+  names(isoscape.rescale) = c("mean", "sd")
 
   #crop output if required
   if (!is.null(mask)) {
-    isoscape.rescale <- crop(isoscape.rescale, mask)
+    isoscape.rescale = crop(isoscape.rescale, mask)
   }
 
   #plot the output rasters
@@ -218,12 +218,12 @@ calRaster <- function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #set names for return data object
-  names(xy) <- c("isoscape.iso", "tissue.iso")
+  names(xy) = c("isoscape.iso", "tissue.iso")
 
   #package results
-  result <- list(isoscape.rescale = isoscape.rescale, lm.data = xy,
+  result = list(isoscape.rescale = isoscape.rescale, lm.data = xy,
                 lm.model = lmResult)
-  class(result) <- "rescale"
+  class(result) = "rescale"
           
   #done
   return(result)
