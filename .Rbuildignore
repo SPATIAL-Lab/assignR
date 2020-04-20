@@ -4,3 +4,5 @@
 ^\.travis\.yml$
 ^CRAN-RELEASE$
 ^mee_ms$
+^.*\.Rproj$
+^\.Rproj\.user$
