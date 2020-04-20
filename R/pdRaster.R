@@ -10,9 +10,6 @@ pdRaster <- function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outD
     stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
   }
   
-  if(class(unknown) != "data.frame"){
-    stop("unknown must be a data.frame")
-  }
   if(any(is.na(unknown[,2])) || any(is.nan(unknown[,2])) || any(is.null(unknown[,2]))){
     stop("Missing isotope values detected in unknown")
   }

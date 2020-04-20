@@ -46,4 +46,6 @@ library(assignR)
 
 <!-- badges: start -->
   [![Travis build status](https://travis-ci.org/SPATIAL-Lab/assignR.svg?branch=master)](https://travis-ci.org/SPATIAL-Lab/assignR)
+  [![codecov](https://codecov.io/gh/Demerara/assignR/branch/master/graph/badge.svg)](https://codecov.io/gh/Demerara/assignR) 
   <!-- badges: end -->
+
