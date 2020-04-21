@@ -68,22 +68,23 @@ data("d2h_lrNA") # precipitation hydrogen isoscape for North America
 data("knownOrig") # hydrogen isotopes of known-origin samples
 
 # extract some known-origin data
-d1 = subOrigData(taxon = "Charadrius montanus")
+d1 = subOrigData(taxon = "Buteo lagopus")
 
 # run quality assessment based on precipitation hydrogen isotopes and 
-# known-origin birds; small values of valiStation and valiTime 
-# used in example to reduce run time
+# known-origin samples; small values of valiStation and valiTime 
+# are used in example to reduce run time
 
 # first with one example
+# gives warning because a small number of samples are available
 qa1 = QA(isoscape = d2h_lrNA, known = d1, valiStation = 1, 
-          valiTime = 2, mask = naMap, name = "Charadrius")
+          valiTime = 2, mask = naMap, name = "Buteo")
                     
 # plot the qa result
 plot(qa1)
 
 # now compare with a second data set
-\donttest{d2 = subOrigData(taxon = "Buteo lagopus")
+\donttest{d2 = subOrigData(taxon = "Charadrius montanus")
 qa2 = QA(isoscape = d2h_lrNA, known = d2, valiStation = 1, 
-          valiTime = 2, mask = naMap, name = "Buteo")
+          valiTime = 2, mask = naMap, name = "Charadrius")
 plot(qa1, qa2)}
 }
