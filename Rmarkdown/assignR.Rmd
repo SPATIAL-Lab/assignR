@@ -98,7 +98,7 @@ Check out the help page for *pdRaster* for additional options, including the use
 # Post-hoc Analysis
 ## Odds Ratio
 
-The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likley from France or Spain?", or "how likley is this hypothesized location relative to other possibilities?". 
+The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likely from France or Spain?", or "how likely is this hypothesized location relative to other possibilities?". 
 
 Let's compare probabilities for two spatial areas - the states of Utah and New Mexico. First we'll load the SpatialPolygons and plot them.
 
@@ -118,10 +118,10 @@ s12 = rbind(s1, s2)
 oddsRatio(asn, s12)
 ```
 
-Here you can see that even though Utah is quite a bit smaller the isotopic evidence suggests it's much more likley to be the origin of each sample. This result is consistent with what you might infer from a first-order comparison of the state map with the posterior probability maps, above.
+Here you can see that even though Utah is quite a bit smaller the isotopic evidence suggests it's much more likely to be the origin of each sample. This result is consistent with what you might infer from a first-order comparison of the state map with the posterior probability maps, above.
 
 *****
-Comparisons can also be made using points. Let's create two points (one in each of the Plover regions) and compare their odds. This result also shows the odds ratio for each point relative to the most- and least-likley gridcells on the posterior probability map.
+Comparisons can also be made using points. Let's create two points (one in each of the Plover regions) and compare their odds. This result also shows the odds ratio for each point relative to the most- and least-likely grid cells on the posterior probability map.
 
 ```{r oddsRatio2}
 pp1 = c(-112,40)
@@ -134,7 +134,7 @@ The odds of the first point being the location of origin are pretty high for eac
 
 ## Assignment
 
-Researchers often want to classify their study area in to regions that are and are not likley to be the origin of the sample (effectively 'assigning' the sample to a part of the area). This requires choosing a subjective threshold to define how much of the study domain is represented in the assignment region. *qtlRaster* offers two choices.
+Researchers often want to classify their study area in to regions that are and are not likely to be the origin of the sample (effectively 'assigning' the sample to a part of the area). This requires choosing a subjective threshold to define how much of the study domain is represented in the assignment region. *qtlRaster* offers two choices.
 
 Extract 10% of the study area, giving maps that show the 10% of grid cells with the highest posterior probability for each sample.
 
@@ -171,7 +171,7 @@ up = unionP(asn)
 The results from *unionP* highlight a broader region, as you might expect.
 
 *****
-Any of the other post-hoc analysis tools can be applied to the summarized results. Here we'll use *qtlRaster* to identify the 10% of the study area that is most likley to be the origin of one or more samples.
+Any of the other post-hoc analysis tools can be applied to the summarized results. Here we'll use *qtlRaster* to identify the 10% of the study area that is most likely to be the origin of one or more samples.
 
 ```{r qtlRaster3}
 qtlRaster(up, threshold = 0.1)
