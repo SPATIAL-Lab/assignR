@@ -33,12 +33,11 @@ plot(naMap)
 ```
 
 *****
-Load and plot the global growing season precipitation H isoscape. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/). We'll also reduce the resolution of this layer to speed up processing these examples.
+Load and plot a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), and resolution has been reduced to speed up processing in these examples. Full-resolution global growing season isoscapes are included in the package as *d2h_world.rda* and *d18o_world.rda*. 
 
-```{r isoscape}
-data("d2h_world")
-d2h_coarse = aggregate(d2h_world, 9)
-plot(d2h_coarse)
+```{r isoscape, fig.width = 6, fig.asp = 0.5}
+data("d2h_lrNA")
+plot(d2h_lrNA)
 ```
 
 *****
@@ -70,7 +69,7 @@ For a real application you would want to explore the *knownOrig.rda* dataset to 
 We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. *calRaster* fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a sample-type specific isoscape.
 
 ```{r calRaster}
-r = calRaster(known = d, isoscape = d2h_coarse, mask = naMap)
+r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
 ```
 
 *****
@@ -131,7 +130,9 @@ Comparisons can also be made using points. Let's create two points (one in each 
 ```{r oddsRatio2}
 pp1 = c(-112,40)
 pp2 = c(-105,33)
-pp12 = SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+pp12 = SpatialPoints(coords = rbind(pp1,pp2), 
+                     proj4string=crs("+proj=longlat +datum=WGS84 +no_defs 
+                                     +ellps=WGS84 +towgs84=0,0,0"))
 oddsRatio(asn, pp12)
 ```
 
@@ -190,7 +191,7 @@ How good are the geographic assignments? What area or probability threshold shou
 We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).
 
 ```{r QA1, warning=FALSE}
-qa1 = QA(d2h_coarse, d, valiStation = 8, valiTime = 4, mask = naMap, name = "normal")
+qa1 = QA(d2h_lrNA, d, valiStation = 8, valiTime = 4, mask = naMap, name = "normal")
 ```
 
 *****
@@ -209,10 +210,10 @@ How would using a different isoscape or different known origin dataset affect th
 
 Let's modify our isoscape to add some random noise.
 
-```{r modraster}
-dv = getValues(d2h_coarse[[1]])
+```{r modraster, fig.width=5, fig.asp = 0.6}
+dv = getValues(d2h_lrNA[[1]])
 dv = dv + rnorm(length(dv), 0, 15)
-d2h_fuzzy = setValues(d2h_coarse[[1]], dv)
+d2h_fuzzy = setValues(d2h_lrNA[[1]], dv)
 plot(d2h_fuzzy)
 ```
 
@@ -220,7 +221,7 @@ plot(d2h_fuzzy)
 We'll combine the fuzzy isoscape with the uncertainty layer from the original isoscape, then rerun *QA* using the new version. Obviously this is not something you'd do in real work, but as an example it allows us to ask the question "how would the quality of my assignments change if my isoscape predictions were of reduced quality?". 
 
 ```{r QA2, warning=FALSE}
-d2h_fuzzy = brick(d2h_fuzzy, d2h_coarse[[2]])
+d2h_fuzzy = brick(d2h_fuzzy, d2h_lrNA[[2]])
 qa2 = QA(d2h_fuzzy, d, valiStation = 8, valiTime = 4, mask = naMap, name = "fuzzy")
 ```
 

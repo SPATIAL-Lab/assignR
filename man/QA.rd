@@ -16,7 +16,7 @@ QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50,
 }
 
 \arguments{
-  \item{isoscape}{RasterStack or RasterBrick with two layers, e.g., as created by \code{calRaster}. The first layer is the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
+  \item{isoscape}{RasterStack or RasterBrick with two layers. The first layer is mean isoscape prediction and the second the isoscape prediction uncertainty (1 standard deviation).
 }
   \item{known}{SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Its length must be larger or equal to 3. Known-origin data can be queried using \code{knownOrig}.
 }
@@ -64,12 +64,11 @@ Vander Zanden, H. B. et. al (2014) Contrasting assignment of migratory organisms
 \examples{
 # load data
 data("naMap") # North America 
-data("d2h_world") # precipitation hydrogen isotope of the world
+data("d2h_lrNA") # precipitation hydrogen isoscape for North America
 data("knownOrig") # hydrogen isotopes of known-origin samples
 
 # extract some known-origin data
 d1 = subOrigData(taxon = "Charadrius montanus")
-d2 = subOrigData(taxon = "Buteo lagopus")
 
 # run quality assessment based on precipitation hydrogen isotopes and 
 # known-origin birds; small values of valiStation and valiTime 
@@ -82,8 +81,9 @@ qa1 = QA(isoscape = d2h_lrNA, known = d1, valiStation = 1,
 # plot the qa result
 plot(qa1)
 
-# now compare
-\donttest{qa2 = QA(isoscape = d2h_lrNA, known = d2, valiStation = 1, 
+# now compare with a second data set
+\donttest{d2 = subOrigData(taxon = "Buteo lagopus")
+qa2 = QA(isoscape = d2h_lrNA, known = d2, valiStation = 1, 
           valiTime = 2, mask = naMap, name = "Buteo")
 plot(qa1, qa2)}
 }
