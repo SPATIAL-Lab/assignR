@@ -188,14 +188,14 @@ qtlRaster(up, threshold = 0.1)
 
 How good are the geographic assignments? What area or probability threshold should be used? Is it better to use isoscape *A* or *B* for my analysis? These questions can be answered through split-sample validation using *QA*.
 
-We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).
+We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).  
 
 ```{r QA1, warning=FALSE}
 qa1 = QA(d2h_lrNA, d, valiStation = 8, valiTime = 4, mask = naMap, name = "normal")
 ```
 
 *****
-Plot the result. 
+Plot the result. (Please note that because of changes in R's random number generator your results may not exactly match those shown here if you are using R version 3.5.X.)
 
 ```{r plot.QA1}
 plot(qa1)

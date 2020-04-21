@@ -31,7 +31,7 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
          isotope values")
   }
   if(nrow(known) < 10){
-    warning("The number of known stations are less than 10")
+    warning("there are fewer than 10 known samples")
   }
   if(nrow(known) < 3){
     stop("QA requires at least 3 known samples")
@@ -64,15 +64,11 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
   }
   
   if(setSeed == TRUE){
-    if(R.version$major >= 3 & R.version$minor >= 6){
-      set.seed(100, sample.kind = "Rejection")      
-    } else{
-      set.seed(100)
-    }
+    set.seed(100)
   }
   
   rowLength = nrow(known)
-  val_stations = sort(sample(seq_len(rowLength),valiStation,replace = FALSE))
+  val_stations = sort(sample(seq_len(rowLength), valiStation, replace = FALSE))
   for (i in seq_len(valiTime)[-1]){
     val_stations = rbind(val_stations, 
                           sort(sample(seq_len(rowLength), valiStation, 
