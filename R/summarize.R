@@ -1,6 +1,7 @@
 jointP = function(pdR){
-  if(class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
-    stop("input probability density map (pdR) should be RasterStack or RasterBrick")
+  if(class(pdR)[1] != "RasterStack" & class(pdR)[1] != "RasterBrick"){
+    stop("input probability density map (pdR) should be RasterStack or 
+         RasterBrick")
   }
   n = nlayers(pdR)
   result = pdR[[1]] * pdR[[2]]
@@ -20,8 +21,9 @@ jointP = function(pdR){
 }
 
 unionP = function(pdR){
-  if(class(pdR) != "RasterStack"){
-    stop("input probability density map (pdR) should be RasterLayer")
+  if(class(pdR)[1] != "RasterStack" & class(pdR)[1] != "RasterBrick"){
+    stop("input probability density map (pdR) should be RasterStack or 
+         RasterBrick")
   }
   result = (1 - pdR[[1]])
   n = nlayers(pdR)

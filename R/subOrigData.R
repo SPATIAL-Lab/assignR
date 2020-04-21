@@ -53,8 +53,8 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
   }
 
   if(!is.null(mask)) {
-    if(class(mask) == "SpatialPolygonsDataFrame" || 
-       class(mask) == "SpatialPolygons"){
+    if(class(mask)[1] == "SpatialPolygonsDataFrame" || 
+       class(mask)[1] == "SpatialPolygons"){
       if(is.na(proj4string(mask))){
         stop("mask must have coordinate reference system")
       } else {

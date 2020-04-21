@@ -2,7 +2,8 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
                valiTime = 50, mask = NULL, setSeed = TRUE, name = NULL){
 
   #check that isoscape is valid and has defined CRS
-  if (class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
+  if (class(isoscape)[1] == "RasterStack" | 
+      class(isoscape)[1] == "RasterBrick") {
     if (is.na(sp::proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
@@ -11,10 +12,12 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
   }
 
   #check that known is valid and has defined, correct CRS
-  if (class(known) != "SpatialPointsDataFrame") {
-    stop("known should be a SpatialPointsDataFrame, see help page of calRaster function")
+  if (class(known)[1] != "SpatialPointsDataFrame") {
+    stop("known should be a SpatialPointsDataFrame, 
+         see help page of calRaster function")
   }
-  if(any(is.na(known@data[,1])) || any(is.nan(known@data[,1])) || any(is.null(known@data[,1]))){
+  if(any(is.na(known@data[,1])) || any(is.nan(known@data[,1])) || 
+     any(is.null(known@data[,1]))){
     stop("Missing values detected in known")
   }
   if (is.na(sp::proj4string(known))) {
@@ -24,7 +27,8 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
     known = sp::spTransform(known, raster::crs(isoscape))
     warning("known was reprojected")
   } else if(ncol(known@data) != 1){
-    stop("known must include a 1-column data frame containing only the isotope values")
+    stop("known must include a 1-column data frame containing only the 
+         isotope values")
   }
   if(nrow(known) < 10){
     warning("The number of known stations are less than 10")
@@ -33,14 +37,15 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
     stop("QA requires at least 3 known samples")
   }
   if(!valiStation<nrow(known)){
-    stop("valiStation must be smaller than the number of known-origin stations in known")
+    stop("valiStation must be smaller than the number of known-origin 
+         stations in known")
   }
-  if(valiTime<2){
+  if(valiTime < 2){
     stop("valiTime must be an integer greater than 1")
   }
   if(!is.null(mask)) {
-    if(class(mask) == "SpatialPolygonsDataFrame" || 
-       class(mask) == "SpatialPolygons"){
+    if(class(mask)[1] == "SpatialPolygonsDataFrame" || 
+       class(mask)[1] == "SpatialPolygons"){
       if(is.na(sp::proj4string(mask))){
         stop("mask must have coordinate reference system")
       }
@@ -53,7 +58,7 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
     }
   }
   if(!is.null(name)){
-    if(class(name) != "character"){
+    if(class(name)[1] != "character"){
       stop("name must be a character string")
     }
   }
@@ -73,7 +78,6 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
                           sort(sample(seq_len(rowLength), valiStation, 
                                       replace = FALSE)))
   }
-
 
   stationNum4model = rowLength - valiStation
   prption_byProb = matrix(0, valiTime, 101)   
@@ -140,8 +144,8 @@ QA = function(isoscape, known, valiStation = ceiling(length(known)*0.1),
 
   result = list(name, val_stations, pd_v, prption_byArea, prption_byProb, 
                  precision, random_prob_density)
-  names(result) = c("name", "val_stations", "pd_val", "prption_byArea", "prption_byProb", "precision", 
-                     "random_prob_density")
+  names(result) = c("name", "val_stations", "pd_val", "prption_byArea", 
+                    "prption_byProb", "precision", "random_prob_density")
   class(result) = "QA"
   return(result)
 }

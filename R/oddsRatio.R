@@ -3,7 +3,8 @@ oddsRatio = function(pdR, inputP){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
   }
 
-  if(class(inputP) == "SpatialPoints" || class(inputP) == "SpatialPointsDataFrame"){
+  if(class(inputP)[1] == "SpatialPoints" || 
+     class(inputP)[1] == "SpatialPointsDataFrame"){
     if(is.na(proj4string(inputP))){
       stop("inputP must have coord. ref.")
     }
@@ -19,8 +20,9 @@ oddsRatio = function(pdR, inputP){
       result = result2
     }
     else if(n == 2){
-      if(class(pdR) == "RasterStack" | class(pdR) == "RasterBrick"){
-        result1 = (extrVals[1,]/(1-extrVals[1,])) / (extrVals[2,]/(1-extrVals[2,]))
+      if(class(pdR)[1] == "RasterStack" | class(pdR)[1] == "RasterBrick"){
+        result1 = (extrVals[1,]/(1-extrVals[1,])) / 
+          (extrVals[2,]/(1-extrVals[2,]))
       } else {
         result1 = (extrVals[1]/(1-extrVals[1])) / (extrVals[2]/(1-extrVals[2]))
       }
@@ -33,7 +35,8 @@ oddsRatio = function(pdR, inputP){
     }
   }
   
-  if(class(inputP) == "SpatialPolygons" || class(inputP) == "SpatialPolygonsDataFrame"){
+  if(class(inputP)[1] == "SpatialPolygons" || 
+     class(inputP)[1] == "SpatialPolygonsDataFrame"){
     if(length(inputP) != 2){
       stop("input polygons (inputP) should be two polygons")
     }

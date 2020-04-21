@@ -2,11 +2,11 @@ plot.QA = function(x, ..., outDir = NULL){
 
   a = list(x, ...)
 
-  if(class(a[[1]]) != "QA"){
+  if(class(a[[1]])[1] != "QA"){
     stop("x must be one or more QA objects")
   }
   if(!is.null(outDir)){
-    if(class(outDir) != "character"){
+    if(class(outDir)[1] != "character"){
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){
@@ -17,7 +17,7 @@ plot.QA = function(x, ..., outDir = NULL){
   
   n = 0
   for(i in seq_len(length(a))){
-    if(class(a[[i]]) == "QA") n = n + 1
+    if(class(a[[i]])[1] == "QA") n = n + 1
   }
 
   xx = seq(0.00, 1, 0.01)
@@ -50,12 +50,14 @@ plot.QA = function(x, ..., outDir = NULL){
 
     plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
-         ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+         ylab="Proportion of validation stations included", xlim=c(0,1), 
+         ylim=c(0,1))
     lines(means.p[,1], means.p[,2], lwd=2)
 
     plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Area quantile", 
-         ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+         ylab="Proportion of validation stations included", xlim=c(0,1), 
+         ylim=c(0,1))
     lines(means.a[,1], means.a[,2], lwd=2)
     
     boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
@@ -63,7 +65,8 @@ plot.QA = function(x, ..., outDir = NULL){
     
     if(!is.null(outDir)){
       
-      png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
+      png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, 
+          res = 600)
       p = par(no.readonly = TRUE)
       on.exit(par(p))
       par(mfrow = c(1, 3))
@@ -75,17 +78,20 @@ plot.QA = function(x, ..., outDir = NULL){
       
       plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Probability quantile", 
-           ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+           ylab="Proportion of validation stations included", xlim=c(0,1), 
+           ylim=c(0,1))
       lines(means.p[,1], means.p[,2], lwd=2)
       
       plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Area quantile", 
-           ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+           ylab="Proportion of validation stations included", xlim=c(0,1), 
+           ylim=c(0,1))
       lines(means.a[,1], means.a[,2], lwd=2)
       
       dev.off()
       
-      png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
+      png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, 
+          res = 600)
       
       boxplot(pd, ylab = "Odds ratio (known origin:random)", outline = FALSE)
       abline(1,0, col="dark grey", lwd=2, lty=3)
@@ -126,7 +132,8 @@ plot.QA = function(x, ..., outDir = NULL){
     pre = data.frame(xx, 1 - mean.pre)
     
     pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
-    pd[1:(niter[1]*vali[1]),1] = as.numeric(a[[1]]$pd_val) / a[[1]]$random_prob_density
+    pd[1:(niter[1]*vali[1]),1] = as.numeric(a[[1]]$pd_val) / 
+      a[[1]]$random_prob_density
     
     for(i in seq_len(n)[-1]){
 
@@ -145,7 +152,8 @@ plot.QA = function(x, ..., outDir = NULL){
       
       pre = cbind(pre, 1 - mean.pre)
       
-      pd[1:(niter[1]*vali[1]),i] = as.numeric(a[[i]]$pd_val) / a[[i]]$random_prob_density
+      pd[1:(niter[1]*vali[1]),i] = as.numeric(a[[i]]$pd_val) / 
+        a[[i]]$random_prob_density
       
     }
     
@@ -159,7 +167,8 @@ plot.QA = function(x, ..., outDir = NULL){
 
     plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
          xlab="Probability quantile", 
-         ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+         ylab="Proportion of validation stations included", xlim=c(0,1), 
+         ylim=c(0,1))
     for(i in seq_len(n)){
       lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
     }
@@ -167,7 +176,8 @@ plot.QA = function(x, ..., outDir = NULL){
       
     plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
          xlab="Area quantile", 
-         ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+         ylab="Proportion of validation stations included", xlim=c(0,1), 
+         ylim=c(0,1))
     for(i in seq_len(n)){
       lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
     }
@@ -178,7 +188,8 @@ plot.QA = function(x, ..., outDir = NULL){
     abline(1, 0, col="dark grey", lwd=2, lty=3)
     
     if(!is.null(outDir)){
-      png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, res = 600)
+      png(paste0(outDir, "/QA1.png"), units = "in", width = 8, height = 3, 
+          res = 600)
       p = par(no.readonly = TRUE)
       on.exit(par(p))
       par(mfrow = c(1, 3))      
@@ -198,7 +209,8 @@ plot.QA = function(x, ..., outDir = NULL){
       
       plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3, 
            xlab="Probability quantile", 
-           ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+           ylab="Proportion of validation stations included", xlim=c(0,1), 
+           ylim=c(0,1))
       for(i in seq_len(n)){
         lines(means.p[,1], means.p[,i+1], lwd=2, col=i+1)
       }
@@ -206,7 +218,8 @@ plot.QA = function(x, ..., outDir = NULL){
 
       plot(c(0,1), c(0,1), type="l", col="dark grey", lwd=2, lty=3,
            xlab="Area quantile", 
-           ylab="Proportion of validation stations included", xlim=c(0,1), ylim=c(0,1))
+           ylab="Proportion of validation stations included", xlim=c(0,1), 
+           ylim=c(0,1))
       for(i in seq_len(n)){
         lines(means.a[,1], means.a[,i+1], lwd=2, col=i+1)
       }
@@ -214,7 +227,8 @@ plot.QA = function(x, ..., outDir = NULL){
       
       dev.off()
 
-      png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, res = 600)
+      png(paste0(outDir, "/QA2.png"), units = "in", width = 6, height = 4, 
+          res = 600)
 
       boxplot(pd, col=seq(2,n+1), names = nm,
               ylab = "Odds ratio (known origin:random)", outline = FALSE)

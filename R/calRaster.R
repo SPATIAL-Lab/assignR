@@ -3,7 +3,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
           verboseLM = TRUE)
 {
   #check that isoscape is valid and has defined CRS
-  if(class(isoscape) == "RasterStack" | class(isoscape) == "RasterBrick") {
+  if(class(isoscape)[1] == "RasterStack" | class(isoscape)[1] == "RasterBrick") {
     if(is.na(proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
@@ -12,7 +12,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #check that known is valid and has defined, correct CRS
-  if(class(known) != "SpatialPointsDataFrame") {
+  if(class(known)[1] != "SpatialPointsDataFrame") {
     stop("known should be a SpatialPointsDataFrame, see help page of 
          calRaster function")
   }
@@ -34,8 +34,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check that mask is valid and has defined, correct CRS
   if(!is.null(mask)) {
-    if(class(mask) == "SpatialPolygonsDataFrame" || 
-       class(mask) == "SpatialPolygons"){
+    if(class(mask)[1] == "SpatialPolygonsDataFrame" || 
+       class(mask)[1] == "SpatialPolygons"){
       if(is.na(proj4string(mask))) {
         stop("mask must have valid coordinate reference system")
       }
@@ -52,11 +52,11 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   if(!interpMethod %in% c(1,2)){
     stop("interpMethod should be 1 or 2")
   }
-  if(class(genplot) != "logical") {
+  if(class(genplot)[1] != "logical") {
     stop("genplot should be logical (T or F)")
   }
   if(!is.null(outDir)){
-    if(class(outDir) != "character"){
+    if(class(outDir)[1] != "character"){
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){

@@ -3,19 +3,22 @@ pdRaster = function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDi
     r = r$isoscape.rescale
   }
   
-  if(class(r) != "RasterStack" & class(r) != "RasterBrick"){
-    stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
+  if(class(r)[1] != "RasterStack" & class(r)[1] != "RasterBrick"){
+    stop("Input isoscape should be RasterStack or RasterBrick with two layers 
+         (mean and standard deviation)")
   } 
   if(nlayers(r) != 2) {
-    stop("Input isoscape should be RasterStack or RasterBrick with two layers (mean and standard deviation)")
+    stop("Input isoscape should be RasterStack or RasterBrick with two layers 
+         (mean and standard deviation)")
   }
   
-  if(any(is.na(unknown[,2])) || any(is.nan(unknown[,2])) || any(is.null(unknown[,2]))){
+  if(any(is.na(unknown[,2])) || any(is.nan(unknown[,2])) || 
+     any(is.null(unknown[,2]))){
     stop("Missing isotope values detected in unknown")
   }
   
   if(!is.null(prior)){
-    if(class(prior) != "RasterLayer"){
+    if(class(prior)[1] != "RasterLayer"){
       stop("prior should be a raster with one layer")
     } 
     if(proj4string(prior) != proj4string(r[[1]])) {
@@ -25,12 +28,12 @@ pdRaster = function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDi
     compareRaster(r[[1]], prior)
   }
   
-  if(class(genplot) != "logical"){
+  if(class(genplot)[1] != "logical"){
     stop("genplot should be logical (TRUE or FALSE)")
   }
   
   if(!is.null(outDir)){
-    if(class(outDir) != "character"){
+    if(class(outDir)[1] != "character"){
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){
@@ -43,7 +46,8 @@ pdRaster = function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDi
   rescaled.sd = r[[2]]
   
   if (!is.null(mask)) {
-    if(class(mask) == "SpatialPolygonsDataFrame" || class(mask) == "SpatialPolygons"){
+    if(class(mask)[1] == "SpatialPolygonsDataFrame" || 
+       class(mask)[1] == "SpatialPolygons"){
       if (is.na(proj4string(mask))){
         stop("mask must have coord. ref.")
       } 
@@ -58,11 +62,11 @@ pdRaster = function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDi
     }
   }
   
-  if (class(unknown) != "data.frame") {
+  if (class(unknown)[1] != "data.frame") {
     stop("unknown should be a data.frame, see help page of pdRaster function")
   }
   
-  if (class(unknown) == "data.frame"){
+  if (class(unknown)[1] == "data.frame"){
     if(ncol(unknown) == 2){
       if(is.numeric(unknown[,2])){
         data = unknown

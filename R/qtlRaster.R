@@ -1,24 +1,27 @@
 qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL){
-  if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
-    stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
+  if(class(pdR)[1] != "RasterLayer" & class(pdR)[1] != "RasterStack" & 
+     class(pdR)[1] != "RasterBrick"){
+    stop("input probability density map (pdR) should be one of the following 
+         classes: RasterLayer, RasterStack or RasterBrick")
   }
-  if(class(threshold) != "numeric"){
-    stop("threshold must be one number between 0 and 1 ")
+  if(class(threshold)[1] != "numeric"){
+    stop("threshold must be a number between 0 and 1 ")
   }
-  if(length(threshold) != 1){
-    stop("threshold must be one number between 0 and 1 ")
+  if(length(threshold)[1] != 1){
+    stop("threshold must be a number between 0 and 1 ")
   }
   if(threshold < 0 | threshold > 1){
-    stop("threshold must be one number between 0 and 1")
+    stop("threshold must be a number between 0 and 1")
   }
   if(thresholdType != "area" & thresholdType != "prob"){
-    stop("thresholdType must be 'area' or 'prob'. See help page for further information")
+    stop("thresholdType must be 'area' or 'prob'. See help page for 
+         further information")
   }
-  if(class(genplot) != "logical"){
+  if(class(genplot)[1] != "logical"){
     stop("genplot must be logical (T/F)")
   }
   if(!is.null(outDir)){
-    if(class(outDir) != "character"){
+    if(class(outDir)[1] != "character"){
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){
