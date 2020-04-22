@@ -1,5 +1,7 @@
 # assignR news
 
+## assignR 1.2.0.9000
+
 ## assignR 1.2.0
 
 * NAMESPACE imports required functions only
