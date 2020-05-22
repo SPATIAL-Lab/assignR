@@ -1,5 +1,6 @@
 #Load packages
 library(assignR)
+library(rgdal)
 
 #Set up data and projection
 d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012", mask = naMap)
