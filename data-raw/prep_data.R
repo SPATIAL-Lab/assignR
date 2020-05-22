@@ -1,4 +1,11 @@
 options(stringsAsFactors = FALSE)
+
+#World outline map
+load("data-raw/wrld_simpl.rda")
+
+#This one is internal
+use_data(wrld_simpl, internal = TRUE)
+
 #Standards adjacency matrix for H
 ham = read.csv("data-raw/H_connections.csv", row.names = 1)
 ham = as.matrix(ham)
@@ -20,9 +27,6 @@ nrow(osds) == nrow(oam)
 #Verify that all matrix entries have a match in definition file
 all(row.names(ham) %in% hsds$Scale)
 all(row.names(oam) %in% osds$Scale)
-
-#World outline map
-load("data-raw/wrld_simpl.rda")
 
 #Known origin data table
 knownOrig
