@@ -29,4 +29,4 @@ US_4,USGS43_4,Indian hair,-60.3,1.3,,,USGS42_4,Tibetan hair,-89.6,0.5,,,Soto et 
 US_5,USGS43_5,Indian hair,-57.5,2,87,0.21,USGS42_5,Tibetan hair,-88.7,1.7,104,0.17,Howa unpubl data,This study ,UT_2,comp eqib against UT 2,,
 US_6,USGS43_6,Indian hair,-44.4,2,,,USGS42_6,Tibetan hair,-72.9,2.2,,,Coplen and Qi 2016 Forensic Sci Int,This study,US_6,"exch with two eqib waters at ambient T for 6 d, dried in vacuum oven at 60 C or in glass desiccators with Sicapent; assumed eps = 0 per mil; Cr-filled reactor",,
 US_7,USGS43_7,Indian hair,-44.2,0.9,5,0.40,USGS42_7,Tibetan hair,-72.2,1,5,0.45,Soto et al. 2017 Rapid Comm Mass Spec,This study,VSMOW,exch with two eqib waters over a range of Ts (25-105 C) and drying procedures; assumed eps = 0 per mil; Cr-filled reactor,,
-,,,,,,,,,,,,,,,,,,
+VSMOW,VSMOW,Water,0,,,,SLAP,Water,-428,,,,https://nucleus.iaea.org/rpst/documents/VSMOW_SLAP.pdf,,,,,
