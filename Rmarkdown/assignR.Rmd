@@ -126,7 +126,8 @@ Comparisons can also be made using points. Let's create two points (one in each 
 ```{r oddsRatio2}
 pp1 = c(-112,40)
 pp2 = c(-105,33)
-pp12 = SpatialPoints(coords = rbind(pp1,pp2), proj4string=crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+pp12 = SpatialPoints(coords = rbind(pp1,pp2))
+proj4string(pp12) = proj4string(naMap)
 oddsRatio(asn, pp12)
 ```
 

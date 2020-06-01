@@ -1,6 +1,8 @@
 # assignR news
 
-## assignR 1.2.0.9000
+## assignR 1.2.1
+
+* Updates to ensure compatibility with new CRS specifications in rgdal
 
 ## assignR 1.2.0
 

@@ -1,5 +1,13 @@
 ^Rmarkdown$
 ^docs$
+^data/ham.rda
+^data/oam.rda
+^data/hsds.rda
+^data/osds.rda
+^man/ham.Rd
+^man/oam.Rd
+^man/hsds.Rd
+^man/osds.Rd
 ^data-raw$
 ^cran-comments\.md$
 ^\.travis\.yml$

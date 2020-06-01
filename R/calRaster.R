@@ -1,6 +1,6 @@
 calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
-          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, outDir = NULL, 
-          verboseLM = TRUE)
+          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, 
+          outDir = NULL, verboseLM = TRUE)
 {
   #check that isoscape is valid and has defined CRS
   if(class(isoscape)[1] == "RasterStack" | class(isoscape)[1] == "RasterBrick") {
