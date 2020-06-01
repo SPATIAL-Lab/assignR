@@ -23,11 +23,9 @@ un_hasNA[1,2] = NA
 #prior = r$isoscape.rescale$mean
 #prior = projectRaster(prior, crs = "+init=epsg:28992")
 
-
 test_that("pdRaster can correctly calculate posterior probabilities of origin 
           for a sample based on its isotope ratio",{
             expect_is(asn, "RasterLayer")
-            expect_silent(pdRaster(r, un, outDir = "temp"))
             expect_error(pdRaster(r$lm.model, unknown = un))
             expect_error(pdRaster(r$isoscape.rescale$mean, unknown = un))
             expect_error(pdRaster(stack(r$isoscape.rescale,r$isoscape.rescale), un))
@@ -40,7 +38,5 @@ test_that("pdRaster can correctly calculate posterior probabilities of origin
             expect_error(pdRaster(r, unknown = un, mask = mask_noCRS))
             expect_error(pdRaster(r, unknown = un, mask = 2))
             expect_warning(pdRaster(r, unknown = un, mask = mask_diffProj))
-          
-            #expect_warning(pdRaster(r, un, prior = prior))
             
 })
