@@ -34,7 +34,7 @@ data.frame with 17 fields.
   \item{[, 14]}{Citation: }
   \item{[, 15]}{Reference: }
   \item{[, 16]}{Ref_scale: Standard scale against which the values for this scale are calibrated}
-  \item{[, 17]}{Treatment: Description of calibration proceedure}
+  \item{[, 17]}{Treatment: Description of calibration procedure}
 }
 }
 

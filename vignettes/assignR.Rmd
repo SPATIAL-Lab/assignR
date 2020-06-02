@@ -102,7 +102,7 @@ Check out the help page for *pdRaster* for additional options, including the use
 # Post-hoc Analysis
 ## Odds Ratio
 
-The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likely from France or Spain?", or "how likley is this hypothesized location relative to other possibilities?". 
+The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likely from France or Spain?", or "how likely is this hypothesized location relative to other possibilities?". 
 
 Let's compare probabilities for two spatial areas - the states of Utah and New Mexico. First we'll load the SpatialPolygons and plot them.
 
