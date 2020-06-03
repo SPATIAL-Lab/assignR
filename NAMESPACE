@@ -15,4 +15,4 @@ importFrom(raster, crs, crop, plot, values, getValues, setValues, minValue,
 importFrom(grDevices, dev.off, pdf, png)
 importFrom(graphics, abline, boxplot, legend, lines, par, text, title)
 importFrom(stats, coef, cov, dnorm, lm, median, na.omit, rnorm)
-importFrom(utils, data, setTxtProgressBar, txtProgressBar)
+importFrom(utils, data, setTxtProgressBar, txtProgressBar, tail)
