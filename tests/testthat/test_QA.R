@@ -6,10 +6,10 @@ data("d2h_world")
 data("knownOrig")
 d1 = subOrigData(taxon = "Charadrius montanus")
 d2 = subOrigData(taxon = "Buteo lagopus")
-qa1 = QA(isoscape = raster::aggregate(d2h_world, 6), known = d1, 
-         valiStation = 1, valiTime = 2, mask = naMap, name = "Charadrius")
-qa2 = QA(isoscape = raster::aggregate(d2h_world, 6), known = d2, 
-         valiStation = 1, valiTime = 2, mask = naMap, name = "Buteo", setSeed = F)
+qa1 = QA(isoscape = d2h_lrNA, known = d1, valiStation = 1, valiTime = 2, by = 25, 
+         mask = naMap, name = "Charadrius")
+qa2 = QA(isoscape = d2h_lrNA, known = d2, valiStation = 1, valiTime = 2, by = 25, 
+         mask = naMap, name = "Buteo", setSeed = F)
 
 # d2h_world_noCRS = d2h_world
 # crs(d2h_world_noCRS) = NA
@@ -30,8 +30,8 @@ qa2 = QA(isoscape = raster::aggregate(d2h_world, 6), known = d2,
 # 
 # mask_diffProj = spTransform(naMap, "+init=epsg:28992")
 
-test_that("QA can correctly evaluate how well does a given isoscape and known origin data set 
-          constrain the geographic origin of samples",{
+test_that("QA can correctly evaluate how well a given isoscape and known origin 
+          data set constrains the geographic origin of samples",{
             expect_is(qa1, "QA")
             expect_is(qa2, "QA")
             

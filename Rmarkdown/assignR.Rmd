@@ -1,7 +1,7 @@
 ---
 title: "assignR Examples"
 author: "Gabe Bowen, Chao Ma"
-date: "October 17, 2019"
+date: "June 3, 2020"
 output: html_document
 ---
 
@@ -14,9 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Install *assignR*.
 
-```{r devtools, message=FALSE, warning=FALSE, results="hide"}
-library(devtools)
-install_github("SPATIAL-Lab/assignR")
+```{r install, message=FALSE, warning=FALSE, results="hide"}
+install.packages("assignR")
 library(assignR)
 ```
 
@@ -186,7 +185,7 @@ How good are the geographic assignments? What area or probability threshold shou
 We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).
 
 ```{r QA1, warning=FALSE}
-qa1 = QA(d2h_world, d, valiStation = 10, valiTime = 5, mask = naMap, name = "normal")
+qa1 = QA(d2h_world, d, valiStation = 10, valiTime = 5, by = 5, mask = naMap, name = "normal")
 ```
 
 *****
@@ -217,7 +216,7 @@ We'll combine the fuzzy isoscape with the uncertainty layer from the original is
 
 ```{r QA2, warning=FALSE}
 d2h_fuzzy = brick(d2h_fuzzy, d2h_world[[2]])
-qa2 = QA(d2h_fuzzy, d, valiStation = 10, valiTime = 5, mask = naMap, name = "fuzzy")
+qa2 = QA(d2h_fuzzy, d, valiStation = 10, valiTime = 5, by = 5, mask = naMap, name = "fuzzy")
 ```
 
 *****
