@@ -54,9 +54,9 @@ Please see Ma et al., 2019 for methodological details.
 }
 
 \references{
-Ma et al. (2020) assignR: An R package for isotope-based geographic assignment. \emph{Methods in Ecology and Evolution} \href{https://doi.org/10.1111/2041-210X.13426}{doi:10.1111/2041-210X.13426}.
+Ma, C. et al. (2020) assignR: An R package for isotope-based geographic assignment. \emph{Methods in Ecology and Evolution} \href{https://doi.org/10.1111/2041-210X.13426}{doi:10.1111/2041-210X.13426}.
 
-Vander Zanden, H. B. et. al (2014) Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. \emph{Methods in Ecology and Evolution} \strong{5} 891--900.
+Vander Zanden, H. B. et al. (2014) Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. \emph{Methods in Ecology and Evolution} \strong{5} 891--900.
 }
 
 \seealso{
