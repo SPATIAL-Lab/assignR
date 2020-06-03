@@ -16,6 +16,8 @@ library(assignR)
 
 *d2h_world.rda* - Global growing season precipitation H isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
 
+*d2h_lrNA.rda* - Low-resolution, North American crop of d2h_world.rda, used in examples.
+
 *d18o_world.rda* - Global growing season precipitation O isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
 
 *knownOrig.rda*	- Hydrogen and oxygen (if available) isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 2721 samples)
