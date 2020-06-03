@@ -3,6 +3,7 @@
 ## assignR 1.2.1
 
 * Updates to ensure compatibility with new CRS specifications in rgdal
+* QA now accepts optional argument "by", allowing reduced run-time
 
 ## assignR 1.2.0
 

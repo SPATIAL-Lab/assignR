@@ -12,7 +12,7 @@ How well does a given isoscape and known origin data set constrain the geographi
 
 \usage{
 QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50, 
-  mask = NULL, setSeed = TRUE, name = NULL)
+  by = 2, mask = NULL, setSeed = TRUE, name = NULL)
 }
 
 \arguments{
@@ -24,6 +24,7 @@ QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50,
 }
   \item{valiTime}{numeric. How many times do you want to randomly draw validation stations and run the validation? Must be an integer equal to or greater than one. 
 }
+  \item{by}[integer. Threshold increment to use in evaluating assignment performance. Must be between 1 and 25.]
   \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
 }
   \item{setSeed}{logical. Do you want to \code{set.seed()} when you randomly draw validation stations? Yes gives the same sequence of random draws each time the function is called.
@@ -45,6 +46,7 @@ QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50,
   \item{random_prob_density}{Random probability of assignment to any given grid cell on the assignment surface(i.e. 1 divided by the total number of grid cells).
 }
   \item{name}{character. Name assigned to the QA object.}
+  \item{by}{integer. Value of by used.}
 }
 
 \note{
@@ -52,7 +54,7 @@ Please see Ma et al., 2019 for methodological details.
 }
 
 \references{
-Ma et al. (in review) Does transpiration matter? Comparing geographic assignment with precipitation- and plant-based isoscapes using IsoMAP and assignR software. \emph{Movement Ecology}.
+Ma et al. (2020) assignR : An R package for isotope‐based geographic assignment. \emph{Methods in Ecology and Evolution} \href{https://doi.org/10.1111/2041-210X.13426}{doi:10.1111/2041-210X.13426}.
 
 Vander Zanden, H. B. et. al (2014) Contrasting assignment of migratory organisms to geographic origins using long-term versus year-specific precipitation isotope maps. \emph{Methods in Ecology and Evolution} \strong{5} 891--900.
 }
@@ -77,7 +79,7 @@ d1 = subOrigData(taxon = "Buteo lagopus")
 # first with one example
 # gives warning because a small number of samples are available
 qa1 = QA(isoscape = d2h_lrNA, known = d1, valiStation = 1, 
-          valiTime = 2, mask = naMap, name = "Buteo")
+          valiTime = 2, by = 10, mask = naMap, name = "Buteo")
                     
 # plot the qa result
 plot(qa1)
@@ -85,6 +87,6 @@ plot(qa1)
 # now compare with a second data set
 \donttest{d2 = subOrigData(taxon = "Charadrius montanus")
 qa2 = QA(isoscape = d2h_lrNA, known = d2, valiStation = 1, 
-          valiTime = 2, mask = naMap, name = "Charadrius")
+          valiTime = 2, by = 10, mask = naMap, name = "Charadrius")
 plot(qa1, qa2)}
 }
