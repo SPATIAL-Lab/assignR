@@ -24,7 +24,7 @@ QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50,
 }
   \item{valiTime}{numeric. How many times do you want to randomly draw validation stations and run the validation? Must be an integer equal to or greater than one. 
 }
-  \item{by}[integer. Threshold increment to use in evaluating assignment performance. Must be between 1 and 25.]
+  \item{by}{integer. Threshold increment to use in evaluating assignment performance. Must be between 1 and 25.}
   \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
 }
   \item{setSeed}{logical. Do you want to \code{set.seed()} when you randomly draw validation stations? Yes gives the same sequence of random draws each time the function is called.

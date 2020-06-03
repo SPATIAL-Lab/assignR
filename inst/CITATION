@@ -1,0 +1,18 @@
+citHeader("To cite assignR in publications use:")
+
+citEntry(entry = "Article",
+  title = "assignR: An R package for isotope-based geographic assignment",
+  author = personList(as.person("Chao Ma"),
+                   as.person("Hannah B. Vander Zanden"),
+                   as.person("Michael B. Wunder"),
+                   as.person("Gabriel J. Bowen")),
+  journal = "Methods in Ecology and Evolution",
+  year = "2020",
+  doi = "10.1111/2041-210X.13426",
+  url = "https://doi.org/10.1111/2041-210X.13426",
+
+  textVersion = paste("Chao Ma, Hannah B. Vander Zanden, Michael B. Wunder, and Gabriel J. Bowen (2020).",
+        "assignR: An R package for isotope-based geographic assignment.",
+        "Methods in Ecology and Evolution.",
+        "https://doi.org/10.1111/2041-210X.13426")
+)
