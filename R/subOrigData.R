@@ -1,56 +1,51 @@
 subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
                         age_code = NULL, mask = NULL) {
   
-  data("knownOrig", envir = environment())
-  knownOrig = knownOrig
+  #load data in funtion environ
+  data("knownOrig_samples", envir = environment())
+  data("knownOrig_sites", envir = environment())
+  data("knownOrig_sources", envir = environment())
+  knownOrig_samples = knownOrig_samples
+  knownOrig_sites = knownOrig_sites
+  knownOrig_sources = knownOrig_sources
   
-  result = NULL
+  result = knownOrig_samples
 
-  if(!marker %in% colnames(knownOrig@data)){
+  if(!marker %in% colnames(knownOrig_samples)){
     stop("marker must be column name for isotope data field")
   }
   
   if(!is.null(taxon)){
-    if(!all(taxon %in% unique(knownOrig$Taxon))){
+    if(!all(taxon %in% unique(knownOrig_samples$Taxon))){
       warning("One or more taxa not present in database")
     }
-    result = knownOrig[knownOrig$Taxon %in% taxon,]
-  }
-  if(!is.null(group)){
-    if(!all(group %in% unique(knownOrig$Group))){
-      warning("One or more groups not present in database")
-    }
-    r = knownOrig[knownOrig$Group %in% group,]
-    if(is.null(result)){
-      result = r
-    }else{
-      result = result[result$ID %in% r$ID,] 
-    }
-  }
-  if(!is.null(reference)){
-    if(!all(reference %in% unique(knownOrig$Reference))){
-      warning("One or more references not present in database")
-    }
-    r = knownOrig[knownOrig$Reference %in% reference,]
-    if(is.null(result)){
-      result = r
-    }else{
-      result = result[result$ID %in% r$ID,] 
-    }
-  }
-  if(!is.null(age_code)){
-    if(!all(age_code %in% unique(knownOrig$Age_code))){
-      warning("One or more age codes not present in database")
-    }
-    r = knownOrig[knownOrig$Age_code %in% age_code,]
-    if(is.null(result)){
-      result = r
-    }else{
-      result = result[result$ID %in% r$ID,] 
-    }
+    result = knownOrig_samples[knownOrig_samples$Taxon %in% taxon,]
   }
   
-  result = result[!is.na(result@data[,marker]),]
+  if(!is.null(group)){
+    if(!all(group %in% unique(knownOrig_samples$Group))){
+      warning("One or more groups not present in database")
+    }
+    r = knownOrig_samples[knownOrig_samples$Group %in% group,]
+    result = result[result$Sample_ID %in% r$Sample_ID,] 
+  }
+  
+  if(!is.null(reference)){
+    if(!all(reference %in% unique(knownOrig_sources$Dataset_ID))){
+      warning("One or more references not present in database")
+    }
+    result = result[result$Dataset_ID %in% reference,] 
+  }
+  
+  if(!is.null(age_code)){
+    if(!all(age_code %in% unique(knownOrig_samples$Age_class))){
+      warning("One or more age codes not present in database")
+    }
+    r = knownOrig_samples[knownOrig_samples$Age_class %in% age_code,]
+    result = result[result$Sample_ID %in% r$Sample_ID,]
+  }
+  
+  result = result[!is.na(result[,marker]),]
   if(length(result) == 0){
     stop("No samples match query")
   }
@@ -60,29 +55,48 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
        class(mask)[1] == "SpatialPolygons"){
       if(is.na(proj4string(mask))){
         stop("mask must have coordinate reference system")
-      } else if(!identicalCRS(knownOrig, mask)) {
-        mask = spTransform(mask, proj4string(knownOrig))
+      } else if(!identicalCRS(knownOrig_sites, mask)) {
+        mask = spTransform(mask, proj4string(knownOrig_sites))
         warning("mask was reprojected")
       }
-      overlap = result[mask,]
+      result_sites = knownOrig_sites[mask,]
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
     }
 
-    if(length(overlap) > 0) {
-      plot(mask, axes = TRUE)
-      plot(overlap, add = TRUE, col = "red")
+    if(length(result_sites) > 0) {
+      if(is.null(result)){
+        result = knownOrig_samples[knownOrig_samples$Site_ID %in% 
+                                     result_sites$Site_ID,]
+      } else{
+        result = result[result$Site_ID %in% result_sites$Site_ID,]
+      }
+      
+      if(length(result) > 0) {
+        plot(mask, axes = TRUE)
+        plot(result_sites, add = TRUE, col = "red")
+      } else {
+        stop("No samples found in mask\n")
+      }
     } else {
-      stop("No samples found in mask\n")
+      stop("No sites found in mask\n")
     }
     
-    result = overlap
-    
   } else {
+    result_sites = knownOrig_sites[knownOrig_sites$Site_ID %in%
+                                     result$Site_ID,]
     plot(wrld_simpl, axes = TRUE)
-    plot(result, add = TRUE, col = "red", cex = 0.5)
+    plot(result_sites, add = TRUE, col = "red", cex = 0.5)
     
   }
-  message(paste(length(result[,1]),"data points are found"))
-  return(result[,marker])
+  
+  message(paste(length(result[,1]),"samples are found from", 
+          length(result_sites), "sites"))
+  
+  result_data = merge(result_sites, result, by = "Site_ID", 
+                      all.x = FALSE, duplicateGeoms = TRUE)
+  result_sources = knownOrig_sources[knownOrig_sources$Dataset_ID %in%
+                                       result_data$Dataset_ID,]
+  
+  return(list(result_data, result_sources))
 }
