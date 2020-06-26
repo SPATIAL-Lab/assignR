@@ -41,8 +41,8 @@ See \code{\link[assignR]{knownOrig_sources}} for citations for all datasets.
 }
 
 \seealso{
-\code{\link[assignR]{knownOrig_sites}}
-\code{\link[assignR]{knownOrig_sources}}
+\code{\link[assignR]{knownOrig_sites}}, 
+\code{\link[assignR]{knownOrig_sources}}, 
 \code{\link[assignR]{subOrigData}}
 }
 

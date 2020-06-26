@@ -40,8 +40,8 @@ data.frame with 18 fields.
 }
 
 \seealso{
-\code{\link[assignR]{knownOrig_samples}}
-\code{\link[assignR]{knownOrig_sites}}
+\code{\link[assignR]{knownOrig_samples}}, 
+\code{\link[assignR]{knownOrig_sites}}, 
 \code{\link[assignR]{subOrigData}}
 }
 

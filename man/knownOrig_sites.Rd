@@ -31,9 +31,7 @@ See \code{\link[assignR]{knownOrig_sources}} for citations for all datasets.
 }
 
 \seealso{
-\code{\link[assignR]{knownOrig_samples}}
-\code{\link[assignR]{knownOrig_sources}}
-\code{\link[assignR]{subOrigData}}
+\code{\link[assignR]{knownOrig_samples}}, \code{\link[assignR]{knownOrig_sources}}, \code{\link[assignR]{subOrigData}}
 }
 
 \examples{
