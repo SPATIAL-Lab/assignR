@@ -34,6 +34,7 @@ QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50,
 }
 
 \value{
+Returns an object of class \dQuote{QA}.
 \item{val_stations}{numeric. An X*Y data.frame of validation station IDs for all valiTime. X = \code{valiTime} and Y = \code{valiStation}.
 }
 \item{pd_val}{numeric. An X*Y data.frame containing the posterior probability density for the validation stations. X = \code{valiTime} and Y = \code{valiStation}.
@@ -50,7 +51,7 @@ QA(isoscape, known, valiStation = ceiling(length(known)*0.1), valiTime = 50,
 }
 
 \note{
-Please see Ma et al., 2019 for methodological details.
+Please see Ma et al. (2020) for methodological details.
 }
 
 \references{
