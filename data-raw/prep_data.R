@@ -3,11 +3,12 @@ library(openxlsx)
 library(sp)
 library(devtools)
 
+#WGS84 projection
+p = CRS("+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs")
+
 #World outline map
 load("data-raw/wrld_simpl.rda")
-
-#grap WGS84 projection
-p = proj4string(wrld_simpl)
+proj4string(wrld_simpl) = p
 
 #This one is internal
 use_data(wrld_simpl, internal = TRUE, overwrite = TRUE)
@@ -59,7 +60,7 @@ all(knownOrig_samples$Dataset_ID %in% knownOrig_sources$Dataset_ID)
 #Convert to SPDF
 knownOrig_sites = SpatialPointsDataFrame(sites[,2:3], 
                                          data = sites[,c(1,4:ncol(sites))],
-                                         proj4string = CRS(p))
+                                         proj4string = p)
   
 #Write it all to /data/
 use_data(ham, oam, hsds, osds, knownOrig_samples, knownOrig_sites, 
