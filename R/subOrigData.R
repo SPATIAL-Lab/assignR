@@ -76,7 +76,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
 
     if(length(result_sites) > 0) {
       result = result[result$Site_ID %in% result_sites$Site_ID,]
-      if(length(result) > 0) {
+      if(nrow(result) > 0) {
         result_sites = result_sites[result_sites$Site_ID %in% 
                                       result$Site_ID,]
         plot(mask, axes = TRUE)
