@@ -279,6 +279,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
       }
       result_data = merge(result_sites, result_out, by = "Site_ID",
                           all.x = FALSE, duplicateGeoms = TRUE)
+      row.names(result_data) = result_data$Sample_ID
       return_obj = list("data" = result_data, "sources" = result_sources,
                         "chains" = chain_out, "marker" = marker)
       class(return_obj) = "subOrigData"
@@ -289,6 +290,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
   } else{
     result_data = merge(result_sites, result, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
+    row.names(result_data) = result_data$Sample_ID
     return_obj = list("data" = result_data, "sources" = result_sources,
                       "chains" = NULL, "marker" = marker)
     class(return_obj) = "subOrigData"

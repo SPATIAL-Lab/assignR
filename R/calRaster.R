@@ -12,13 +12,41 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #check that known is valid and has defined, correct CRS
-  if(class(known)[1] != "SpatialPointsDataFrame") {
-    stop("known should be a SpatialPointsDataFrame, see help page of 
-         calRaster function")
+  if(!(class(known)[1] %in% c("subOrigData", "SpatialPointsDataFrame"))) {
+    stop("known must be a subOrigData or SpatialPointsDataFrame object")
   }
-  if(any(is.na(known@data[,1])) || any(is.nan(known@data[,1])) || 
-     any(is.null(known@data[,1]))){
-    stop("Missing values detected in known")
+  if(class(known)[1] == "subOrigData"){
+    if(is.null(known$data) || is.null(known$marker)){
+      stop("missing information in subOrigData known")
+    }
+    col_m = match(known$marker, names(known$data))
+    col_sd = match(paste0(known$marker, ".sd"), names(known$data))
+    if(is.na(col_m) | is.na(col_sd)){
+      stop("cannot match marker to data table in subOrigData known")
+    }
+    known = known$data
+  }else{
+    if(ncol(known@data) != 2){
+      stop("known must include a 2-column data frame containing the 
+           measured isotope values (col 1) and 1 sd uncertainty (col 2)")
+    }
+    warning("user-provided known; assuming measured isotope value and 1 sd
+            uncertainty are contained in columns 1 and 2, respectively")
+    col_m = 1
+    col_sd = 2
+  }
+  if(any(is.na(known@data[, col_m])) || 
+     any(is.nan(known@data[, col_m])) || 
+     any(is.null(known@data[, col_m]))){
+    stop("Missing values detected in known values")
+  }
+  if(any(is.na(known@data[, col_sd])) || 
+     any(is.nan(known@data[, col_sd])) || 
+     any(is.null(known@data[, col_sd]))){
+    stop("Missing values detected in known uncertainties")
+  }
+  if(any(known@data[, col_sd] == 0)){
+    stop("zero values found in known uncertainties")
   }
   if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
@@ -27,10 +55,6 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     known = spTransform(known, crs(isoscape))
     warning("known was reprojected")
   } 
-  if(ncol(known@data) != 1){
-    stop("known must include a 1-column data frame containing only 
-         the isotope values")
-  }
 
   #check that mask is valid and has defined, correct CRS
   if(!is.null(mask)) {
@@ -82,12 +106,11 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   nSample = nrow(known)
 
   #create space for regression variables
-  tissue.iso = vector("numeric", length = nSample)
-  isoscape.iso = vector("numeric", length = nSample)
   null.iso = NULL
 
   #populate the dependent variable values
-  tissue.iso = known@data[, 1]
+  tissue.iso = known@data[, col_m]
+  tissue.iso.wt = 1 / known@data[, col_sd]^2
 
   #populate the independent variable values
   if (interpMethod == 1) {
@@ -98,7 +121,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
                                     method = "bilinear")
   }
 
-  #warn if some known site have NA isoscape values
+  #warn if some known sites have NA isoscape values
   if (any(is.na(isoscape.iso[, 1]))) {
     na = which(is.na(isoscape.iso[, 1]))
     wtxt = "NO isoscape values found at the following locations:\n"
@@ -114,12 +137,13 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
     #remove na values before continuing
     tissue.iso = tissue.iso[!is.na(isoscape.iso[,1])]
+    tissue.iso.wt = tissue.iso.wt[!is.na(isoscape.iso[,1])]
     isoscape.iso = isoscape.iso[!is.na(isoscape.iso[,1]), ]
     nSample = length(tissue.iso)
   }
 
   #fit the regression model
-  lmResult = lm(tissue.iso ~ isoscape.iso[, 1])
+  lmResult = lm(tissue.iso ~ isoscape.iso[, 1], weights = tissue.iso.wt)
 
   #output
   if (verboseLM){
@@ -135,7 +159,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   #create data object for return
   x = isoscape.iso[, 1]
   y = tissue.iso
-  xy = data.frame(x, y)
+  w = tissue.iso.wt
+  xyw = data.frame(x, y, w)
 
   if (genplot == TRUE || !is.null(outDir) ) {
     #formatted lm equation for plotting
@@ -174,7 +199,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   }
   isoscape.dev = tissue.dev = double()
   for(i in 1:100){
-    lm.sim = lm(tissue.iso ~ isoscape.sim[,i])
+    lm.sim = lm(tissue.iso ~ isoscape.sim[,i], weights = tissue.iso.wt)
     isoscape.dev = c(isoscape.dev, isoscape.sim[,i] - isoscape.iso[,1])
     tissue.dev = c(tissue.dev, lm.sim$residuals)
   }
@@ -218,10 +243,10 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #set names for return data object
-  names(xy) = c("isoscape.iso", "tissue.iso")
+  names(xyw) = c("isoscape.iso", "tissue.iso", "tissue.iso.wt")
 
   #package results
-  result = list(isoscape.rescale = isoscape.rescale, lm.data = xy,
+  result = list(isoscape.rescale = isoscape.rescale, lm.data = xyw,
                 lm.model = lmResult)
   class(result) = "rescale"
           
