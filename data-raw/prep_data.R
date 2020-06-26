@@ -10,7 +10,7 @@ load("data-raw/wrld_simpl.rda")
 p = proj4string(wrld_simpl)
 
 #This one is internal
-use_data(wrld_simpl, internal = TRUE)
+use_data(wrld_simpl, internal = TRUE, overwrite = TRUE)
 
 #Standards adjacency matrix for H
 ham = read.xlsx("data-raw/ham.xlsx", rowNames = TRUE)
