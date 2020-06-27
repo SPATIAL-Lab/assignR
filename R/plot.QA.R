@@ -34,7 +34,7 @@ plot.QA = function(x, ..., outDir = NULL){
   }
   
   #vector of thresholds
-  xx = seq(0.00, 1, x$by/100)
+  xx = seq(0.00, 1, a[[1]]$by/100)
   if(tail(xx, 1) != 1){
     xx = c(xx, 1)
   }
@@ -44,8 +44,8 @@ plot.QA = function(x, ..., outDir = NULL){
     vali = ncol(x$val_stations)
     niter = nrow(x$val_stations)
     
-    means.p = data.frame(xx, apply(x$prption_byProb, 2, mean)/vali)
-    means.a = data.frame(xx, apply(x$prption_byArea, 2, mean)/vali)
+    means.p = data.frame(xx, apply(x$prption_byProb, 2, mean))
+    means.a = data.frame(xx, apply(x$prption_byArea, 2, mean))
     
     precision = matrix(rep(0, niter*length(xx)), 
                        ncol=niter, nrow=length(xx))
@@ -139,12 +139,11 @@ plot.QA = function(x, ..., outDir = NULL){
     }
     
     means.p = data.frame(xx, apply(a[[1]]$prption_byProb, 2, 
-                                   mean)/vali[1])
+                                   mean))
     means.a = data.frame(xx, apply(a[[1]]$prption_byArea, 2, 
-                                   mean)/vali[1])
+                                   mean))
     
-    precision = matrix(rep(0, niter[1] * length(xx)), ncol=niter[1], 
-                       nrow=length(xx))
+    precision = matrix(ncol=niter[1], nrow=length(xx))
     for (i in 1:niter[1]){
       precision[,i] = apply(a[[1]]$precision[[i]],1, median)
     }
@@ -156,21 +155,20 @@ plot.QA = function(x, ..., outDir = NULL){
     
     pre = data.frame(xx, 1 - mean.pre)
     
-    pd = matrix(rep(NA, n * max(niter) * max(vali)), ncol=n)
-    pd[1:(niter[1]*vali[1]),1] = as.numeric(a[[1]]$pd_val) / 
+    pd = matrix(ncol=n, nrow = max(niter) * max(vali))
+    pd[1:(niter[1] * vali[1]), 1] = as.numeric(a[[1]]$pd_val) / 
       a[[1]]$random_prob_density
     
     for(i in seq_len(n)[-1]){
 
       means.p = cbind(means.p, apply(a[[i]]$prption_byProb, 2, 
-                                     mean)/vali[i])
+                                     mean))
       means.a = cbind(means.a, apply(a[[i]]$prption_byArea, 2, 
-                                     mean)/vali[i])
+                                     mean))
       
-      precision = matrix(rep(0, niter[i] * length(xx)), ncol=niter[i], 
-                         nrow=length(xx))
-      for (j in 1:niter[i]){
-        precision[,j] = apply(a[[i]]$precision[[j]],1, median)
+      precision = matrix(ncol=niter[i], nrow=length(xx))
+      for (j in seq(niter[i])){
+        precision[,j] = apply(a[[i]]$precision[[j]], 1, median)
       }
       
       mean.pre = NULL
@@ -180,7 +178,7 @@ plot.QA = function(x, ..., outDir = NULL){
       
       pre = cbind(pre, 1 - mean.pre)
       
-      pd[1:(niter[1]*vali[1]),i] = as.numeric(a[[i]]$pd_val) / 
+      pd[1:(niter[i] * vali[i]), i] = as.numeric(a[[i]]$pd_val) / 
         a[[i]]$random_prob_density
       
     }

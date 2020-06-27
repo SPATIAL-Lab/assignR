@@ -17,7 +17,7 @@ calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA,
 
 \arguments{
   \item{known}{
-SpatialPointsDataFrame. Known-origin data that should contain only one feature: tissue isotope value. Known-origin data can be queried using \code{knownOrig}.
+subOrigData or SpatialPointsDataFrame. Known-origin tissue isotope data from the subOrgData function or provided by user. User-provided data must be formatted as a subOrgData object (see \code{\link[assignR]{subOrigData}} or a SpatialPointsDataFrame in which the first data field contains the measured tissue isotope value and the second the 1 standard deviation uncertainty on that value.
 }
   \item{isoscape}{
 raster. Isoscape raster with two layers. The first one is the mean and the second is one standard deviation.
@@ -58,11 +58,11 @@ logical. Print out the linear regression results.
 \examples{
 # load North America boundary and global isoscape
 data("naMap")
-data("d2h_world")
+data("d2h_lrNA")
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(taxon = "Homo sapiens", reference = "Ehleringer et al. 2008", mask = naMap)
+d = subOrigData(group = "Modern human", mask = naMap)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
+r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
 }
