@@ -35,40 +35,63 @@ plot(naMap)
 *****
 Load and plot a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), and resolution has been reduced to speed up processing in these examples. Full-resolution global growing season isoscapes are included in the package as *d2h_world.rda* and *d18o_world.rda*. 
 
-```{r isoscape, fig.width = 6, fig.asp = 0.5}
+```{r isoscape, fig.width=7, fig.asp=0.45}
 data("d2h_lrNA")
 plot(d2h_lrNA)
 ```
 
 *****
-The package includes a database of H and O isotope data for known origin samples, *knownOrig.rda*. Let's load it and have a look. First we'll get the names of the data fields available in the database.
+The package includes a database of H and O isotope data for known origin samples, which consists of three tables (*knownOrig_sites.rda*, *knownOrig_samples.rda*, and *knownOrig_sources.rda*). Let's load it and have a look. First we'll get the names of the data fields available in the tables.
 
 ```{r knownOrig_names}
-data("knownOrig")
-names(knownOrig)
+data("knownOrig_sites", "knownOrig_samples", "knownOrig_sources")
+names(knownOrig_sites)
+names(knownOrig_samples)
+names(knownOrig_sources)
 ```
 
 Now lets look at a list of species names available.
 
 ```{r knownOrig_taxa}
-unique(knownOrig$Taxon)
+unique(knownOrig_samples$Taxon)
 ```
 
 *****
-Load H isotope data for North American Loggerhead Shrike from the package database. Here we are limiting the data to values from one publication...comparability of H isotope measurements across different labs and methods is often questionable.
+Load H isotope data for North American Loggerhead Shrike from the package database.
 
-```{r birdData}
-d = subOrigData(taxon = "Lanius ludovicianus", reference = "Hobson et al. 2012", mask = naMap)
+```{r birdData, fig.width=5, fig.asp=0.8}
+d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
 ```
 
-For a real application you would want to explore the *knownOrig.rda* dataset to find measurements that are appropriate to your study system (same or similar taxon, geographic region, measurement approach, etc.) or collect and import known-origin data that are specific to your system.
+By default, the *subOrigData* function transforms all data to a common calibration scale (VSMOW-SLAP), using data from co-analysis of different laboratory reference materials (Magozzi et al., in prep). The co-analysis comparisons used are documented in the function's return object.  
+
+```{r birdChains}
+d$chains
+```
+
+Information on these calibration scales is contained in the *hsds.rda* and *osds.rda* data files. 
+
+Transformation is important when blending data from different labs or papers because different reference materials have been used to calibrate published data and these calibrations are not always comparable. In this case all the data come from one paper:
+
+```{r birdSources}
+d$sources[,1:3]
+```
+
+If we didn't want to transform the data, and instead wished to use the calibration scale from the original publication, we can specify that in our call to *subOrigData*. Keep in mind that any subsequent analyses using these data will be based on this calibration scale: for example, if you wish to assign samples of unknown origin, the values for those samples should be reported on the same scale.
+
+```{r birdNoTrans, fig.width=5, fig.asp=0.8}
+d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap, std_scale = NULL)
+d$sources$H_std_scale
+```
+
+For a real application you would want to explore the database to find measurements that are appropriate to your study system (same or similar taxon, geographic region, measurement approach, etc.) or collect and import known-origin data that are specific to your system.
 
 *****
 # Isoscape Calibration and Probability of Origin for Unknown Samples 
 
 We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. *calRaster* fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a sample-type specific isoscape.
 
-```{r calRaster}
+```{r calRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
 r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
 ```
 
@@ -86,7 +109,7 @@ print(un)
 *****
 Produce posterior probability density maps used to the assign the unknown origin samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf)
 
-```{r pdRaster}
+```{r pdRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
 asn = pdRaster(r, unknown = un)
 ```
 
@@ -143,14 +166,14 @@ Researchers often want to classify their study area in to regions that are and a
 
 Extract 10% of the study area, giving maps that show the 10% of grid cells with the highest posterior probability for each sample.
 
-```{r qtlRaster1}
+```{r qtlRaster1, fig.width=5, fig.asp=0.8, out.width='45%'}
 qtlRaster(asn, threshold = 0.1)
 ```
 
 *****
 Extract 80% of the posterior probability density, giving maps that show the smallest region within which there is an 80% chance each sample originated.
 
-```{r qtlRaster2}
+```{r qtlRaster2, fig.width=5, fig.asp=0.8, out.width='45%'}
 qtlRaster(asn, threshold = 0.8, thresholdType = "prob")
 ```
 
@@ -162,14 +185,14 @@ Most studies involve assigning multiple individuals, and often it is desirable t
 
 Calculate the probability that **all** samples came from any given grid cell in the analysis area. Note that this summarization will only be useful if all samples are truly derived from a single population of common geographic origin.
 
-```{r jointP}
+```{r jointP, fig.width=5, fig.asp=0.8}
 jointP(asn)
 ```
 
 *****
 Calculate the probability that **any** sample came from any given grid cell in the analysis area. In this case we'll save the output to a variable for later use.
 
-```{r unionP}
+```{r unionP, fig.width=5, fig.asp=0.8}
 up = unionP(asn)
 ```
 
@@ -178,7 +201,7 @@ The results from *unionP* highlight a broader region, as you might expect.
 *****
 Any of the other post-hoc analysis tools can be applied to the summarized results. Here we'll use *qtlRaster* to identify the 10% of the study area that is most likely to be the origin of one or more samples.
 
-```{r qtlRaster3}
+```{r qtlRaster3, fig.width=5, fig.asp=0.8}
 qtlRaster(up, threshold = 0.1)
 ```
 
@@ -190,17 +213,17 @@ How good are the geographic assignments? What area or probability threshold shou
 We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).  
 
 ```{r QA1, warning=FALSE}
-qa1 = QA(d2h_lrNA, d, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "normal")
+qa1 = QA(d, d2h_lrNA, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "normal")
 ```
 
 *****
 Plot the result. (Please note that because of changes in R's random number generator your results may not exactly match those shown here if you are using R version 3.5.X.)
 
-```{r plot.QA1}
+```{r plot.QA1, fig.width=4, fig.asp=1, out.width='45%'}
 plot(qa1)
 ```
 
-The first three panels show three metrics, granularity (higher is better), bias (closer to 1:1 is better), and sensitivity (higher is better). The second plot shows the posterior probabilities at the known locations of origin relative to random (=1, higher is better). More information is provided in Ma et al., in review.
+The first three panels show three metrics, granularity (higher is better), bias (closer to 1:1 is better), and sensitivity (higher is better). The second plot shows the posterior probabilities at the known locations of origin relative to random (=1, higher is better). More information is provided in [Ma et al., 2020](https://doi.org/10.1111/2041-210X.13426).
 
 A researcher might refer to the sensitivity plot, for example, to assess what *qtlRaster* area threshold would be required to obtain 90% correct assignments in their study system. Here it's somewhere between 0.25 and 0.3.
 
@@ -209,7 +232,7 @@ How would using a different isoscape or different known origin dataset affect th
 
 Let's modify our isoscape to add some random noise.
 
-```{r modraster, fig.width=5, fig.asp = 0.6}
+```{r modraster, fig.width=5, fig.asp=0.8}
 dv = getValues(d2h_lrNA[[1]])
 dv = dv + rnorm(length(dv), 0, 15)
 d2h_fuzzy = setValues(d2h_lrNA[[1]], dv)
@@ -221,13 +244,13 @@ We'll combine the fuzzy isoscape with the uncertainty layer from the original is
 
 ```{r QA2, warning=FALSE}
 d2h_fuzzy = brick(d2h_fuzzy, d2h_lrNA[[2]])
-qa2 = QA(d2h_fuzzy, d, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "fuzzy")
+qa2 = QA(d, d2h_fuzzy, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "fuzzy")
 ```
 
 *****
 Now *plot* to compare.
 
-```{r plot.QA2}
+```{r plot.QA2, fig.width=4, fig.asp=1, out.width='45%'}
 plot(qa1, qa2)
 ```
 
