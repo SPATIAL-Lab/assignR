@@ -62,7 +62,8 @@ Magozzi, S. et al. (in prep) Standard-chain transformation to improve the compar
 
 \examples{
 ## WITHOUT mask
-# extract d2H data for Jackdaw, Partridge and Willow Grouse, transformed to the VSMOW/SLAP H standard scale
+# extract d2H data for Jackdaw, Partridge and Willow Grouse, transformed
+# to the VSMOW/SLAP H standard scale
 d1 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", "Turdus migratorius"))
 summary(d1)
 

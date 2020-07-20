@@ -42,7 +42,9 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
   }
   
   if(!is.null(reference)){
-    if(!all(reference %in% unique(knownOrig_sources$Dataset_ID))){
+    if(!is.numeric(reference)){
+      warning("reference is now numeric dataset ID, see knownOrig_sources.rda")
+    } else if(!all(reference %in% unique(knownOrig_sources$Dataset_ID))){
       warning("One or more references not present in database")
     }
     result = result[result$Dataset_ID %in% reference,] 
