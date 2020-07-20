@@ -1,6 +1,7 @@
 ^Rmarkdown$
 ^docs$
 ^data-raw$
+^n3qafliajlfewe$
 ^cran-comments\.md$
 ^\.travis\.yml$
 ^CRAN-RELEASE$
