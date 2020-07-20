@@ -48,8 +48,7 @@ data("naMap")
 data("d2h_world")
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(taxon = "Homo sapiens", 
-  reference = "Ehleringer et al. 2008", mask = naMap)
+d = subOrigData(group = "Modern human", mask = naMap)
 
 # rescale from environmental isoscape to tissue isoscape
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
