@@ -5,7 +5,7 @@
 \docType{data}
 
 \title{
-Low resolution North American growing season H isoscape
+data: low resolution North American growing season H isoscape
 }
 
 \description{

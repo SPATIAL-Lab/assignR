@@ -5,7 +5,7 @@
 \docType{data}
 
 \title{
-Adjacency matrix for keratin H isotope standards
+data: adjacency matrix for keratin H isotope standards
 }
 
 \description{

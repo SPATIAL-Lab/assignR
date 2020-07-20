@@ -5,7 +5,7 @@
 \docType{data}
 
 \title{
-Site data for tissues of known origin
+data: site data for tissues of known origin
 }
 
 \description{

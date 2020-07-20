@@ -5,7 +5,7 @@
 \docType{data}
 
 \title{
-Standards description for keratin O isotope standard scales
+data: standards description for keratin O isotope standard scales
 }
 
 \description{

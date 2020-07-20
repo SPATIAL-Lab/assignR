@@ -35,11 +35,10 @@ character string or string vector. Animal age code for data to be extracted.
 SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, global.
 }
   \item{std_scale}{
-character string. Text identifier for standard calibration scale to which all isotope values will be transformed. See \code{\link[assignR]{hsds}} and \code{\link[assignR]{osds}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported standard scale.
+character string. Text identifier for standard calibration scale to which all isotope values will be transformed. See \code{\link[assignR]{hsds}} and \code{\link[assignR]{osds}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported standard scale.}
   \item{niter}{
 integer. Number of random samples used to propagate uncertainty in standard chain transformations.
 }
-  }
 }
 
 \value{

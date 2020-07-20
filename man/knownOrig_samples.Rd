@@ -5,7 +5,7 @@
 \docType{data}
 
 \title{
-Sample data for tissues of known origin
+data: sample data for tissues of known origin
 }
 
 \description{
