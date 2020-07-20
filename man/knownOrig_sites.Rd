@@ -39,7 +39,7 @@ library(sp)
 data("knownOrig_sites")
 class(knownOrig_sites)
 summary(knownOrig_sites)
-plot(wrld_simpl, add = TRUE, border = "grey")
+plot(assignR:::wrld_simpl, border = "grey")
 plot(knownOrig_sites, add = TRUE)
 }
 

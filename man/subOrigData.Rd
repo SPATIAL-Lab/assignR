@@ -26,7 +26,7 @@ character string or string vector. Species name(s) for data to be extracted.
 character string or string vector. Taxonomic groups for data to be extracted.
 }
   \item{reference}{
-character string or string vector. Bibliographic reference for data to be extracted.
+integer or integer vector. Dataset_ID(s) for data to be extracted. See \code{\link[assignR]{knownOrig_sources}}.
 }
   \item{age_code}{
 character string or string vector. Animal age code for data to be extracted. 
@@ -72,7 +72,8 @@ d2 = subOrigData(group = c("Insect","Passerine"), std_scale = NULL)
 summary(d2)
 
 # extract d18O data for all humans, transformed to the VSMOW/SLAP O standard scale
-d3 = subOrigData(marker = "d18O", group = c("Modern human", "Indigenous human"), std_scale = "VSMOW_O")
+d3 = subOrigData(marker = "d18O", 
+  group = c("Modern human", "Indigenous human"), std_scale = "VSMOW_O")
 summary(d3)
 
 # extract d2H data for humans using taxon, transformed to the VSMOW/SLAP H standard scale

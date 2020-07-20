@@ -4,7 +4,7 @@ author: "Gabe Bowen, Chao Ma"
 date: "August 29, 2019"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{assigR}
+  %\VignetteIndexEntry{assignR Examples}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
