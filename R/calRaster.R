@@ -210,7 +210,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   iso.cov = cov(isoscape.dev, tissue.dev)
   
   #combine uncertainties of isoscape and rescaling function
-  sd = (isoscape[[2]]^2 + (summary(lmResult)$sigma)^2 + iso.cov)^0.5
+  lm_var = sum(lmResult$residuals^2) / lmResult$df.residual
+  sd = (isoscape[[2]]^2 + lm_var + iso.cov)^0.5
 
   #stack the output rasters and apply names
   isoscape.rescale = stack(isoscape.rescale, sd)
