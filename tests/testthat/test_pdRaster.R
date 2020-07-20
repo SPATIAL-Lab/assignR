@@ -4,8 +4,7 @@ library(raster)
 data("naMap")
 data("d2h_world")
 
-d = subOrigData(taxon = "Homo sapiens", 
-                reference = "Ehleringer et al. 2008", mask = naMap)
+d = subOrigData(group = "Modern human", mask = naMap)
 r = calRaster(known = d, isoscape = d2h_world, mask = naMap)
 id = "smile"
 d2H = -80
