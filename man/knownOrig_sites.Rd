@@ -9,7 +9,7 @@ data: site data for tissues of known origin
 }
 
 \description{
-This dataset consists of site locations and metadata for loactions were human hair, insect wings, and bird feathers of known origin have been collected.
+This dataset consists of locations and metadata for sites were human hair, insect wings, and bird feathers of known origin have been collected.
 }
 
 \usage{data("knownOrig_sites")

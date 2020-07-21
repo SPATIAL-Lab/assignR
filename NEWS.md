@@ -6,7 +6,7 @@
 * New data objects document different calibration standards used to generate known-origin H and O isotope data
 * subOrigData supports transformation of data among different calibration standard scales using the 'standard-chain' method of Magozzi et al. (in prep); format of return object from this function has changed
 * calRaster changes including new format for input object "known" and use of weighted least squares regression
-* QA changes including new format for input object "known" and option to resample known data by site rather than by sample; for bySite option returned results are the average of site-level average statistics; argument order changed for consistancy with calRaster
+* QA changes including new format for input object "known" and option to resample known data by site rather than by sample; for bySite option returned results are the average of site-level average statistics; argument order changed for consistency with calRaster
 
 ## assignR 1.2.1
 
