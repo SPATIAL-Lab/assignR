@@ -12,7 +12,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #check that known is valid and has defined, correct CRS
-  if(!(class(known)[1] %in% c("subOrigData", "SpatialPointsDataFrame"))) {
+  if(!(class(known)[1] %in% c("subOrigData", "QAData", 
+                              "SpatialPointsDataFrame"))) {
     stop("known must be a subOrigData or SpatialPointsDataFrame object")
   }
   if(class(known)[1] == "subOrigData"){
@@ -34,8 +35,12 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
       stop("known must include a data frame containing the measured 
            isotope values (col 1) and 1 sd uncertainty (col 2)")
     }
-    warning("user-provided known; assuming measured isotope value and 1 sd
+    if(class(known) == "QAData"){
+      class(known) = "SpatialPointsDataFrame"
+    } else{
+      warning("user-provided known; assuming measured isotope value and 1 sd
             uncertainty are contained in columns 1 and 2, respectively")
+    }
     col_m = 1
     col_sd = 2
   }

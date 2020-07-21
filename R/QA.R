@@ -182,6 +182,7 @@ QA = function(known, isoscape, bySite = TRUE,
       m = known[-val_stations[i,],]
     }
     
+    class(m) = "QAData"
     rescale = calRaster(m, isoscape, mask, genplot = FALSE, 
                                   verboseLM = FALSE)
     
