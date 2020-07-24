@@ -31,7 +31,7 @@ test_that("pdRaster can correctly calculate posterior probabilities of origin
             expect_error(pdRaster(r, unknown = as.matrix(un)))
             expect_error(pdRaster(r, unknown = un_hasNA))
             expect_error(pdRaster(r, unknown = data.frame(un$id,un$id)))
-            expect_error(pdRaster(r, unknown = data.frame(un,un)))
+            expect_error(pdRaster(r, unknown = data.frame(un[,1])))
             expect_error(pdRaster(r, unknown = un, genplot = 2))
             expect_error(pdRaster(r, unknown = un, outDir = 2))
             expect_error(pdRaster(r, unknown = un, mask = mask_noCRS))

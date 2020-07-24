@@ -99,21 +99,32 @@ r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
 ```
 
 *****
-Let's create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape. The isotope values are drawn from a random distribution with a standard deviation of 8 per mil, which is a pretty reasonable variance for conspecific residents at a single location. If you had real measured data for your study samples you would load them here, instead.
+Let's create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape. The isotope values are drawn from a random distribution with a standard deviation of 8 per mil, which is a pretty reasonable variance for conspecific residents at a single location. We'll also add made-up values for the analytical uncertainty for each sample and a column recording the calibration scale used for our measurements (see below). If you had real measured data for your study samples you would load them here, instead.
 
 ```{r samples}
 id = letters[1:5]
 set.seed(123)
 d2H = rnorm(5, -110, 8)
-un = data.frame(id, d2H)
+d2H.sd = runif(5, 1.5, 2.5)
+d2H_std_scale = rep("UT_H_1", 5)
+un = data.frame(id, d2H, d2H.sd, d2H_std_scale)
 print(un)
 ```
+
+As discussed above, one issue that must be considered with any organic H or O isotope data is the calibration scale (the reference materials and assigned, calibrated values for those) used by the laboratory producing the data. The calibration scale for your unknown samples should be the same as that for the known origin data used in calRaster. Remember that the scale for our known origin data 'd' is *OldSA.1_H_1*. Let's assume that our fake data were normalized to the *UT_H_1* scale. The *refTrans* function allows us to convert between the two.
+
+```{r refTrans}
+un = refTrans(un, std_scale = "OldSA.1_H_1")
+print(un)
+```
+
+Notice that both the d2H values and the uncertainties have been updated to reflect the scale transformation.
 
 *****
 Produce posterior probability density maps used to the assign the unknown origin samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf)
 
 ```{r pdRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
-asn = pdRaster(r, unknown = un)
+asn = pdRaster(r, unknown = un$data)
 ```
 
 Cell values in these maps are small because each cell's value represents the probability that this one cell, out of all of them on the map, is the actual origin of the sample. Together, all cell values on the map should sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.

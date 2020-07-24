@@ -201,7 +201,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   #create rescaled prediction isoscape
   isoscape.rescale = isoscape[[1]] * slope + intercept
   
-  #simulate covariance
+  #simulate rescaling function variance
   isoscape.sim = matrix(0, nrow = nSample, ncol = 100)
   for(i in seq_along(isoscape.iso[,1])){
     isoscape.sim[i,] = rnorm(100, isoscape.iso[i, 1], isoscape.iso[i, 2])
@@ -212,11 +212,10 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     isoscape.dev = c(isoscape.dev, isoscape.sim[,i] - isoscape.iso[,1])
     tissue.dev = c(tissue.dev, lm.sim$residuals)
   }
-  iso.cov = cov(isoscape.dev, tissue.dev)
-  
+
   #combine uncertainties of isoscape and rescaling function
-  lm_var = sum(lmResult$residuals^2) / lmResult$df.residual
-  sd = (isoscape[[2]]^2 + lm_var + iso.cov)^0.5
+  #rescaling variance is added variance from simulated fits
+  sd = (isoscape[[2]]^2 + (var(tissue.dev) - var(isoscape.dev)))^0.5
 
   #stack the output rasters and apply names
   isoscape.rescale = stack(isoscape.rescale, sd)

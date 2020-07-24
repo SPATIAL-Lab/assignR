@@ -15,5 +15,5 @@ importFrom(raster, crs, crop, plot, values, getValues, setValues, minValue,
            overlay, projectRaster, compareRaster)
 importFrom(grDevices, dev.off, pdf, png)
 importFrom(graphics, abline, boxplot, legend, lines, par, text, title)
-importFrom(stats, coef, cov, dnorm, lm, median, na.omit, rnorm, sd)
+importFrom(stats, coef, cov, dnorm, lm, median, na.omit, rnorm, sd, var)
 importFrom(utils, data, setTxtProgressBar, txtProgressBar, tail)

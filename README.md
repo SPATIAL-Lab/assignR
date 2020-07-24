@@ -20,7 +20,7 @@ library(assignR)
 
 *d18o_world.rda* - Global growing season precipitation O isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
 
-*knownOrig.rda*	- Hydrogen and oxygen (if available) isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 2721 samples)
+*knownOrig.rda*	- Hydrogen and oxygen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 4218 samples); information on calibration scales used to report data from different labs, useful for converting between scales
 
 *naMap.rda* - North America outline
 
@@ -29,6 +29,8 @@ library(assignR)
 **Functions**
 
 *subOrigData* - Subset the known-origin stable isotope dataset included in this package
+
+*refTrans* - Transform data among calibration scales
 
 *calRaster* - Transform environmental isoscape to tissue isoscape
 

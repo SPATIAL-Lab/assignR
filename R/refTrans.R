@@ -85,6 +85,11 @@ refTrans = function(samples, marker = "d2H", std_scale = "VSMOW_H",
     } else{
       trans_out = trans(start_scales, samples_scales, samples, std_scale, 
                         am, std_table, marker, sd_col, niter)
+      if(marker == "d2H"){
+        trans_out$data$d2H_std_scale = rep(std_scale)  
+      } else{
+        trans_out$data$d18O_std_scale = rep(std_scale)
+      }
       return(trans_out)
     } 
     

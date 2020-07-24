@@ -66,19 +66,18 @@ pdRaster = function(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDi
     stop("unknown should be a data.frame, see help page of pdRaster function")
   }
   
-  if (class(unknown)[1] == "data.frame"){
-    if(ncol(unknown) == 2){
-      if(is.numeric(unknown[,2])){
-        data = unknown
-      } else {
-        stop("unknown column 2 must contain numeric values")
-      }
-    } else {
-      stop("Wrong number of columns in unknown")
-    }
-
+  if(ncol(unknown) < 2){
+    stop("unknown must contain sample ID in col 1 and marker value in col 2")
   }
-  
+  if(ncol(unknown) > 2){
+    warning("more than 2 cols in unknown, assuming IDs in col 1 and marker values in col 2")
+  }
+  if(is.numeric(unknown[,2])){
+    data = unknown
+  } else {
+    stop("unknown column 2 must contain numeric values")
+  }
+
   n = nrow(data)
   
   errorV = getValues(rescaled.sd)
