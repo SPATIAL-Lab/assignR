@@ -6,7 +6,7 @@ Data and tools supporting geographic assignment of materials based on their isot
 
 For step-by-step examples demonstrating all functions in the latest development release, see [https://spatial-lab.github.io/assignR/](https://spatial-lab.github.io/assignR/).
 
-For current production release, see [https://cran.r-project.org/web/packages/assignR/vignettes/assignR.html](vignette) and install from CRAN:
+For current production release, see [vignette](https://cran.r-project.org/web/packages/assignR/vignettes/assignR.html) and install from CRAN:
 
 ## Install and load
 install.packages("assignR")     
