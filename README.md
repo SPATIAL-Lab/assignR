@@ -4,7 +4,9 @@
 
 Data and tools supporting geographic assignment of materials based on their isotopic chemistry. Isoscapes (environmental isotope maps) can be generated externally or defaults (*d2h_world.rda*, *d18o_world.rda*) are provided in the package. Data from samples of known origin are used to calibrate the relationship between isoscape and sample values, and can be provided by the user or extracted from the package database (*knownOrig.rda*). Functions (*calRaster*, *pdRaster*) support calibrating the isoscape and inverting Bayes theorem to estimate the probability of origin for unknown samples across a geographic study domain. Functions (*QA*, *plot.QA*) allow quality assessment of assignment results and comparison of methods using split-sample tests and known origin data. Functions (*oddsRatio*, *qtlRaster*, *jointP*, *unionP*) support post-hoc classification of results, summarization of results from multiple samples, and comparison of support for different locations.
 
-For step-by-step examples demonstrating all functions see [https://spatial-lab.github.io/assignR/](https://spatial-lab.github.io/assignR/).
+For step-by-step examples demonstrating all functions in the latest development release, see [https://spatial-lab.github.io/assignR/](https://spatial-lab.github.io/assignR/).
+
+For current production release, see [https://cran.r-project.org/web/packages/assignR/vignettes/assignR.html](vignette) and install from CRAN:
 
 ## Install and load
 install.packages("assignR")     
