@@ -1,5 +1,5 @@
-subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
-                        age_code = NULL, mask = NULL, std_scale = "VSMOW_H",
+subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL, 
+                        age_code = NULL, mask = NULL, ref_scale = "VSMOW_H",
                        niter = 1000) {
   
   #load data in funtion environ
@@ -33,13 +33,13 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
     result = result[result$Group %in% group,]
   }
   
-  if(!is.null(reference)){
-    if(!is.numeric(reference)){
-      warning("reference format should now be a numeric dataset ID, see knownOrig_sources.rda")
-    } else if(!all(reference %in% unique(knownOrig_sources$Dataset_ID))){
-      warning("One or more references not present in database")
+  if(!is.null(dataset)){
+    if(!is.numeric(dataset)){
+      warning("dataset format should now be a numeric dataset ID, see knownOrig_sources.rda")
+    } else if(!all(dataset %in% unique(knownOrig_sources$Dataset_ID))){
+      warning("One or more datasets not present in database")
     }
-    result = result[result$Dataset_ID %in% reference,] 
+    result = result[result$Dataset_ID %in% dataset,] 
   }
   
   if(!is.null(age_code)){
@@ -96,16 +96,16 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, reference = N
   result_sources = knownOrig_sources[knownOrig_sources$Dataset_ID %in%
                                        result$Dataset_ID,]
   
-  if(!is.null(std_scale)){
+  if(!is.null(ref_scale)){
     if(marker == "d2H"){
-      result = merge(result, result_sources[,c("Dataset_ID", "H_std_scale")], 
+      result = merge(result, result_sources[,c("Dataset_ID", "H_cal")], 
             by = "Dataset_ID", all.x = TRUE)
     } else{
-      result = merge(result, result_sources[,c("Dataset_ID", "O_std_scale")], 
+      result = merge(result, result_sources[,c("Dataset_ID", "O_cal")], 
             by = "Dataset_ID", all.x = TRUE)
     }
     class(result) = "SOD"
-    trans_out = refTrans(result, marker, std_scale, niter)
+    trans_out = refTrans(result, marker, ref_scale, niter)
     result_data = merge(result_sites, trans_out$data, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
     row.names(result_data) = result_data$Sample_ID

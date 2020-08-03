@@ -80,7 +80,7 @@ d$sources[,1:3]
 If we didn't want to transform the data, and instead wished to use the calibration scale from the original publication, we can specify that in our call to *subOrigData*. Keep in mind that any subsequent analyses using these data will be based on this calibration scale: for example, if you wish to assign samples of unknown origin, the values for those samples should be reported on the same scale.
 
 ```{r birdNoTrans, fig.width=5, fig.asp=0.8}
-d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap, std_scale = NULL)
+d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap, ref_scale = NULL)
 d$sources$H_std_scale
 ```
 
@@ -103,15 +103,15 @@ id = letters[1:5]
 set.seed(123)
 d2H = rnorm(5, -110, 8)
 d2H.sd = runif(5, 1.5, 2.5)
-d2H_std_scale = rep("UT_H_1", 5)
-un = data.frame(id, d2H, d2H.sd, d2H_std_scale)
+d2H_cal = rep("UT_H_1", 5)
+un = data.frame(id, d2H, d2H.sd, d2H_cal)
 print(un)
 ```
 
 As discussed above, one issue that must be considered with any organic H or O isotope data is the calibration scale (the reference materials and assigned, calibrated values for those) used by the laboratory producing the data. The calibration scale for your unknown samples should be the same as that for the known origin data used in calRaster. Remember that the scale for our known origin data 'd' is *OldSA.1_H_1*. Let's assume that our fake data were normalized to the *UT_H_1* scale. The *refTrans* function allows us to convert between the two.
 
 ```{r refTrans}
-un = refTrans(un, std_scale = "OldSA.1_H_1")
+un = refTrans(un, ref_scale = "OldSA.1_H_1")
 print(un)
 ```
 

@@ -16,7 +16,7 @@ This dataset consists of citation, methodological, and other metadata for studie
 }
 
 \format{
-data.frame with 18 fields.
+data.frame with 17 fields.
 \describe{
   \item{[, 1]}{Dataset_ID: Unique ID}
   \item{[, 2]}{Dataset_name: Dataset name or descriptor}
@@ -34,8 +34,7 @@ data.frame with 18 fields.
   \item{[, 14]}{Drying: Did the study document that samples were fully dried and transferred dry to instrument (Y/N/NA)?}
   \item{[, 15]}{Analysis_method: Instrument configuration used for analysis}
   \item{[, 16]}{Analysis_type: What elements were analyzed for stable isotope ratios (H/O/H_O)?}
-  \item{[, 17]}{Chromatography: Did the authors demonstrate clean chromatographic separation of CO for O isotope analysis (Y/N/NA)?}
-  \item{[, 18]}{Source_comments: Data source comments}
+  \item{[, 17]}{Source_comments: Data source comments}
 }
 }
 

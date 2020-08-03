@@ -1,45 +1,57 @@
-refTrans = function(samples, marker = "d2H", std_scale = "VSMOW_H", 
+refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H", 
                     niter = 1000){
   data("ham", envir = environment())
   data("oam", envir = environment())
-  data("hsds", envir = environment())
-  data("osds", envir = environment())
+  data("hrms", envir = environment())
+  data("orms", envir = environment())
   ham = ham
   oam = oam
-  hsds = hsds
-  osds = osds
+  hrms = hrms
+  orms = orms
   
   if(class(samples) == "SOD"){
     class(samples) = "data.frame"
     #Identify values based on marker
     if(marker == "d2H"){
-      #Intial standard scales
-      start_scales = unique(samples$H_std_scale) 
-      #Pull original sample scales to a vector for later use
-      samples_scales = samples$H_std_scale
+      #Intial calibration scales
+      start_scales = unique(samples$H_cal) 
+      #Pull original calibration scales to a vector for later use
+      samples_scales = samples$H_cal
       #Remove scales from samples object
       samples = samples[,-ncol(samples)]
       #Which adjacency matrix and standard table?
       am = ham
-      std_table = hsds
+      cal_table = hrms
       #Name of the relevant SD column
       sd_col = "d2H.sd"
     } else if(marker == "d18O"){
-      start_scales = unique(samples$O_std_scale) 
-      samples_scales = samples$O_std_scale
+      start_scales = unique(samples$O_cal) 
+      samples_scales = samples$O_cal
       samples = samples[,-ncol(samples)]
       am = oam
-      std_table = osds
+      cal_table = orms
       sd_col = "d18O.sd"
     }
     
+    #Check that cal isn't missing
+    if(NA %in% start_scales){
+      warning("No calibration scale reported, some samples dropped from scale transformation")
+      start_scales = start_scales[!is.na(start_scales)]
+      samples = samples[!is.na(samples_scales),]
+      samples_scales = samples_scales[!is.na(samples_scales)]
+    }
+    #Check that cal isn't missing for all samples
+    if(length(samples_scales) == 0){
+      stop("No calibration scale reported for any samples, transformation not possible")
+    }
+    
     #Check that target exists in adj. matrix
-    if(is.na(match(std_scale, rownames(am)))){
-      warning("Standard scale not valid. Returning untransformed values.")
+    if(is.na(match(ref_scale, rownames(am)))){
+      warning("Reference scale not valid. Returning untransformed values.")
       return(list("data" = samples, "chains" = NULL))
     } else{
-      trans_out = trans(start_scales, samples_scales, samples, std_scale, 
-                        am, std_table, marker, sd_col, niter)
+      trans_out = trans(start_scales, samples_scales, samples, ref_scale, 
+                        am, cal_table, marker, sd_col, niter)
       return(trans_out)
     }
   } else if(class(samples) == "data.frame"){
@@ -52,24 +64,24 @@ refTrans = function(samples, marker = "d2H", std_scale = "VSMOW_H",
     if(!(paste0(marker, ".sd") %in% names(samples))){
       stop("samples must include a sd field for the selected marker")
     }
-    if(!(paste0(marker, "_std_scale") %in% names(samples))){
-      stop("samples must include a standard scale field for the selected marker")
+    if(!(paste0(marker, "_cal") %in% names(samples))){
+      stop("samples must include a calibration scale field for the selected marker")
     }
     if(marker == "d2H"){
-      #Vector of all starting standard scales
-      start_scales = unique(samples$d2H_std_scale) 
-      #Which adjacency matrix and standard table?
+      #Vector of all starting calibration scales
+      start_scales = unique(samples$d2H_cal) 
+      #Which adjacency matrix and calibration table?
       am = ham
-      std_table = hsds
+      cal_table = hrms
       #Pull starting standard scales for use
-      samples_scales = samples$d2H_std_scale
+      samples_scales = samples$d2H_cal
       #SD column
       sd_col = "d2H.sd"
     } else {
-      start_scales = unique(samples$d18O_std_scale) 
+      start_scales = unique(samples$d18O_cal) 
       am = oam
-      std_table = osds
-      samples_scales = samples$d18O_std_scale
+      cal_table = orms
+      samples_scales = samples$d18O_cal
       sd_col = "d18O.sd"
     }
     if(!is.numeric(samples[,marker])){
@@ -80,15 +92,15 @@ refTrans = function(samples, marker = "d2H", std_scale = "VSMOW_H",
     }
     
     #Check that target exists in adj. matrix
-    if(is.na(match(std_scale, rownames(am)))){
-      stop("Standard scale not valid. No transformation possible.")
+    if(is.na(match(ref_scale, rownames(am)))){
+      stop("Reference scale not valid. No transformation possible.")
     } else{
-      trans_out = trans(start_scales, samples_scales, samples, std_scale, 
-                        am, std_table, marker, sd_col, niter)
+      trans_out = trans(start_scales, samples_scales, samples, ref_scale, 
+                        am, cal_table, marker, sd_col, niter)
       if(marker == "d2H"){
-        trans_out$data$d2H_std_scale = rep(std_scale)  
+        trans_out$data$d2H_cal = rep(ref_scale)  
       } else{
-        trans_out$data$d18O_std_scale = rep(std_scale)
+        trans_out$data$d18O_cal = rep(ref_scale)
       }
       return(trans_out)
     } 
@@ -99,17 +111,11 @@ refTrans = function(samples, marker = "d2H", std_scale = "VSMOW_H",
 
 }
 
-trans = function(start_scales, samples_scales, samples, std_scale, am, 
-                 std_table, marker, sd_col, niter){
+trans = function(start_scales, samples_scales, samples, ref_scale, am, 
+                 cal_table, marker, sd_col, niter){
   for(i in seq_along(start_scales)){
-    if(is.na(start_scales[i])){
-      warning("No reference scale reported, some samples dropped from scale transformation")
-      chain = NULL
-    } else{
-      samples_sub = samples[samples_scales == start_scales[i],]
-      #samples_sub = samples_sub[!is.na(samples_sub$Sample_ID),]
-      chain = std_chain(start_scales[i], std_scale, am)
-    }
+    samples_sub = samples[samples_scales == start_scales[i],]
+    chain = cal_chain(start_scales[i], ref_scale, am)
     if(!is.null(chain)){
       if(length(chain) > 1){
         vals = matrix(nrow = nrow(samples_sub), ncol = niter)
@@ -118,9 +124,9 @@ trans = function(start_scales, samples_scales, samples, std_scale, am,
                            samples_sub[j, sd_col])
         }
         for(j in 1:(length(chain)-1)){
-          ssv1 = std_vals(chain[j], std_table)
-          ssv2 = std_vals(chain[j+1], std_table)
-          vals = std_shift(vals, ssv1, ssv2, niter)
+          ssv1 = rm_vals(chain[j], cal_table)
+          ssv2 = rm_vals(chain[j+1], cal_table)
+          vals = cal_shift(vals, ssv1, ssv2, niter)
           if(is.null(vals)){
             chain = NULL
             break
@@ -152,15 +158,15 @@ trans = function(start_scales, samples_scales, samples, std_scale, am,
 
 
 #Breadth first algorithm to identify shortest standard chain
-std_chain = function(ss1, ss2, scs){
-  #Get adj. matrix row/col index for starting standard set
+cal_chain = function(ss1, ss2, scs){
+  #Get adj. matrix row/col index for starting calibration
   node.start = match(ss1, rownames(scs))
   #This matrix will accumulate all possible paths
   chains = matrix(node.start, nrow = 1)
   #Current path length
   l = 1
   
-  #Go until the target standard set is found
+  #Go until the target reference scale is found
   while(!(ss2 %in% rownames(scs)[chains[,l]])){
     #Store the current number of paths
     srows = nrow(chains)
@@ -172,7 +178,7 @@ std_chain = function(ss1, ss2, scs){
     for(i in 1:nrow(chains)){
       #If that path has already reached a dead end, skip it
       if(!is.na(chains[i, l-1])){
-        #Otherwise find all standard sets that can be reached from
+        #Otherwise find all calibrations that can be reached from
         #the end of the current path
         nodes.n = unname(which(scs[chains[i, l-1],] == 1))
         #For each of those possible new nodes
@@ -200,21 +206,21 @@ std_chain = function(ss1, ss2, scs){
   return(chain)
 }
 
-std_vals = function(scale, sds){
-  lm = sds$Low[sds$Scale == scale]
-  hm = sds$High[sds$Scale == scale]
-  lse = sds$Low_se[sds$Scale == scale]
-  hse = sds$High_se[sds$Scale == scale]
-  ref_scale = sds$Ref_scale[sds$Scale == scale]
+rm_vals = function(scale, sds){
+  lm = sds$Low[sds$Calibration == scale]
+  hm = sds$High[sds$Calibration == scale]
+  lse = sds$Low_se[sds$Calibration == scale]
+  hse = sds$High_se[sds$Calibration == scale]
+  ref_scale = sds$Ref_scale[sds$Calibration == scale]
   ssv = list("lm" = lm, "hm" = hm, "lse" = lse, "hse" = hse, 
              "ref_scale" = ref_scale)
   class(ssv) = "ssv"
   return(ssv)
 }
 
-std_shift = function(vals, ssv1, ssv2, niter){
+cal_shift = function(vals, ssv1, ssv2, niter){
   if(class(ssv1) != "ssv" | class(ssv2) != "ssv"){
-    stop("Standard values must be provided as class ssv")
+    stop("RM values must be provided as class ssv")
   }
   
   if(ssv1$ref_scale == ssv2$ref_scale){

@@ -5,11 +5,11 @@
 \docType{data}
 
 \title{
-data: adjacency matrix for keratin H isotope standards
+data: adjacency matrix for keratin H isotope calibrations
 }
 
 \description{
-This matrix documents keratin H isotope standard scales between which comparisons can be drawn, either through use of common reference materials or through comparative analyses.
+This matrix documents keratin H isotope calibrations between which comparisons can be drawn, either through use of common reference materials or through comparative analyses
 }
 
 \usage{data("ham")
@@ -18,16 +18,16 @@ This matrix documents keratin H isotope standard scales between which comparison
 \format{
 matrix.
 \describe{
-  n x n symmetric, where n is the number of standard scales represented here and in \code{\link{hsds}}.
+  n x n symmetric, where n is the number of calibrations represented here and in \code{\link{hrms}}.
 }
 }
 
 \references{
-Magozzi, et al. (in review) A global compilation of known-origin keratin hydrogen and oxygen isotope data for wildlife and forensic applications.
+Magozzi, et al. (in review) Calibration hierarchy transformation to improve the comparability of organic hydrogen and oxygen isotope data.
 }
 
 \seealso{
-\code{\link{hsds}}
+\code{\link{hrms}}
 }
 
 \examples{
