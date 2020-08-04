@@ -1,5 +1,5 @@
 refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H", 
-                    niter = 1000){
+                    niter = 5000){
   data("ham", envir = environment())
   data("oam", envir = environment())
   data("hrms", envir = environment())
@@ -9,13 +9,14 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
   hrms = hrms
   orms = orms
   
+  #For data send from subOrigData
   if(class(samples) == "SOD"){
     class(samples) = "data.frame"
     #Identify values based on marker
     if(marker == "d2H"){
-      #Intial calibration scales
+      #Intial reference scales
       start_scales = unique(samples$H_cal) 
-      #Pull original calibration scales to a vector for later use
+      #Pull original reference scales to a vector for later use
       samples_scales = samples$H_cal
       #Remove scales from samples object
       samples = samples[,-ncol(samples)]
@@ -47,13 +48,27 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
     
     #Check that target exists in adj. matrix
     if(is.na(match(ref_scale, rownames(am)))){
-      warning("Reference scale not valid. Returning untransformed values.")
+      warning("ref_scale not valid. Returning untransformed values.")
       return(list("data" = samples, "chains" = NULL))
     } else{
+      #check whether ref_scale is a not floating calibration
+      ref_scale.anchor = cal_table[cal_table$Calibration == ref_scale, 
+                                   "Ref_scale"]
+      if(ref_scale != ref_scale.anchor){
+        #if so update ref_scale to floating target
+        #note if original calibration scale is linked to a second scale,
+        #this always gives chain length of 2 or more, so uncertainty in
+        #original scale calibration is incorporated
+        ref_scale = ref_scale.anchor
+        wt = paste("ref_scale is calibrated to another scale. Returning values on",
+                   ref_scale, "scale.")
+        warning(wt)
+      }
       trans_out = trans(start_scales, samples_scales, samples, ref_scale, 
                         am, cal_table, marker, sd_col, niter)
       return(trans_out)
     }
+  #User-provided data
   } else if(class(samples) == "data.frame"){
     if(!(marker %in% c("d2H", "d18O"))){
       stop("marker must be d2H or d18O")
@@ -93,8 +108,18 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
     
     #Check that target exists in adj. matrix
     if(is.na(match(ref_scale, rownames(am)))){
-      stop("Reference scale not valid. No transformation possible.")
+      stop("ref_scale not valid. No transformation possible.")
     } else{
+      #check whether ref_scale is a not floating calibration
+      ref_scale.anchor = cal_table[cal_table$Calibration == ref_scale, 
+                                   "Ref_scale"]
+      if(ref_scale != ref_scale.anchor){
+        #if so update ref_scale to floating target
+        ref_scale = ref_scale.anchor
+        wt = paste("ref_scale is calibrated to another scale. Returning values on",
+                   ref_scale, "scale.")
+        warning(wt)
+      }
       trans_out = trans(start_scales, samples_scales, samples, ref_scale, 
                         am, cal_table, marker, sd_col, niter)
       if(marker == "d2H"){
@@ -118,11 +143,21 @@ trans = function(start_scales, samples_scales, samples, ref_scale, am,
     chain = cal_chain(start_scales[i], ref_scale, am)
     if(!is.null(chain)){
       if(length(chain) > 1){
+        #Sample from originally calibrated values
         vals = matrix(nrow = nrow(samples_sub), ncol = niter)
         for(j in seq_along(samples_sub[,1])){
           vals[j,] = rnorm(niter, samples_sub[j, marker], 
                            samples_sub[j, sd_col])
         }
+        #Add uncertainty for first calibration, if present
+        ssv1 = rm_vals(chain[1], cal_table)
+        if(!is.na(ssv1$lse)){
+          ssv2 = ssv1
+          ssv2$lse = ssv2$hse = 0
+          ssv1$ref_scale = "start"
+          vals = cal_shift(vals, ssv1, ssv2, niter)
+        }
+        #Cycle through chain
         for(j in 1:(length(chain)-1)){
           ssv1 = rm_vals(chain[j], cal_table)
           ssv2 = rm_vals(chain[j+1], cal_table)
@@ -223,38 +258,32 @@ cal_shift = function(vals, ssv1, ssv2, niter){
     stop("RM values must be provided as class ssv")
   }
   
-  if(ssv1$ref_scale == ssv2$ref_scale){
-    st = "m"
-  } else{
-    st = "s"
-  }
-  
-  if(st == "m"){
+  if(ssv1$ref_scale != ssv2$ref_scale){
     if(!is.na(ssv1$lse)){
       ssv1.lv = rnorm(niter, ssv1$lm, ssv1$lse)
       ssv1.hv = rnorm(niter, ssv1$hm, ssv1$hse)
-      ssv2.lv = ssv1$lm
-      ssv2.hv = ssv1$hm
+      ssv2.lv = ssv2$lm
+      ssv2.hv = ssv2$hm
     } else if(!is.na(ssv2$lse)){
-      ssv1.lv = ssv2$lm
-      ssv1.hv = ssv2$hm
+      ssv1.lv = ssv1$lm
+      ssv1.hv = ssv1$hm
       ssv2.lv = rnorm(niter, ssv2$lm, ssv2$lse)
       ssv2.hv = rnorm(niter, ssv2$hm, ssv2$hse)      
     } else{
-      warning("Measurement comparison without estimate of error, some samples dropped from scale transformation")
-      return(NULL)
+      ssv1.lv = ssv1$lm
+      ssv1.hv = ssv1$hm
+      ssv2.lv = ssv2$lm
+      ssv2.hv = ssv2$hm
     }
+  
+    m = (ssv2.hv - ssv2.lv) / (ssv1.hv - ssv1.lv)
+    b = ssv2.hv - ssv1.hv * m
+    
+    vals.new = vals * m + b
+    
+    return(vals.new)
   } else{
-    ssv1.lv = ssv1$lm
-    ssv1.hv = ssv1$hm
-    ssv2.lv = ssv2$lm
-    ssv2.hv = ssv2$hm
+    return(vals)
   }
   
-  m = (ssv2.hv - ssv2.lv) / (ssv1.hv - ssv1.lv)
-  b = ssv2.hv - ssv1.hv * m
-  
-  vals.new = vals * m + b
-  
-  return(vals.new)
 }

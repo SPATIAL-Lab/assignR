@@ -1,6 +1,6 @@
 subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL, 
                         age_code = NULL, mask = NULL, ref_scale = "VSMOW_H",
-                       niter = 1000) {
+                       niter = 5000) {
   
   #load data in funtion environ
   data("knownOrig_samples", envir = environment())
