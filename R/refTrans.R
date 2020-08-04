@@ -1,5 +1,6 @@
 refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H", 
                     niter = 5000){
+<<<<<<< HEAD
   
   #load data in funtion environ
   data("refMats", envir = environment())
@@ -9,6 +10,17 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
   hrms = refMats$hrms
   orms = refMats$orms
   
+=======
+  data("ham", envir = environment())
+  data("oam", envir = environment())
+  data("hrms", envir = environment())
+  data("orms", envir = environment())
+  ham = ham
+  oam = oam
+  hrms = hrms
+  orms = orms
+  
+>>>>>>> a5150b3704a171cc2544182d9dbe49911a64ad2a
   #For data send from subOrigData
   if(class(samples) == "SOD"){
     class(samples) = "data.frame"
