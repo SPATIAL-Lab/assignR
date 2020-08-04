@@ -1,13 +1,13 @@
 refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H", 
                     niter = 5000){
-  data("ham", envir = environment())
-  data("oam", envir = environment())
-  data("hrms", envir = environment())
-  data("orms", envir = environment())
-  ham = ham
-  oam = oam
-  hrms = hrms
-  orms = orms
+  
+  #load data in funtion environ
+  data("refMats", envir = environment())
+  refMats = refMats
+  ham = refMats$ham
+  oam = refMats$oam
+  hrms = refMats$hrms
+  orms = refMats$orms
   
   #For data send from subOrigData
   if(class(samples) == "SOD"){

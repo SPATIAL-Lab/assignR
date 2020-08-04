@@ -44,19 +44,26 @@ plot(d2h_lrNA)
 ```
 
 *****
-The package includes a database of H and O isotope data for known origin samples, which consists of three tables (*knownOrig_sites.rda*, *knownOrig_samples.rda*, and *knownOrig_sources.rda*). Let's load it and have a look. First we'll get the names of the data fields available in the tables.
+The package includes a database of H and O isotope data for known origin samples (*knownOrig.rda*), which consists of three features (*sites*, *samples*, and *sources*). Let's load it and have a look. First we'll get the names of the data fields available in the tables.
 
 ```{r knownOrig_names}
-data("knownOrig_sites", "knownOrig_samples", "knownOrig_sources")
-names(knownOrig_sites)
-names(knownOrig_samples)
-names(knownOrig_sources)
+data("knownOrig")
+names(knownOrig$sites)
+names(knownOrig$samples)
+names(knownOrig$sources)
+```
+
+The *sites* feature is a spatial object that records the geographic location of all sites from which samples are available.
+
+```{r knownOrig_sites, fig.width=5, fig.asp=0.8}
+plot(assignR:::wrld_simpl)
+points(knownOrig$sites, col = "red")
 ```
 
 Now lets look at a list of species names available.
 
 ```{r knownOrig_taxa}
-unique(knownOrig_samples$Taxon)
+unique(knownOrig$samples$Taxon)
 ```
 
 *****
@@ -66,21 +73,21 @@ Load H isotope data for North American Loggerhead Shrike from the package databa
 d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
 ```
 
-By default, the *subOrigData* function transforms all data to a common calibration scale (VSMOW-SLAP), using data from co-analysis of different laboratory reference materials (Magozzi et al., in prep). The co-analysis comparisons used are documented in the function's return object.  
+By default, the *subOrigData* function transforms all data to a common reference scale (VSMOW-SLAP) using data from co-analysis of different laboratory reference materials (Magozzi et al., in prep). The calibrations used are documented in the function's return object.  
 
 ```{r birdChains}
 d$chains
 ```
 
-Information on these calibration scales is contained in the *hrms.rda* and *orms.rda* data files. 
+Information on these calibrations is contained in the *refMats.rda* data file. 
 
-Transformation is important when blending data from different labs or papers because different reference materials have been used to calibrate published data and these calibrations are not always comparable. In this case all the data come from one paper:
+Transformation is important when blending data from different labs or papers because different reference scales have been used to calibrate published data and these calibrations are not always comparable. In this case all the data come from one paper:
 
 ```{r birdSources}
 d$sources[,1:3]
 ```
 
-If we didn't want to transform the data, and instead wished to use the calibration scale from the original publication, we can specify that in our call to *subOrigData*. Keep in mind that any subsequent analyses using these data will be based on this calibration scale: for example, if you wish to assign samples of unknown origin, the values for those samples should be reported on the same scale.
+If we didn't want to transform the data, and instead wished to use the reference scale from the original publication, we can specify that in our call to *subOrigData*. Keep in mind that any subsequent analyses using these data will be based on this calibration scale: for example, if you wish to assign samples of unknown origin, the values for those samples should be reported on the same scale.
 
 ```{r birdNoTrans, fig.width=5, fig.asp=0.8}
 d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap, ref_scale = NULL)

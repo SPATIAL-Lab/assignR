@@ -61,7 +61,12 @@ all(knownOrig_samples$Dataset_ID %in% knownOrig_sources$Dataset_ID)
 knownOrig_sites = SpatialPointsDataFrame(sites[,2:3], 
                                          data = sites[,c(1,4:ncol(sites))],
                                          proj4string = p)
+
+#Group data objects
+knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples, 
+                 sources = knownOrig_sources)
+
+refMats = list(hrms = hrms, orms = orms, ham = ham, oam = oam)
   
 #Write it all to /data/
-use_data(ham, oam, hrms, orms, knownOrig_samples, knownOrig_sites, 
-          knownOrig_sources, overwrite = TRUE)
+use_data(knownOrig, refMats, overwrite = TRUE)

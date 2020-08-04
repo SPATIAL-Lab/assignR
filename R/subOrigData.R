@@ -3,12 +3,11 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
                        niter = 5000) {
   
   #load data in funtion environ
-  data("knownOrig_samples", envir = environment())
-  data("knownOrig_sites", envir = environment())
-  data("knownOrig_sources", envir = environment())
-  knownOrig_samples = knownOrig_samples
-  knownOrig_sites = knownOrig_sites
-  knownOrig_sources = knownOrig_sources
+  data("knownOrig", envir = environment())
+  knownOrig = knownOrig
+  knownOrig_samples = knownOrig$samples
+  knownOrig_sites = knownOrig$sites
+  knownOrig_sources = knownOrig$sources
   
   result = knownOrig_samples
 

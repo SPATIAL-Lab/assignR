@@ -26,7 +26,7 @@ character string or string vector. Species name(s) for data to be extracted.
 character string or string vector. Taxonomic groups for data to be extracted.
 }
   \item{dataset}{
-integer or integer vector. Dataset_ID(s) for data to be extracted. See \code{\link[assignR]{knownOrig_sources}}.
+integer or integer vector. Dataset_ID(s) for data to be extracted. See \code{\link[assignR]{knownOrig}} feature \emph{sources}.
 }
   \item{age_code}{
 character string or string vector. Animal age code for data to be extracted. 
@@ -35,7 +35,7 @@ character string or string vector. Animal age code for data to be extracted.
 SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, global.
 }
   \item{ref_scale}{
-character string. Text identifier for reference scale to which all isotope values will be transformed. See \code{\link[assignR]{hrms}} and \code{\link[assignR]{orms}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported calibration scale.}
+character string. Text identifier for reference scale to which all isotope values will be transformed. See \code{\link[assignR]{refMats}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported calibration scale.}
   \item{niter}{
 integer. Number of random samples used to propagate uncertainty in calibration hierarchy transformations.
 }
@@ -44,12 +44,12 @@ integer. Number of random samples used to propagate uncertainty in calibration h
 \value{
 Returns an object of class \dQuote{subOrigData}, formatted for use in \code{\link[assignR]{calRaster}} or \code{\link[assignR]{QA}} functions.
   \item{data}{
-SpatialPointsDataFrame including one feature for each selected sample. data.frame fields are described in \code{\link[assignR]{knownOrig_samples}}. }
+SpatialPointsDataFrame including one feature for each selected sample. data.frame fields are described in \code{\link[assignR]{knownOrig}} feature \emph{samples}.}
   \item{sources}{
-data.frame. Information for all data sources for the selected samples. Fields are described in \code{\link[assignR]{knownOrig_sources}} 
+data.frame. Information for all data sources for the selected samples. Fields are described in \code{\link[assignR]{knownOrig}} feature \emph{sources} 
   }
   \item{chains}{
-list. Each item is a character string vector containing the hierarchy of calibrations used in the transformation for a set of selected samples. See \code{\link[assignR]{hrms}} and \code{\link[assignR]{orms}}.
+list. Each item is a character string vector containing the hierarchy of calibrations used in the transformation for a set of selected samples. See \code{\link[assignR]{refMats}}.
   }
   \item{marker}{
 character string. The isotopic marker specified in the call to \code{subOrigData}
