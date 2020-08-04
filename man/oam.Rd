@@ -23,7 +23,7 @@ matrix.
 }
 
 \references{
-Magozzi, et al. (in review) Calibration hierarchy transformation to improve the comparability of tissue organic hydrogen and oxygen isotope data.
+Magozzi, et al. (in review) Calibration chain transformation to improve the comparability of tissue organic hydrogen and oxygen isotope data.
 }
 
 \seealso{

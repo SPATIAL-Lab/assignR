@@ -11,7 +11,7 @@ This function conducts transformations to convert isotope measurements between c
 }
 
 \usage{
-refTrans(samples, marker = "d2H", ref_scale = "VSMOW_H", niter = 1000)
+refTrans(samples, marker = "d2H", ref_scale = "VSMOW_H", niter = 5000)
 }
 
 \arguments{
@@ -38,12 +38,12 @@ list. Each item is a character string vector containing the hierarchy of calibra
 }
 
 \references{
-Magozzi, S. et al. (in prep) Calibration hierarchy transformation to improve the comparability of organic hydrogen and oxygen isotope data.
+Magozzi, S. et al. (in prep) Calibration chain transformation to improve the comparability of organic hydrogen and oxygen isotope data.
 }
 
 \examples{
 # Some fake sample data
-s = data.frame("d2H" = seq(-100, -10, by=10), "d2H.sd" = rep(2), "d2H_cal_scale" = rep("OldUT_H_1"))
+s = data.frame("d2H" = seq(-100, -10, by=10), "d2H.sd" = rep(2), "d2H_cal" = rep("OldUT_H_1"))
 
 # Transform to VSMOW-SLAP scale using default arguments
 d1 = refTrans(s)

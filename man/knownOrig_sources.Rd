@@ -28,8 +28,8 @@ data.frame with 17 fields.
   \item{[, 8]}{Exchange: Was a correction for exchangeable H made (Y/N/NA)?}
   \item{[, 9]}{Exchange_method: Method used to correct for exchangeable H}
   \item{[, 10]}{Exchange_T: Was H exchange carried out at ambient or high temperature (Ambient/High/NA)?}
-  \item{[, 11]}{H_std_scale: Standard scale used to calibrate H isotope data, see \code{\link[assignR]{hsds}}}
-  \item{[, 12]}{O_std_scale: Standard scale used to calibrate O isotope data, see \code{\link[assignR]{osds}}}
+  \item{[, 11]}{H_cal: Reference scale used to calibrate H isotope data, see \code{\link[assignR]{hrms}}}
+  \item{[, 12]}{O_cal: Reference scale used to calibrate O isotope data, see \code{\link[assignR]{orms}}}
   \item{[, 13]}{Std_powdered: Were calibration standards powdered (Y/N/NA)?}
   \item{[, 14]}{Drying: Did the study document that samples were fully dried and transferred dry to instrument (Y/N/NA)?}
   \item{[, 15]}{Analysis_method: Instrument configuration used for analysis}

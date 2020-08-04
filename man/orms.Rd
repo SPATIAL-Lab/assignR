@@ -40,7 +40,7 @@ data.frame with 18 fields.
 }
 
 \references{
-Magozzi, S. et al. (in prep) Calibration hierarchy transformation to improve the comparability of organic hydrogen and oxygen isotope data.
+Magozzi, S. et al. (in prep) Calibration chain transformation to improve the comparability of organic hydrogen and oxygen isotope data.
 }
 
 \seealso{

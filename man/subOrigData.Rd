@@ -11,8 +11,8 @@ This function subsets the known-origin isotope dataset included in this package 
 }
 
 \usage{
-subOrigData(marker = "d2H", taxon = NULL, group = NULL, reference = NULL, 
-  age_code = NULL, mask = NULL, ref_scale = "VSMOW_H", niter = 1000)
+subOrigData(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL, 
+  age_code = NULL, mask = NULL, ref_scale = "VSMOW_H", niter = 5000)
 }
 
 \arguments{
@@ -57,7 +57,7 @@ character string. The isotopic marker specified in the call to \code{subOrigData
 }
 
 \references{
-Magozzi, S. et al. (in prep) Calibration hierarchy transformation to improve the comparability of organic hydrogen and oxygen isotope data.
+Magozzi, S. et al. (in prep) Calibration chain transformation to improve the comparability of organic hydrogen and oxygen isotope data.
 }
 
 \examples{
