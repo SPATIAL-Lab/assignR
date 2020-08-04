@@ -56,9 +56,6 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
                                    "Ref_scale"]
       if(ref_scale != ref_scale.anchor){
         #if so update ref_scale to floating target
-        #note if original calibration scale is linked to a second scale,
-        #this always gives chain length of 2 or more, so uncertainty in
-        #original scale calibration is incorporated
         ref_scale = ref_scale.anchor
         wt = paste("ref_scale is calibrated to another scale. Returning values on",
                    ref_scale, "scale.")
@@ -122,10 +119,14 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
       }
       trans_out = trans(start_scales, samples_scales, samples, ref_scale, 
                         am, cal_table, marker, sd_col, niter)
-      if(marker == "d2H"){
-        trans_out$data$d2H_cal = rep(ref_scale)  
+      if(nrow(trans_out$data > 0)){
+        if(marker == "d2H"){
+          trans_out$data$d2H_cal = rep(ref_scale)  
+        } else{
+          trans_out$data$d18O_cal = rep(ref_scale)
+        }
       } else{
-        trans_out$data$d18O_cal = rep(ref_scale)
+        stop("No samples could be transformed")
       }
       return(trans_out)
     } 
@@ -260,10 +261,17 @@ cal_shift = function(vals, ssv1, ssv2, niter){
   
   if(ssv1$ref_scale != ssv2$ref_scale){
     if(!is.na(ssv1$lse)){
-      ssv1.lv = rnorm(niter, ssv1$lm, ssv1$lse)
-      ssv1.hv = rnorm(niter, ssv1$hm, ssv1$hse)
-      ssv2.lv = ssv2$lm
-      ssv2.hv = ssv2$hm
+      if(!is.na(ssv2$lse)){
+        ssv1.lv = rnorm(niter, ssv1$lm, ssv1$lse)
+        ssv1.hv = rnorm(niter, ssv1$hm, ssv1$hse)
+        ssv2.lv = rnorm(niter, ssv2$lm, ssv2$lse)
+        ssv2.hv = rnorm(niter, ssv2$hm, ssv2$hse)      
+      } else{
+        ssv1.lv = rnorm(niter, ssv1$lm, ssv1$lse)
+        ssv1.hv = rnorm(niter, ssv1$hm, ssv1$hse)
+        ssv2.lv = ssv2$lm
+        ssv2.hv = ssv2$hm
+      }
     } else if(!is.na(ssv2$lse)){
       ssv1.lv = ssv1$lm
       ssv1.hv = ssv1$hm
