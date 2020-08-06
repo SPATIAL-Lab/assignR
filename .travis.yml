@@ -4,6 +4,7 @@ language: R
 cache: packages
 before_install:
  - sudo apt-get install libgdal-dev
+ - R -e 'install.packages("rgdal", repos=c("http://R-Forge.R-project.org", "http://cran.rstudio.com"))'
 
 r_packages:
   - covr
