@@ -3,7 +3,10 @@
 language: R
 cache: packages
 before_install:
+<<<<<<< HEAD
  - sudo apt-get install libgdal-dev
+=======
+>>>>>>> 1813c174791fac6b68d9bbb884959163879d2ea8
  - R -e 'install.packages("rgdal", repos=c("http://R-Forge.R-project.org", "http://cran.rstudio.com"))'
 
 r_packages:
