@@ -17,7 +17,7 @@ calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA,
 
 \arguments{
   \item{known}{
-subOrigData or SpatialPointsDataFrame. Known-origin tissue isotope data from the subOrgData function or provided by user. User-provided data must be formatted as a subOrgData object (see \code{\link[assignR]{subOrigData}} or a SpatialPointsDataFrame in which the first data field contains the measured tissue isotope value and the second the 1 standard deviation uncertainty on that value.
+subOrigData or SpatialPointsDataFrame. Known-origin tissue isotope data from the subOrgData function or provided by user. User-provided data must be formatted as a subOrigData object (see \code{\link[assignR]{subOrigData}} or a SpatialPointsDataFrame in which the first data field contains the measured tissue isotope value and the second the 1 standard deviation uncertainty on that value.
 }
   \item{isoscape}{
 raster. Isoscape raster with two layers. The first one is the mean and the second is one standard deviation.

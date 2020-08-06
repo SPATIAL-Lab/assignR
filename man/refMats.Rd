@@ -12,7 +12,8 @@ data: documentation of keratin H and O isotope reference material calibrations
 This data object contains information on keratin H and O isotope reference materials and RM calibrations used across multiple laboratories since the year 2000.
 }
 
-\usage{data("refMats")
+\usage{
+data("refMats")
 }
 
 \format{
@@ -65,16 +66,10 @@ list.
   }
 }
 \item{ham}{
-  matrix.
-  \describe{
-    n x n symmetric, where n is the number of calibrations represented here and in \code{refMats$hrms}.
-  }
+  matrix. n x n symmetric, where n is the number of calibrations represented here and in \code{refMats$hrms}.
 }
 \item{oam}{
-  matrix.
-  \describe{
-    n x n symmetric, where n is the number of calibrations represented here and in \code{refMats$orms}.
-  }
+  matrix. n x n symmetric, where n is the number of calibrations represented here and in \code{refMats$orms}.
 }
 }
 }

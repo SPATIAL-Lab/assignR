@@ -32,6 +32,10 @@ qtlRaster(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL)
   }
 }
 
+\value{
+RasterStack or RasterLayer including a binary assignment surface for each individual in \code{pdR}. If \code{outDir} is not NULL, writes individual rasters in GeoTIFF format and a single PDF file with images for each raster to the designated directory.
+}
+
 \examples{
 # load North America boundary and global isoscape
 data("naMap")

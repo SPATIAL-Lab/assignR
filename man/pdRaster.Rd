@@ -34,8 +34,9 @@ logical. Plot results in R.
 character string. Directory path to which output will be saved. If NULL no files are written.
 }
 }
+
 \value{
-RasterStack or RasterLayer including a probability density surface for each individual in unknown. If \code{saveFiles} == TRUE writes individual rasters in GeoTIFF format and a single PDF file with images for each probability density raster to the working directory.
+RasterStack or RasterLayer including a probability density surface for each individual in \code{unknown}. If \code{outDir} is not NULL, writes individual rasters in GeoTIFF format and a single PDF file with images for each probability density raster to the designated directory.
 }
 
 \seealso{

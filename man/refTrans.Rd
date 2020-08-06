@@ -16,7 +16,7 @@ refTrans(samples, marker = "d2H", ref_scale = "VSMOW_H", niter = 5000)
 
 \arguments{
   \item{samples}{
-  data.frame. Must include a field with data to be transformed, analtyical reproducibility of sample data (1 standard deviation), and original calibration scale for data. These fields must be named \emph{marker}, \emph{marker.sd}, and \emph{marker_cal}, respectively, where \emph{marker} is \dQuote{d2H} or \dQuote{d18O}. Values for the cal field should correspond to \emph{Calibration} codes found in \code{\link[assignR]{refMats}} tables \emph{hrms} and \emph{orms}.
+  data.frame. Must include a field with data to be transformed, analytical reproducibility of sample data (1 standard deviation), and original calibration scale for data. These fields must be named \emph{marker}, \emph{marker.sd}, and \emph{marker_cal}, respectively, where \emph{marker} is \dQuote{d2H} or \dQuote{d18O}. Values for the cal field should correspond to \emph{Calibration} codes found in \code{\link[assignR]{refMats}} tables \emph{hrms} and \emph{orms}.
 }
   \item{marker}{
 character string. Column name for isotopic data to be extracted, either \dQuote{d2H} or \dQuote{d18O}.
