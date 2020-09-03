@@ -8,7 +8,6 @@ p = CRS("+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs")
 
 #World outline map
 load("data-raw/wrld_simpl.rda")
-proj4string(wrld_simpl) = p
 
 #This one is internal
 use_data(wrld_simpl, internal = TRUE, overwrite = TRUE)
@@ -61,6 +60,8 @@ all(knownOrig_samples$Dataset_ID %in% knownOrig_sources$Dataset_ID)
 knownOrig_sites = SpatialPointsDataFrame(sites[,2:3], 
                                          data = sites[,c(1,4:ncol(sites))],
                                          proj4string = p)
+#update to include WKT representation; requires rgdal >=1.5-17
+knownOrig_sites = rebuild_CRS(knownOrig_sites)
 
 #Group data objects
 knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples, 
