@@ -1,6 +1,6 @@
 # assignR news
 
-## assignR 1.3.0
+## assignR 2.0.0
 
 * knownOrig database has been expanded and reformatted
 * New data objects document different calibration standards used to generate known-origin H and O isotope data
