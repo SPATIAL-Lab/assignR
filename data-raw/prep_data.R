@@ -25,16 +25,16 @@ oam = as.matrix(oam)
 isSymmetric(oam)
 
 #Standards definitions files
-hrms = read.xlsx("data-raw/hrms.xlsx")
-orms = read.xlsx("data-raw/orms.xlsx")
+hstds = read.xlsx("data-raw/hstds.xlsx")
+ostds = read.xlsx("data-raw/ostds.xlsx")
 
 #Verify rownumber matches adjacency matrix dimensions
-nrow(hrms) == nrow(ham)
-nrow(orms) == nrow(oam)
+nrow(hstds) == nrow(ham)
+nrow(ostds) == nrow(oam)
 
 #Verify that all matrix entries have a match in definition file
-all(row.names(ham) %in% hrms$Calibration)
-all(row.names(oam) %in% orms$Calibration)
+all(row.names(ham) %in% hstds$Calibration)
+all(row.names(oam) %in% ostds$Calibration)
 
 #Known origin data table
 knownOrig_sources = read.xlsx("data-raw/knownOrigNew.xlsx", 
@@ -47,10 +47,10 @@ knownOrig_samples = read.xlsx("data-raw/knownOrigNew.xlsx",
 #check standard scale names
 ss = unique(knownOrig_sources$H_cal)
 ss = ss[!is.na(ss)]
-all(ss %in% hrms$Calibration)
+all(ss %in% hstds$Calibration)
 ss = unique(knownOrig_sources$O_cal)
 ss = ss[!is.na(ss)]
-all(ss %in% orms$Calibration)
+all(ss %in% ostds$Calibration)
 
 #check linking fields
 all(knownOrig_samples$Site_ID %in% sites$Site_ID)
@@ -60,6 +60,7 @@ all(knownOrig_samples$Dataset_ID %in% knownOrig_sources$Dataset_ID)
 knownOrig_sites = SpatialPointsDataFrame(sites[,2:3], 
                                          data = sites[,c(1,4:ncol(sites))],
                                          proj4string = p)
+
 #update to include WKT representation; requires rgdal >=1.5-17
 knownOrig_sites = rebuild_CRS(knownOrig_sites)
 
@@ -67,7 +68,7 @@ knownOrig_sites = rebuild_CRS(knownOrig_sites)
 knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples, 
                  sources = knownOrig_sources)
 
-refMats = list(hrms = hrms, orms = orms, ham = ham, oam = oam)
+stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
   
 #Write it all to /data/
-use_data(knownOrig, refMats, overwrite = TRUE)
+use_data(knownOrig, stds, overwrite = TRUE)

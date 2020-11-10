@@ -58,10 +58,10 @@ list.
     \item{[, 8]}{Exchange: Was a correction for exchangeable H made (Y/N/NA)?}
     \item{[, 9]}{Exchange_method: Method used to correct for exchangeable H}
     \item{[, 10]}{Exchange_T: Was H exchange carried out at ambient or high temperature (Ambient/High/NA)?}
-    \item{[, 11]}{H_cal: Reference scale used to calibrate H isotope data, see \code{\link[assignR]{refMats}} object hrms}
-    \item{[, 12]}{O_cal: Reference scale used to calibrate O isotope data, see \code{\link[assignR]{refMats}} object orms}
+    \item{[, 11]}{H_cal: Reference scale used to calibrate H isotope data, see \code{\link[assignR]{stds}} object hstds}
+    \item{[, 12]}{O_cal: Reference scale used to calibrate O isotope data, see \code{\link[assignR]{stds}} object ostds}
     \item{[, 13]}{Std_powdered: Were calibration standards powdered (Y/N/NA)?}
-    \item{[, 14]}{Drying: Did the study document that samples were fully dried and transferred dry to instrument (Y/N/NA)?}
+    \item{[, 14]}{Drying: Did the study document how samples were fully dried and transferred dry to instrument (Y/N/NA)?}
     \item{[, 15]}{Analysis_method: Instrument configuration used for analysis}
     \item{[, 16]}{Analysis_type: What elements were analyzed for stable isotope ratios (H/O/H_O)?}
     \item{[, 17]}{Source_comments: Data source comments}

@@ -35,7 +35,7 @@ character string or string vector. Animal age code for data to be extracted.
 SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, global.
 }
   \item{ref_scale}{
-character string. Text identifier for reference scale to which all isotope values will be transformed. See \code{\link[assignR]{refMats}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported calibration scale.}
+character string. Text identifier for reference scale to which all isotope values will be transformed. See \code{\link[assignR]{stds}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported scale.}
   \item{niter}{
 integer. Number of random samples used to propagate uncertainty in calibration hierarchy transformations.
 }
@@ -49,7 +49,7 @@ SpatialPointsDataFrame including one feature for each selected sample. data.fram
 data.frame. Information for all data sources for the selected samples. Fields are described in \code{\link[assignR]{knownOrig}} feature \emph{sources} 
   }
   \item{chains}{
-list. Each item is a character string vector containing the hierarchy of calibrations used in the transformation for a set of selected samples. See \code{\link[assignR]{refMats}}.
+list. Each item is a character string vector containing the hierarchy of calibrations used in the transformation for a set of selected samples. See \code{\link[assignR]{stds}}.
   }
   \item{marker}{
 character string. The isotopic marker specified in the call to \code{subOrigData}
@@ -57,7 +57,7 @@ character string. The isotopic marker specified in the call to \code{subOrigData
 }
 
 \references{
-Magozzi, S. et al. (in prep) Calibration chain transformation to improve the comparability of organic hydrogen and oxygen isotope data.
+Magozzi, S. et al. (revised) Calibration chain transformation to improve the comparability of organic hydrogen and oxygen isotope data.
 }
 
 \examples{

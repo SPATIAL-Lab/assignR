@@ -1,7 +1,7 @@
 ---
 title: "assignR Examples"
 author: "Gabe Bowen, Chao Ma"
-date: "July 20, 2020"
+date: "November 10, 2020"
 output: html_document
 ---
 
@@ -19,9 +19,10 @@ library(devtools)
 install_github("SPATIAL-Lab/assignR@*release")
 ```
 
-Now let's load it, along with a couple other packages we'll need for the examples. 
+*****
+Let's load the package 
 
-```{r load, message=FALSE, warning=FALSE, results="hide"}
+```{r install, message=FALSE, warning=FALSE, results="hide"}
 library(assignR)
 library(raster)
 library(sp)
@@ -73,13 +74,13 @@ Load H isotope data for North American Loggerhead Shrike from the package databa
 d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
 ```
 
-By default, the *subOrigData* function transforms all data to a common reference scale (VSMOW-SLAP) using data from co-analysis of different laboratory reference materials (Magozzi et al., in prep). The calibrations used are documented in the function's return object.  
+By default, the *subOrigData* function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards (Magozzi et al., revised). The calibrations used are documented in the function's return object.  
 
 ```{r birdChains}
 d$chains
 ```
 
-Information on these calibrations is contained in the *refMats.rda* data file. 
+Information on these calibrations is contained in the *stds.rda* data file. 
 
 Transformation is important when blending data from different labs or papers because different reference scales have been used to calibrate published data and these calibrations are not always comparable. In this case all the data come from one paper:
 
@@ -118,10 +119,10 @@ un = data.frame(id, d2H, d2H.sd, d2H_cal)
 print(un)
 ```
 
-As discussed above, one issue that must be considered with any organic H or O isotope data is the calibration scale (the reference materials and assigned, calibrated values for those) used by the laboratory producing the data. The calibration scale for your unknown samples should be the same as that for the known origin data used in calRaster. Remember that the scale for our known origin data 'd' is *OldSA.1_H_1*. Let's assume that our fake data were normalized to the *UT_H_1* scale. The *refTrans* function allows us to convert between the two.
+As discussed above, one issue that must be considered with any organic H or O isotope data is the reference scale used by the laboratory producing the data. The reference scale for your unknown samples should be the same as that for the known origin data used in calRaster. Remember that the scale for our known origin data 'd' is *OldEC.1_H_1*. Let's assume that our fake data were normalized to the *UT_H_1* scale. The *refTrans* function allows us to convert between the two.
 
 ```{r refTrans}
-un = refTrans(un, ref_scale = "OldSA.1_H_1")
+un = refTrans(un, ref_scale = "OldEC.1_H_1")
 print(un)
 ```
 
@@ -280,4 +281,5 @@ Assignments made using the fuzzy isoscape are generally poorer than those made w
 *****
 *****
 Questions or comments? <gabe.bowen@utah.edu>
+
 

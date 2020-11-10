@@ -2,12 +2,12 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
                     niter = 5000){
   
   #load data in funtion environ
-  data("refMats", envir = environment())
-  refMats = refMats
-  ham = refMats$ham
-  oam = refMats$oam
-  hrms = refMats$hrms
-  orms = refMats$orms
+  data("stds", envir = environment())
+  stds = stds
+  ham = stds$ham
+  oam = stds$oam
+  hstds = stds$hstds
+  ostds = stds$ostds
 
   #For data sent from subOrigData
   if(class(samples) == "SOD"){
@@ -22,7 +22,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
       samples = samples[,-ncol(samples)]
       #Which adjacency matrix and standard table?
       am = ham
-      cal_table = hrms
+      cal_table = hstds
       #Name of the relevant SD column
       sd_col = "d2H.sd"
     } else if(marker == "d18O"){
@@ -30,7 +30,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
       samples_scales = samples$O_cal
       samples = samples[,-ncol(samples)]
       am = oam
-      cal_table = orms
+      cal_table = ostds
       sd_col = "d18O.sd"
     }
     
@@ -84,7 +84,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
       start_scales = unique(samples$d2H_cal) 
       #Which adjacency matrix and calibration table?
       am = ham
-      cal_table = hrms
+      cal_table = hstds
       #Pull starting standard scales for use
       samples_scales = samples$d2H_cal
       #SD column
@@ -92,7 +92,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
     } else {
       start_scales = unique(samples$d18O_cal) 
       am = oam
-      cal_table = orms
+      cal_table = ostds
       samples_scales = samples$d18O_cal
       sd_col = "d18O.sd"
     }
@@ -151,7 +151,7 @@ trans = function(start_scales, samples_scales, samples, ref_scale, am,
                            samples_sub[j, sd_col])
         }
         #Add uncertainty for first calibration, if present
-        ssv1 = rm_vals(chain[1], cal_table)
+        ssv1 = std_vals(chain[1], cal_table)
         if(!is.na(ssv1$lse)){
           ssv2 = ssv1
           ssv2$lse = ssv2$hse = 0
@@ -160,8 +160,8 @@ trans = function(start_scales, samples_scales, samples, ref_scale, am,
         }
         #Cycle through chain
         for(j in 1:(length(chain)-1)){
-          ssv1 = rm_vals(chain[j], cal_table)
-          ssv2 = rm_vals(chain[j+1], cal_table)
+          ssv1 = std_vals(chain[j], cal_table)
+          ssv2 = std_vals(chain[j+1], cal_table)
           vals = cal_shift(vals, ssv1, ssv2, niter)
           if(is.null(vals)){
             chain = NULL
@@ -242,7 +242,7 @@ cal_chain = function(ss1, ss2, scs){
   return(chain)
 }
 
-rm_vals = function(scale, sds){
+std_vals = function(scale, sds){
   lm = sds$Low[sds$Calibration == scale]
   hm = sds$High[sds$Calibration == scale]
   lse = sds$Low_se[sds$Calibration == scale]
