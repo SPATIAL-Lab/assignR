@@ -24,7 +24,7 @@ library(assignR)
 
 *knownOrig.rda*	- Hydrogen and oxygen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 4218 samples)
 
-*refMats.rda* - Information on reference scales used to report data from different labs, useful for converting between scales
+*stds.rda* - Information on reference scales used to report data from different labs, useful for converting between scales
 
 *naMap.rda* - North America outline
 
@@ -53,7 +53,7 @@ library(assignR)
 *plot.QA* - Plot results of one or more quality analyses from QA function
 
 <!-- badges: start -->
-  [![Travis build status](https://travis-ci.org/SPATIAL-Lab/assignR.svg?branch=master)](https://travis-ci.org/SPATIAL-Lab/assignR)
+  [![Travis build status](https://travis-ci.com/github/SPATIAL-Lab/assignR.svg?branch=master)](https://travis-ci.com/github/SPATIAL-Lab/assignR)
   [![codecov](https://codecov.io/gh/SPATIAL-Lab/assignR/branch/master/graph/badge.svg)](https://codecov.io/gh/SPATIAL-Lab/assignR) 
   <!-- badges: end -->
 
