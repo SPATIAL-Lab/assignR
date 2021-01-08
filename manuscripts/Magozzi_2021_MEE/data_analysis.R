@@ -3,7 +3,8 @@
 
 ## Install assignR development release
 library(devtools)
-install_github("SPATIAL-Lab/assignR@*release")
+#install_github("SPATIAL-Lab/assignR@*release") #will be bundled as a release when we are finished and ready to resubmit
+install_github("SPATIAL-Lab/assignR")
 
 ## Load assignR & other required libraries
 library(assignR)
@@ -74,7 +75,8 @@ d18O$Dataset_ID = factor(d18O$Dataset_ID, levels=c(9,10,8,5,7,15,16))
 cols = gray.colors(n=6, gamma = 1)
 
 ## Fig. 1A 
-pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.1A.pdf", height=5, width=8, encoding="WinAnsi.enc")
+pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.1A_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
+#pdf("/Users/Sarah/Dropbox/HO_database/paper/Fig.1A_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
 
 par(mfrow=c(1,1), oma=c(0,0,0.5,0.5), mar=c(7.5,4,0.5,0.5), mgp=c(2.5,1,0)) 
 
@@ -94,11 +96,12 @@ legend("topright", c("Original","Recalibrated"), fill=c(cols[2], cols[5]), bty =
 dev.off()
 
 ## Fig. 1B
-pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.1B.pdf", height=5, width=8, encoding="WinAnsi.enc")
+pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.1B_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
+#pdf("/Users/Sarah/Dropbox/HO_database/paper/Fig.1B_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
 
 par(mfrow=c(1,1), oma=c(0,0,0.5,0.5), mar=c(7.5,4,0.5,0.5), mgp=c(2.5,1,0)) 
 
-boxplot(d2H.sd ~ Cat:Dataset_ID, data= d2H, col=c(cols[2],cols[5]), ylim=c(0,4.5), xaxt="n", ylab=expression(paste("Keratin SE ", delta^{2}, "H (\u2030)")), xlab="", cex.axis = 1, cex.lab=1, outline=FALSE)
+boxplot(d2H.sd ~ Cat:Dataset_ID, data= d2H, col=c(cols[2],cols[5]), ylim=c(0,5), xaxt="n", ylab=expression(paste("Keratin SE ", delta^{2}, "H (\u2030)")), xlab="", cex.axis = 1, cex.lab=1, outline=FALSE)
 labels=paste(c("Bowen et al. 2009","Ehleringer et al. 2008","Thompson et al. 2010","Bataille Human Hair","Wunder Plover","Neto et al. 2006","Hobson et al. 2004","Hobson et al. 2009","Hobson et al. 2012","Lott & Smith 2006","Prochazka et al. 2013","van Dijk et al. 2014","Hobson & Kohler 2015","Bowen Scaup","Magozzi Towhee"))
 axis(side=1, at=1.5+2*(0:14), labels=FALSE)
 box(lwd=1.25)
@@ -112,7 +115,8 @@ points(28, 0.6865116, pch=16, col="black", cex=1)
 dev.off()
 
 ## Fig. 2A
-pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.2A.pdf", height=5, width=8, encoding="WinAnsi.enc")
+pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.2A_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
+#pdf("/Users/Sarah/Dropbox/HO_database/paper/Fig.2A_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
 
 par(mfrow=c(1,1), oma=c(0,0,0.5,0.5), mar=c(7.5,4,0.5,0.5), mgp=c(2.5,1,0)) 
 
@@ -126,7 +130,8 @@ text(x = 1.5+2*(0:6), y = par("usr")[3]-1, srt=60, adj=1, xpd=TRUE, labels=label
 dev.off()
 
 ## Fig 2B
-pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.2B.pdf", height=5, width=8, encoding="WinAnsi.enc")
+pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.2B_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
+#pdf("/Users/Sarah/Dropbox/HO_database/paper/Fig.2B_final.pdf", height=5, width=8, encoding="WinAnsi.enc")
 
 par(mfrow=c(1,1), oma=c(0,0,0.5,0.5), mar=c(7.5,4,0.5,0.5), mgp=c(2.5,1,0)) 
 
@@ -267,7 +272,8 @@ dataset_symbols = array(data=c(0:length(dataset_names)), dim=c(1,length(dataset_
 dataset_colors = array(data=c("darkmagenta","chartreuse3","firebrick",rep("tomato2",3),"springgreen4","orange red","tomato2","chartreuse3","tomato2","orange"), dim=c(1,length(dataset_names)), dimnames=list(NULL,dataset_names))
 dataset_size = array(data=c(rep(1,6),3,rep(1,5)), dim=c(1,length(dataset_names)), dimnames=list(NULL,dataset_names))
 
-pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.3.pdf", height=12, width=10, encoding="WinAnsi.enc")
+pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.3_final.pdf", height=12, width=10, encoding="WinAnsi.enc")
+#pdf("/Users/Sarah/Dropbox/HO_database/paper/Fig.3_final.pdf", height=12, width=10, encoding="WinAnsi.enc")
 
 par(mfrow=c(5,3), oma=c(3,3,0.5,0.5), mar=c(2,2,0.5,0.5), mgp=c(2.5,1,0)) 
 
@@ -276,7 +282,8 @@ par(mfrow=c(5,3), oma=c(3,3,0.5,0.5), mar=c(2,2,0.5,0.5), mgp=c(2.5,1,0))
 
 Mod_human = d2H.lm.avg[d2H.lm.avg$Group == "Modern human",]
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), ylab="", xaxt='n', cex.axis = 1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Mod_human$d2H_precip[Mod_human$Dataset_name == i], Mod_human$d2H[Mod_human$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -285,12 +292,14 @@ for (i in dataset_names) {
 M.old = lm(Mod_human$d2H ~ Mod_human$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Mod_human$d2H_precip[Mod_human$Dataset_name == i], Mod_human$Recald2H[Mod_human$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -299,9 +308,10 @@ for (i in dataset_names) {
 M.old = lm(Mod_human$Recald2H ~ Mod_human$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), xaxt='n', yaxt='n', ann=FALSE, bty='n')
 
@@ -316,7 +326,8 @@ legend("topright", legend=c("Bataille Human Hair","Ehleringer et al. 2008","Hobs
 
 Pass = d2H.lm.avg[d2H.lm.avg$Group == "Passerine",]
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Pass$d2H, Pass$Recald2H),na.rm=T), max(c(Pass$d2H, Pass$Recald2H),na.rm=T)+20), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Pass$d2H, Pass$Recald2H),na.rm=T), max(c(Pass$d2H, Pass$Recald2H),na.rm=T)+20), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Pass$d2H_precip[Pass$Dataset_name == i], Pass$d2H[Pass$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -331,12 +342,14 @@ points(Pass$d2H_precip[Pass$Dataset_name == i], Pass$d2H[Pass$Dataset_name == i]
 M.old = lm(Pass$d2H ~ Pass$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Pass$d2H, Pass$Recald2H),na.rm=T), max(c(Pass$d2H, Pass$Recald2H),na.rm=T)+20), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Pass$d2H, Pass$Recald2H),na.rm=T), max(c(Pass$d2H, Pass$Recald2H),na.rm=T)+20), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Pass$d2H_precip[Pass$Dataset_name == i], Pass$Recald2H[Pass$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -351,9 +364,10 @@ points(Pass$d2H_precip[Pass$Dataset_name == i], Pass$Recald2H[Pass$Dataset_name 
 M.old = lm(Pass$Recald2H ~ Pass$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), xaxt='n', yaxt='n', ann=FALSE, bty='n')
 
@@ -362,7 +376,8 @@ plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Rec
 
 Ground = d2H.lm.avg[d2H.lm.avg$Group == "Ground bird",]
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Ground$d2H, Ground$Recald2H),na.rm=T), max(c(Ground$d2H, Ground$Recald2H),na.rm=T)+20), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Ground$d2H, Ground$Recald2H),na.rm=T), max(c(Ground$d2H, Ground$Recald2H),na.rm=T)+20), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Ground$d2H_precip[Ground$Dataset_name == i], Ground$d2H[Ground$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -371,12 +386,14 @@ for (i in dataset_names) {
 M.old = lm(Ground$d2H ~ Ground$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Ground$d2H, Ground$Recald2H),na.rm=T), max(c(Ground$d2H, Ground$Recald2H),na.rm=T)+20), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Ground$d2H, Ground$Recald2H),na.rm=T), max(c(Ground$d2H, Ground$Recald2H),na.rm=T)+20), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Ground$d2H_precip[Ground$Dataset_name == i], Ground$Recald2H[Ground$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -385,9 +402,10 @@ for (i in dataset_names) {
 M.old = lm(Ground$Recald2H ~ Ground$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), xaxt='n', yaxt='n', ann=FALSE, bty='n')
 
@@ -396,7 +414,8 @@ plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Rec
 
 Water = d2H.lm.avg[d2H.lm.avg$Group == "Water bird",]
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Water$d2H, Water$Recald2H),na.rm=T), max(c(Water$d2H, Water$Recald2H),na.rm=T)+10), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Water$d2H, Water$Recald2H),na.rm=T), max(c(Water$d2H, Water$Recald2H),na.rm=T)+10), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Water$d2H_precip[Water$Dataset_name == i], Water$d2H[Water$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -405,12 +424,14 @@ for (i in dataset_names) {
 M.old = lm(Water$d2H ~ Water$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Water$d2H, Water$Recald2H),na.rm=T), max(c(Water$d2H, Water$Recald2H),na.rm=T)+10), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Water$d2H, Water$Recald2H),na.rm=T), max(c(Water$d2H, Water$Recald2H),na.rm=T)+10), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-200,0,50), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Water$d2H_precip[Water$Dataset_name == i], Water$Recald2H[Water$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -419,9 +440,10 @@ for (i in dataset_names) {
 M.old = lm(Water$Recald2H ~ Water$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), xaxt='n', yaxt='n', ann=FALSE, bty='n')
 
@@ -430,7 +452,7 @@ plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Rec
 
 Raptor = d2H.lm.avg[d2H.lm.avg$Group == "Raptor",]
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Raptor$d2H, Raptor$Recald2H),na.rm=T), max(c(Raptor$d2H, Raptor$Recald2H),na.rm=T)+25), ylab="")
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Raptor$d2H, Raptor$Recald2H),na.rm=T), max(c(Raptor$d2H, Raptor$Recald2H),na.rm=T)+25), ylab="", cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Raptor$d2H_precip[Raptor$Dataset_name == i], Raptor$d2H[Raptor$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -439,12 +461,13 @@ for (i in dataset_names) {
 M.old = lm(Raptor$d2H ~ Raptor$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 
-plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Raptor$d2H, Raptor$Recald2H),na.rm=T), max(c(Raptor$d2H, Raptor$Recald2H),na.rm=T)+25), ylab="")
+plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Raptor$d2H, Raptor$Recald2H),na.rm=T), max(c(Raptor$d2H, Raptor$Recald2H),na.rm=T)+25), ylab="", cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Raptor$d2H_precip[Raptor$Dataset_name == i], Raptor$Recald2H[Raptor$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -453,9 +476,10 @@ for (i in dataset_names) {
 M.old = lm(Raptor$Recald2H ~ Raptor$d2H_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 plot(x=NULL, y = NULL, xlim=c(-200,0), ylim=c(min(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T), max(c(Mod_human$d2H, Mod_human$Recald2H),na.rm=T)+10), xaxt='n', yaxt='n', ann=FALSE, bty='n')
 
@@ -476,7 +500,8 @@ dataset_colors = array(data=c("chartreuse3","firebrick","grey","springgreen4","c
 dataset_size = array(data=c(rep(1,3),3,1), dim=c(1,length(dataset_names)), dimnames=list(NULL,dataset_names))
 
 
-pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.4.pdf", height=12, width=10, encoding="WinAnsi.enc")
+pdf("/Users/Sarah/Dropbox/Magozzi et al. MEE_code/Figures/Fig.4_final.pdf", height=12, width=10, encoding="WinAnsi.enc")
+#pdf("/Users/Sarah/Dropbox/HO_database/paper/Fig.4_final.pdf", height=12, width=10, encoding="WinAnsi.enc")
 
 par(mfrow=c(5,3), oma=c(3,3,0.5,0.5), mar=c(2,2,0.5,0.5), mgp=c(2.5,1,0)) 
 
@@ -485,7 +510,8 @@ par(mfrow=c(5,3), oma=c(3,3,0.5,0.5), mar=c(2,2,0.5,0.5), mgp=c(2.5,1,0))
 
 Mod_human = d18O.lm.avg[d18O.lm.avg$Group == "Modern human",]
 
-plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-20,-2,5), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Mod_human$d18O_precip[Mod_human$Dataset_name == i], Mod_human$d18O[Mod_human$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -494,12 +520,14 @@ for (i in dataset_names) {
 M.old = lm(Mod_human$d18O ~ Mod_human$d18O_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 
-plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-20,-2,5), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Mod_human$d18O_precip[Mod_human$Dataset_name == i], Mod_human$Recald18O[Mod_human$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -508,15 +536,16 @@ for (i in dataset_names) {
 M.old = lm(Mod_human$Recald18O ~ Mod_human$d18O_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
-plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), xaxt='n', yaxt='n', ann=FALSE, bty='n')
+plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), xaxt='n', yaxt='n', ann=FALSE, bty='n', cex.axis=1.1)
 
 
 ## legend scales 
-legend("topleft", legend=c("OldUT_O_1","IAEA_O_1","SA_O_9","UT_O_2"), fill = c("chartreuse3","grey","firebrick","springgreen4"), bty="n", cex=1)
+legend("topleft", legend=c("OldUT_O_1","IAEA_O_1","SA_O_10","UT_O_2"), fill = c("chartreuse3","grey","firebrick","springgreen4"), bty="n", cex=1)
 
 ## legend datasets 
 legend("topright", legend=c("Ehleringer et al. 2008","Hobson & Kohler 2015","Hobson et al. 2004","Magozzi Towhee","Thompson et al. 2010"), pch = dataset_symbols, bty="n", cex=1)
@@ -526,7 +555,8 @@ legend("topright", legend=c("Ehleringer et al. 2008","Hobson & Kohler 2015","Hob
 
 Pass = d18O.lm.avg[d18O.lm.avg$Group == "Passerine",]
 
-plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Pass$d18O, Pass$Recald18O),na.rm=T), max(c(Pass$d18O, Pass$Recald18O),na.rm=T)+1), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Pass$d18O, Pass$Recald18O),na.rm=T), max(c(Pass$d18O, Pass$Recald18O),na.rm=T)+1), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-20,-2,5), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Pass$d18O_precip[Pass$Dataset_name == i], Pass$d18O[Pass$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -541,11 +571,13 @@ points(Pass$d18O_precip[Pass$Dataset_name == i], Pass$d18O[Pass$Dataset_name == 
 M.old = lm(Pass$d18O ~ Pass$d18O_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
-plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Pass$d18O, Pass$Recald18O),na.rm=T), max(c(Pass$d18O, Pass$Recald18O),na.rm=T)+1), ylab="", xaxt='n')
+plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Pass$d18O, Pass$Recald18O),na.rm=T), max(c(Pass$d18O, Pass$Recald18O),na.rm=T)+1), ylab="", xaxt='n', cex.axis=1.1)
+axis(side = 1, at = seq(-20,-2,5), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Pass$d18O_precip[Pass$Dataset_name == i], Pass$Recald18O[Pass$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -560,11 +592,12 @@ points(Pass$d18O_precip[Pass$Dataset_name == i], Pass$Recald18O[Pass$Dataset_nam
 M.old = lm(Pass$Recald18O ~ Pass$d18O_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
-plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), xaxt='n', yaxt='n', ann=FALSE, bty='n')
+plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), xaxt='n', yaxt='n', ann=FALSE, bty='n', cex.axis=1.1)
 
 
 ## Ground bird
@@ -572,6 +605,7 @@ plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Re
 Ground = d18O.lm.avg[d18O.lm.avg$Group == "Ground bird",]
 
 plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Ground$d18O, Ground$Recald18O),na.rm=T), max(c(Ground$d18O, Ground$Recald18O),na.rm=T)+1), ylab="")
+axis(side = 1, at = seq(-20,-2,5), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Ground$d18O_precip[Ground$Dataset_name == i], Ground$d18O[Ground$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -580,12 +614,14 @@ for (i in dataset_names) {
 M.old = lm(Ground$d18O ~ Ground$d18O_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 
 plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Ground$d18O, Ground$Recald18O),na.rm=T), max(c(Ground$d18O, Ground$Recald18O),na.rm=T)+1), ylab="")
+axis(side = 1, at = seq(-20,-2,5), labels = FALSE, tck = -0.03, cex.axis=1.1)
 
 for (i in dataset_names) {
   points(Ground$d18O_precip[Ground$Dataset_name == i], Ground$Recald18O[Ground$Dataset_name == i], pch=dataset_symbols[dataset_names == i], cex=dataset_size[dataset_names == i], col=dataset_colors[dataset_names == i])
@@ -594,9 +630,10 @@ for (i in dataset_names) {
 M.old = lm(Ground$Recald18O ~ Ground$d18O_precip)
 abline(M.old, col="black")
 cf.old = round(coef(M.old),2)
+cf.old[1] = ifelse(cf.old[1] <0 , cf.old[1], paste("+", cf.old[1]))
 r2.old = round(summary(M.old)$adj.r.squared, 2)
-eq.old = paste0("y = ", cf.old[1], ifelse(sign(cf.old[2])==1, " + ", " - "), abs(cf.old[2]), " x, R^2 = ", r2.old)
-mtext(eq.old, 3, line=-1, adj=0.15, col="black", cex=0.75)
+eq.old = bquote(paste("y = ", .(cf.old[2]), "x ", .(cf.old[1]), ", R"^2," = ", .(r2.old), sep=""))
+mtext(eq.old,3, line=-1.5, adj=0.15, col="black", cex=0.75)
 
 plot(x=NULL, y = NULL, xlim=c(-20,-2), ylim=c(min(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T), max(c(Mod_human$d18O, Mod_human$Recald18O),na.rm=T)+1), xaxt='n', yaxt='n', ann=FALSE, bty='n')
 
