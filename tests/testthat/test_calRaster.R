@@ -11,7 +11,7 @@ d_diffProj$data = spTransform(d$data, "+init=epsg:28992")
 d_usr_bad = d$data
 d_usr_good = d_usr_bad
 d_usr_good@data = data.frame(d$data$d2H, d$data$d2H.sd)
-d_noCRS=d
+d_noCRS = d
 crs(d_noCRS$data) = NA
 
 d2h_world_noCRS = d2h_world
@@ -28,9 +28,9 @@ d2h_world_with9999 = setValues(d2h_world, tempVals)
 
 d2h_world_na = crop(d2h_world, naMap)
 
-r1 = calRaster(known = d, isoscape = d2h_world, mask = naMap)
-r2 = calRaster(known = d, isoscape = d2h_world, mask = naMap, interpMethod = 1)
-r3 = calRaster(known = d, isoscape = d2h_world_with9999, NA.value = 9999)
+r1 = calRaster(known = d, isoscape = d2h_world, mask = naMap, genplot = FALSE)
+r2 = calRaster(known = d, isoscape = d2h_world, mask = naMap, interpMethod = 1, genplot = FALSE)
+r3 = calRaster(known = d, isoscape = d2h_world_with9999, NA.value = 9999, genplot = FALSE)
 
 test_that("calRaster can correctly uses known-origin tissue data to rescale a map of 
           environmental isotope values to a map of tissue value (and associated uncertainty) 

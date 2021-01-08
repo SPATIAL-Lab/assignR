@@ -28,8 +28,16 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     known = known$data
   }else{
     if(ncol(known@data) < 2){
-      stop("known must include a data frame containing the measured 
-           isotope values (col 1) and 1 sd uncertainty (col 2)")
+      if(ncol(known@data) == 1){
+        warning("use of known with 1 data column is depreciated; known 
+              should include a data frame containing the measured 
+              isotope values (col 1) and 1 sd uncertainty (col 2); 
+              assuming equal uncertainty for all samples")
+        known@data[,2] = rep(0.0001, nrow(known@data))
+      } else{
+        stop("known must include a data frame containing the measured 
+              isotope values (col 1) and 1 sd uncertainty (col 2)")
+      }
     }
     if(any(!is.numeric(known@data[,1]), !is.numeric(known@data[,2]))){
       stop("known must include a data frame containing the measured 
