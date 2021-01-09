@@ -57,7 +57,7 @@ character string. The isotopic marker specified in the call to \code{subOrigData
 }
 
 \references{
-Magozzi, S. et al. (revised) Calibration chain transformation to improve the comparability of organic hydrogen and oxygen isotope data.
+Magozzi, S. et al. (in press) Calibration chain transformation to improve the comparability of organic hydrogen and oxygen isotope data. \emph{Methods in Ecology and Evolution}
 }
 
 \examples{

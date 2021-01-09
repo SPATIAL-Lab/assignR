@@ -4,7 +4,7 @@
 
 * knownOrig database has been expanded and reformatted
 * New data objects document different calibration standards used to generate known-origin H and O isotope data
-* subOrigData supports transformation of data among different calibration standard scales using the 'standard-chain' method of Magozzi et al. (revised); format of return object from this function has changed
+* subOrigData supports transformation of data among different calibration standard scales using the 'standard-chain' method of Magozzi et al. (in press); format of return object from this function has changed
 * calRaster changes including new format for input object "known" and use of weighted least squares regression; tissue isoscape variance calculation updated to a + b - c, where a is isoscape gridcell variance, b is the residual variance of tissue predictions made from isoscape-tissue rescaling functions fit using values sampled from the isoscape with noise, and c is the variance of the sampled isoscape values   
 * QA changes including new format for input object "known" and option to resample known data by site rather than by sample; for bySite option returned results are the average of site-level average statistics; argument order changed for consistency with calRaster
 * sp objects updated to support WKT2_2019 strings

@@ -70,7 +70,7 @@ Load H isotope data for North American Loggerhead Shrike from the package databa
 d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
 ```
 
-By default, the *subOrigData* function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards (Magozzi et al., revised). The calibrations used are documented in the function's return object.  
+By default, the *subOrigData* function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards (Magozzi et al., in press). The calibrations used are documented in the function's return object.  
 
 ```{r birdChains}
 d$chains
