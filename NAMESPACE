@@ -8,6 +8,7 @@ export(qtlRaster)
 export(refTrans)
 export(subOrigData)
 export(unionP)
+import(rgdal)
 import(maptools)
 importFrom(sp, proj4string, spTransform, spplot, plot, identicalCRS, merge)
 importFrom(raster, crs, crop, plot, values, getValues, setValues, minValue, 
