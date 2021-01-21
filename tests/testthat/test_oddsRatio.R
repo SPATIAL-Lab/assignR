@@ -37,7 +37,8 @@ crs(pp12_noCRS) = NA
 s12_noCRS = s12
 crs(s12_noCRS) = NA
 
-pp121 = SpatialPoints(coords = rbind(pp1,pp2,pp1), 
+pp3 = pp1
+pp121 = SpatialPoints(coords = rbind(pp1,pp2,pp3), 
                      proj4string=CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
 
 test_that("pdRaster can correctly calculate ratio of odds 
