@@ -16,12 +16,12 @@ unionP(pdR)
 
 \arguments{
   \item{pdR}{
-RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{calRaster}. All layers must have common spatial extent and projection.
+RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{pdRaster}. All layers must have common spatial extent and projection.
 }
 }
 
 \examples{
-# load North America boundary and global isoscape
+# load North America boundary and isoscape
 data("naMap")
 data("d2h_lrNA")
 

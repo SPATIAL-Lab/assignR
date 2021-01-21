@@ -5,6 +5,7 @@ plot.QA = function(x, ..., outDir = NULL){
   if(class(a[[1]])[1] != "QA"){
     stop("x must be one or more QA objects")
   }
+  
   if(!is.null(outDir)){
     if(class(outDir)[1] != "character"){
       stop("outDir should be a character string")

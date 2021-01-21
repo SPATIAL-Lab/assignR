@@ -7,11 +7,11 @@ Plot quality metrics for geographic assignments
 }
 
 \description{
-Plot the output from \code{\link[assignR]{QA}}, including spatial precision, bias, sensitivity and odds ratio of known locations for validation samples.
+Plot the output from \code{\link{QA}}, including spatial precision, bias, sensitivity and odds ratio of known locations for validation samples.
 }
 
 \usage{
-  \method{plot}{QA}(x, ..., outDir = NULL)
+\method{plot}{QA}(x, ..., outDir = NULL)
 }
 
 \arguments{

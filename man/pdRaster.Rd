@@ -16,7 +16,7 @@ pdRaster(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDir = NULL)
 
 \arguments{
 \item{r}{
-RasterStack or RasterBrick with two layers, e.g., as created by \code{\link[assignR]{calRaster}}. The first layer is the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
+RasterStack or RasterBrick with two layers, e.g., as created by \code{\link{calRaster}}. The first layer is the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
 }
 \item{unknown}{
 data.frame. First column should be unique sample IDs, and second column should be tissue isotope values for the individuals for which the assignments will be made.
