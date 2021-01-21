@@ -16,7 +16,7 @@ isoStack(..., clean = TRUE)
 
 \arguments{
   \item{...}{
-  Two or more RasterStack or RasterBrick isoscapes, each with two layers, e.g., as produced by \code{\link{calRaster}}. The first layer in each should contain the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
+  Two or more RasterStack or RasterBrick isoscapes, each with two layers, or \code{rescale} objects as produced by \code{\link{calRaster}}. For objects other than \code{rescale}, the first layer in each should contain the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
   }
   \item{clean}{
   logical. Reconcile differences in raster properties within \code{...}?

@@ -46,6 +46,7 @@ logical. Print out the linear regression results.
 }
 
 \value{
+Returns an object of class \dQuote{rescale}.
 \item{isoscape.rescale}{RasterBrick. \code{isoscape} rescaled using a linear regression model between values of \code{known} and \code{isoscape}. The first layer is the mean prediction and the second the standard deviation.}
 \item{lm.data}{data.frame. Known origin data and extracted \code{isoscape} values used for linear regression modeling.}
 \item{lm.model}{list. Linear regression model.}

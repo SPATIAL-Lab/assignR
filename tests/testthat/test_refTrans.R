@@ -13,7 +13,7 @@ un5 = data.frame(id, d2H, d2H.sd, "d2H_cal" = rep("sam", 5))
 r = refTrans(un1)
 
 test_that("refTrans can correctly transform data",{
-  expect_equal(class(r), "list")
+  expect_s3_class(r, "refTrans")
   expect_equal(length(r[[2]]), 1)
   expect_error(refTrans(un2))
   expect_error(refTrans(un3))

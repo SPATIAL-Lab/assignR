@@ -1,7 +1,8 @@
 # assignR news
 
 ## assignR 2.0.0.9000
-* added isoStack function to stack multiple isoscapes in a single data object, and print s3 generic for this class
+* added isoStack function to stack multiple isoscapes in a single data object; added plot s3 method for this class
+* update pdRaster to support multivariate assignment
 
 ## assignR 2.0.0
 

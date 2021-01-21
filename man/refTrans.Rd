@@ -29,7 +29,7 @@ integer. Number of random samples used to propagate uncertainty in calibration h
 }
 
 \value{
-list.
+Returns an object of class \dQuote{refTrans}.
   \item{data}{
 data.frame. Formatted identically to input object \emph{samples}, with values for the data and data uncertainty fields replaced with transformed values.}
   \item{chains}{

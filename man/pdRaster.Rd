@@ -16,10 +16,10 @@ pdRaster(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDir = NULL)
 
 \arguments{
 \item{r}{
-RasterStack or RasterBrick with two layers, e.g., as created by \code{\link{calRaster}}. The first layer is the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
+RasterStack or RasterBrick with two layers, \code{rescale} object (see \code{\link{calRaster}}), or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the substrate-specific isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
 }
 \item{unknown}{
-data.frame. First column should be unique sample IDs, and second column should be tissue isotope values for the individuals for which the assignments will be made.
+data.frame, \code{\link{refTrans}} object, or list of two or more \code{\link{refTrans}} objects. For user-created data.frame, first column should contain unique sample IDs, and subsequent columns should contain sample isotope values for one or more isotopes to be used in assignment.
 }
 \item{prior}{
 raster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{r}.
@@ -35,12 +35,18 @@ character string. Directory path to which output will be saved. If NULL no files
 }
 }
 
+\details{
+If more than one isotope marker is to be used for multivariate assignment, \code{r} must be an \code{\link{isoStack}} object and the number of isoscapes in that object must be equal to the number of isotope-value columns or \code{\link{refTrans}} objects included in \code{unknown}. Isoscapes and unknown sample values will be matched based on order, so it is critical that the values appear in the same order in these two input objects.
+}
+
 \value{
 RasterStack or RasterLayer including a probability density surface for each individual in \code{unknown}. If \code{outDir} is not NULL, writes individual rasters in GeoTIFF format and a single PDF file with images for each probability density raster to the designated directory.
 }
 
 \seealso{
-\code{\link[assignR]{calRaster}}
+\code{\link{calRaster}}
+\code{\link{refTrans}}
+\code{\link{isoStack}}
 }
 
 \examples{

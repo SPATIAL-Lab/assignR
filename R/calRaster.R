@@ -265,7 +265,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   #package results
   result = list(isoscape.rescale = isoscape.rescale, lm.data = xyw,
                 lm.model = lmResult)
-  class(result) = "rescale"
+  class(result) = c("rescale")
           
   #done
   return(result)

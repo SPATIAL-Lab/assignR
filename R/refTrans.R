@@ -128,6 +128,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
       } else{
         stop("No samples could be transformed")
       }
+      class(trans_out) = "refTrans"
       return(trans_out)
     } 
     

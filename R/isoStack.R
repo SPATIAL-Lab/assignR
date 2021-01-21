@@ -7,14 +7,17 @@ isoStack = function(..., clean = TRUE){
   }
   n = length(r)
   
-  for(i in r){
-    if(class(i)[1] != "RasterBrick" & class(i)[1] != "RasterStack"){
+  for(i in 1:n){
+    if(class(r[[i]])[1] == "rescale"){
+      r[[i]] = r[[i]]$isoscape.rescale
+    }
+    if(class(r[[i]])[1] != "RasterBrick" & class(r[[i]])[1] != "RasterStack"){
       stop("each object in ... must be a RasterBrick or RasterStack")
     }
-    if(nlayers(i) != 2){
+    if(nlayers(r[[i]]) != 2){
       stop("each isoscape must include two layers: mean and 1 sd")
     }
-    if(is.na(proj4string(i))) {
+    if(is.na(proj4string(r[[i]]))) {
       stop("each isoscape must have valid coordinate reference system")
     }
   }
@@ -104,8 +107,5 @@ plot.isoStack = function(x, ...){
   
   for(i in x){
     plot(i)
-#    for(j in 1:2){
-#      plot(i[[j]])
-#    }
   }
 }
