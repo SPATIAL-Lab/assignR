@@ -133,7 +133,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     indv.iso = indv.data[1, -1]
     
     for(j in seq_along(assign)){
-      if(is.na(meanV[j, 1])){
+      if(any(sapply(meanV[j, ], is.na))){
         assign[j] = NA
       } else{
         assign[j] = dmvnorm(indv.iso, mean = meanV[j,], sigma = dev)
