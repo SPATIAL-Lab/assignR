@@ -126,7 +126,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   assign = numeric(length(rescaled.mean))
   
   dev = cov(meanV, use = "pairwise.complete.obs")
-  
+
   for (i in seq_len(n)) {
     indv.data = data[i, ]
     indv.id = indv.data[1, 1]
@@ -136,7 +136,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
       if(any(sapply(meanV[j, ], is.na))){
         assign[j] = NA
       } else{
-        assign[j] = dmvnorm(indv.iso, mean = meanV[j,], sigma = dev)
+        assign[j] = dmvn(as.numeric(indv.iso), meanV[j,], dev)
       }
     }
 

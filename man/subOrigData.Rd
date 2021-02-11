@@ -42,14 +42,14 @@ integer. Number of random samples used to propagate uncertainty in calibration h
 }
 
 \value{
-Returns an object of class \dQuote{subOrigData}, formatted for use in \code{\link[assignR]{calRaster}} or \code{\link[assignR]{QA}} functions.
+Returns an object of class \dQuote{subOrigData}, formatted for use in \code{\link{calRaster}} or \code{\link{QA}} functions.
   \item{data}{
-SpatialPointsDataFrame including one feature for each selected sample. data.frame fields are described in \code{\link[assignR]{knownOrig}} feature \emph{samples}.}
+SpatialPointsDataFrame including one feature for each selected sample. data.frame fields are described in \code{\link{knownOrig}} feature \emph{samples}.}
   \item{sources}{
-data.frame. Information for all data sources for the selected samples. Fields are described in \code{\link[assignR]{knownOrig}} feature \emph{sources} 
+data.frame. Information for all data sources for the selected samples. Fields are described in \code{\link{knownOrig}} feature \emph{sources} 
   }
   \item{chains}{
-list. Each item is a character string vector containing the hierarchy of calibrations used in the transformation for a set of selected samples. See \code{\link[assignR]{stds}}.
+list. Each item is a character string vector containing the hierarchy of calibrations used in the transformation for a set of selected samples. See \code{\link{stds}}.
   }
   \item{marker}{
 character string. The isotopic marker specified in the call to \code{subOrigData}
