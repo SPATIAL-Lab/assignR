@@ -10,12 +10,16 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     r = r$isoscape.rescale
   }
   
-  if(class(r)[1] != "RasterStack" & class(r)[1] != "RasterBrick"){
-    stop("Input isoscape should be RasterStack or RasterBrick with two layers 
+  if(class(r)[1] == "RasterStack" | class(r)[1] == "RasterBrick"){
+    if(is.na(proj4string(r))) {
+      stop("r must have valid coordinate reference system")
+    }
+    if(nlayers(r) != 2) {
+      stop("r should contain RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
-  } 
-  if(nlayers(r) != 2) {
-    stop("Input isoscape should be RasterStack or RasterBrick with two layers 
+    }
+  } else{
+    stop("r should contain RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
   }
   
@@ -50,7 +54,7 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     if(!is.null(prior)){
       assign = assign * getValues(prior)
     }
-    assign.norm = assign / sum(assign[!is.na(assign)])
+    assign.norm = assign / sum(assign, na.rm = TRUE)
     assign.norm = setValues(rescaled.mean, assign.norm)
     if (i == 1){
       result = assign.norm
@@ -75,12 +79,16 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   ni = length(r)
   
   for(i in r){
-    if(class(i)[1] != "RasterStack" & class(i)[1] != "RasterBrick"){
-      stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
+    if(class(i)[1] == "RasterStack" | class(i)[1] == "RasterBrick"){
+      if(is.na(proj4string(i))) {
+        stop("r must have valid coordinate reference system")
+      }
+      if(nlayers(i) != 2) {
+        stop("r should contain RasterStacks or RasterBricks with two layers 
          (mean and standard deviation)")
-    } 
-    if(nlayers(i) != 2) {
-      stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
+      }
+    } else{
+      stop("r should contain RasterStacks or RasterBricks with two layers 
          (mean and standard deviation)")
     }
   }
@@ -124,19 +132,26 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   result = NULL
   temp = list()
   assign = as.numeric(rep(NA, length(rescaled.mean)))
-  
-  dev = cov(meanV, use = "pairwise.complete.obs")
   cells = seq_along(meanV[,1])
   cellmask = apply(meanV, 1, sum)
   cells = cells[!is.na(cellmask)]
-
+  
+  dev = d.cell = cov(meanV, use = "pairwise.complete.obs")
+  v = sqrt(diag(dev))
+  
   for (i in seq_len(n)) {
     indv.data = data[i, ]
     indv.id = indv.data[1, 1]
     indv.iso = indv.data[1, -1]
     
     for(j in cells){
-      assign[j] = dmvn(as.numeric(indv.iso), meanV[j,], dev)
+      v.cell = errorV[j,] / v
+      for(k in 1:ni){
+        for(l in 1:ni){
+          d.cell[k, l] = dev[k, l] * v.cell[k] * v.cell[l]
+        }
+      }
+      assign[j] = dmvn(as.numeric(indv.iso), meanV[j,], d.cell)
     }
 
     if(!is.null(prior)){

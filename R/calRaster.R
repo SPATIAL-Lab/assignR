@@ -1,11 +1,15 @@
 calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
-          NA.value = NA, ignore.NA = TRUE, genplot = TRUE, 
-          outDir = NULL, verboseLM = TRUE)
-{
+                      NA.value = NA, ignore.NA = TRUE, genplot = TRUE, 
+                      outDir = NULL, verboseLM = TRUE){
+
   #check that isoscape is valid and has defined CRS
   if(class(isoscape)[1] == "RasterStack" | class(isoscape)[1] == "RasterBrick") {
     if(is.na(proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
+    }
+    if(nlayers(r) != 2) {
+      stop("isoscape should be RasterStack or RasterBrick with two layers 
+         (mean and standard deviation)")
     }
   } else {
     stop("isoscape should be a RasterStack or RasterBrick")
