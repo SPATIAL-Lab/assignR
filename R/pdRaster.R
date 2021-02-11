@@ -123,21 +123,20 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
 
   result = NULL
   temp = list()
-  assign = numeric(length(rescaled.mean))
+  assign = as.numeric(rep(NA, length(rescaled.mean)))
   
   dev = cov(meanV, use = "pairwise.complete.obs")
+  cells = seq_along(meanV[,1])
+  cellmask = apply(meanV, 1, sum)
+  cells = cells[!is.na(cellmask)]
 
   for (i in seq_len(n)) {
     indv.data = data[i, ]
     indv.id = indv.data[1, 1]
     indv.iso = indv.data[1, -1]
     
-    for(j in seq_along(assign)){
-      if(any(sapply(meanV[j, ], is.na))){
-        assign[j] = NA
-      } else{
-        assign[j] = dmvn(as.numeric(indv.iso), meanV[j,], dev)
-      }
+    for(j in cells){
+      assign[j] = dmvn(as.numeric(indv.iso), meanV[j,], dev)
     }
 
     if(!is.null(prior)){
