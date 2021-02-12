@@ -7,7 +7,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     if(is.na(proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
-    if(nlayers(r) != 2) {
+    if(nlayers(isoscape) != 2) {
       stop("isoscape should be RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
     }

@@ -136,7 +136,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   cellmask = apply(meanV, 1, sum)
   cells = cells[!is.na(cellmask)]
   
-  dev = d.cell = cov(meanV, use = "pairwise.complete.obs")
+  dev = d.cell = cor(meanV, use = "pairwise.complete.obs")
   v = sqrt(diag(dev))
   
   for (i in seq_len(n)) {
