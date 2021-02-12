@@ -138,6 +138,16 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   
   dev = d.cell = cor(meanV, use = "pairwise.complete.obs")
   v = sqrt(diag(dev))
+  d.l = list(nrow(meanV))
+  for(i in cells){
+    v.cell = errorV[i,] / v
+    for(j in 1:ni){
+      for(k in 1:ni){
+        d.cell[j, k] = dev[j, k] * v.cell[j] * v.cell[k]
+      }
+    }
+    d.l[[i]] = d.cell
+  }
   
   for (i in seq_len(n)) {
     indv.data = data[i, ]
@@ -145,13 +155,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     indv.iso = indv.data[1, -1]
     
     for(j in cells){
-      v.cell = errorV[j,] / v
-      for(k in 1:ni){
-        for(l in 1:ni){
-          d.cell[k, l] = dev[k, l] * v.cell[k] * v.cell[l]
-        }
-      }
-      assign[j] = dmvn(as.numeric(indv.iso), meanV[j,], d.cell)
+      assign[j] = dmvn(as.numeric(indv.iso), meanV[j,], d.l[[j]])
     }
 
     if(!is.null(prior)){
