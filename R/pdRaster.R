@@ -133,12 +133,12 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   temp = list()
   assign = as.numeric(rep(NA, length(rescaled.mean)))
   cells = seq_along(meanV[,1])
-  cellmask = apply(meanV, 1, anyNA)
+  cellmask = apply(cbind(meanV, errorV), 1, anyNA)
   cells = cells[!cellmask]
   
-  dev = d.cell = cov(meanV, use = "complete.obs")
+  dev = d.cell = cov(meanV, use = "pairwise.complete.obs")
   v = sqrt(diag(dev))
-  d.l = list(nrow(meanV))
+  d.l = list()
   for(i in cells){
     v.cell = errorV[i,] / v
     for(j in 1:ni){
