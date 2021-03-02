@@ -17,9 +17,9 @@ QA(known, isoscape, bySite = TRUE, valiStation = 1, valiTime = 50,
 
 \arguments{
   \item{known}{
-subOrigData or SpatialPointsDataFrame. Known-origin tissue isotope data from the \code{subOrigData} function or provided by user. User-provided data must be formatted as a subOrgData object (see \code{\link{subOrigData}}) or a SpatialPointsDataFrame in which the first data field contains the measured tissue isotope value and the second the one standard deviation uncertainty on that value. A user-provided SpatialPointsDataFrame must include a field named \dQuote{Site_ID} containing unique values for each sampling site to support the \dQuote{bySite} option, otherwise use \code{bySite = FALSE}.
+subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue isotope data from the \code{subOrigData} function or provided by user. User-provided data must be formatted as subOrgData objects (see \code{\link{subOrigData}}) or a SpatialPointsDataFrame (see Details).
 }
-  \item{isoscape}{RasterStack or RasterBrick with two layers. The first layer is mean isoscape prediction and the second the isoscape prediction uncertainty (one standard deviation).
+  \item{isoscape}{RasterStack or RasterBrick with two layers or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the substrate-specific isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
 }
   \item{bySite}{logical. Resample known by site (TRUE) or by sample (FALSE)?}
   \item{valiStation}{numeric. How many sites or samples from known are withheld for validation? Must be two or more smaller than the length of \code{known}.
@@ -33,6 +33,10 @@ subOrigData or SpatialPointsDataFrame. Known-origin tissue isotope data from the
 }
   \item{name}{character. Useful for identifying the QA output in subsequent plotting.
   }
+}
+
+\details{
+If \code{known} is a user-provided SpatialPointsDataFrame, the first field in \code{@data} must include the measured value for the first (or only) isotope marker and the second the one standard deviation uncertainty on that value. Subsequent fields must include the same information for all other isotope markers included in the analysis, and these markers must appear in the same order as in \code{isoscape}. A user-provided SpatialPointsDataFrame must include a field named \dQuote{Site_ID} containing unique values for each sampling site to support the \dQuote{bySite} option, otherwise use \code{bySite = FALSE}.
 }
 
 \value{

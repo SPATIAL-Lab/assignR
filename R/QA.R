@@ -7,99 +7,86 @@ QA = function(known, isoscape, bySite = TRUE,
     stop("bySite must be logical")
   }
 
-  #check that known is valid and has defined, correct CRS
-  col_site = NULL
-  if(!(class(known)[1] %in% c("subOrigData", "SpatialPointsDataFrame"))) {
-    stop("known must be a subOrigData or SpatialPointsDataFrame object")
-  }
-  if(class(known)[1] == "subOrigData"){
-    if(is.null(known$data) || is.null(known$marker)){
-      stop("missing information in subOrigData known")
-    }
-    col_m = match(known$marker, names(known$data))
-    col_sd = match(paste0(known$marker, ".sd"), names(known$data))
-    if(is.na(col_m) | is.na(col_sd)){
-      stop("cannot match marker to data table in subOrigData known")
-    }
-    if(bySite){
-      col_site = match("Site_ID", names(known$data))
-      if(is.na(col_site)){
-        stop("no Site_ID field in known; provide Site_IDs or use bySite = FALSE")
+  #check isoscape and set ni number of isotopes
+  if(class(isoscape)[1] == "isoStack"){
+    ni = length(isoscape)
+    
+    for(i in isoscape){
+      if(class(i)[1] != "RasterStack" & class(i)[1] != "RasterBrick"){
+        stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
+         (mean and standard deviation)")
+      } 
+      if(nlayers(i) != 2) {
+        stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
+         (mean and standard deviation)")
       }
     }
-    known = known$data
-    known@data = known@data[, c(col_m, col_sd, col_site)]
-  }else{
-    if(ncol(known@data) < 2){
-      if(ncol(known@data) == 1){
-        warning("use of known with 1 data column is depreciated; known 
-              should include a data frame containing the measured 
-              isotope values (col 1) and 1 sd uncertainty (col 2); 
-              assuming equal uncertainty for all samples")
-        known@data[,2] = rep(0.0001, nrow(known@data))
-      } else{
-        stop("known must include a data frame containing the measured 
-              isotope values (col 1) and 1 sd uncertainty (col 2)")
+  } else{
+    ni = 1
+    
+    if(class(isoscape)[1] == "rescale"){
+      isoscape = isoscape$isoscape.rescale
+    }
+    
+    if(class(isoscape)[1] == "RasterStack" | 
+        class(isoscape)[1] == "RasterBrick") {
+      if(is.na(sp::proj4string(isoscape))) {
+        stop("isoscape must have valid coordinate reference system")
       }
-    }
-    if(any(!is.numeric(known@data[,1]), !is.numeric(known@data[,2]))){
-      stop("known must include a data frame containing the measured 
-           isotope values (col 1) and 1 sd uncertainty (col 2)")
-    }
-    warning("user-provided known; assuming measured isotope value and 1 sd
-            uncertainty are contained in columns 1 and 2, respectively")
-    if(bySite){
-      col_site = match("Site_ID", names(known@data))
-      if(is.na(col_site)){
-        stop("no Site_ID field in known; provide Site_IDs or use bySite = FALSE")
+      if(nlayers(isoscape) != 2){
+        stop("Input isoscape should be RasterStack or RasterBrick with two layers 
+         (mean and standard deviation)")
       }
-      known@data = known@data[, c(1, 2, col_site)]
+    } else {
+      stop("isoscape should be a RasterStack or RasterBrick")
     }
-  }
-  if(any(is.na(known@data[, 1])) || 
-     any(is.nan(known@data[, 1])) || 
-     any(is.null(known@data[, 1]))){
-    stop("Missing values detected in known values")
-  }
-  if(any(is.na(known@data[, 2])) || 
-     any(is.nan(known@data[, 2])) || 
-     any(is.null(known@data[, 2]))){
-    stop("Missing values detected in known uncertainties")
-  }
-  if(any(known@data[, 2] == 0)){
-    stop("zero values found in known uncertainties")
-  }
-  if(!is.null(col_site)){
-    if(any(is.na(known@data[, col_site])) || 
-       any(is.nan(known@data[, col_site])) || 
-       any(is.null(known@data[, col_site]))){
-      stop("Missing values detected in sites field")
-    }
-  }
-  if(is.na(proj4string(known))) {
-    stop("known must have valid coordinate reference system")
-  } 
-  if(proj4string(known) != proj4string(isoscape)){
-    known = spTransform(known, crs(isoscape))
-    warning("known was reprojected")
-  } 
-  if(nrow(known) < 10){
-    warning("there are fewer than 10 known samples")
-  }
-  if(nrow(known) < 3){
-    stop("QA requires at least 3 known samples")
   }
   
-  #check isoscape
-  if (class(isoscape)[1] == "RasterStack" | 
-      class(isoscape)[1] == "RasterBrick") {
-    if (is.na(sp::proj4string(isoscape))) {
-      stop("isoscape must have valid coordinate reference system")
-    }
-  } else {
-    stop("isoscape should be a RasterStack or RasterBrick")
+  #check known for multi-isotope
+  if(ni > 1){
+    #two options for ni>1, list of SODs, check and unpack each to spdf
+    if(class(known)[1] == "list"){
+      if(length(known) != ni){
+        stop("length of known must equal length of isoStack")
+      }
+      #convert each SOD into SPDF
+      for(i in 1:ni){
+        known[[i]] = check_SOD(known[[i]], isoscape[[i]], bySite)
+      }
+      #merge by sample - ?support partial data?
+      k.spdf = known[[1]]
+      kmlen = length(known[[1]])
+      for(i in 2:ni){
+        k.spdf = merge(k.spdf, known[[i]]@data, by = "Sample_ID", 
+                       all.x = FALSE)
+        if(bySite){
+          if(!all(k.spdf$Site_ID.x == k.spdf$Site_ID.y)){
+            stop("different Site_ID values for same samples")
+          }
+          k.spdf = k.spdf[, names(k.spdf) != "Site_ID.x"]
+          names(k.spdf)[names(k.spdf) == "Site_ID.y"] = "Site_ID"
+        }
+        #move Sample_IDs to last column
+        k.spdf@data = cbind(k.spdf@data[,-1], k.spdf@data[1])
+        kmlen = max(kmlen, length(known[[i]]))
+      }
+      if(length(k.spdf) != kmlen){
+        warning(paste("non-matching samples in known,", length(k.spdf),
+                      "of", kmlen, "samples being used"))
+      }
+      known = k.spdf
+    } 
+    #if ni == 1
+  } else{
+    known = check_SOD(known, isoscape, bySite)
   }
-  
+  #SOD or SOD list will now be converted to this
+  if(class(known)[1] == "SpatialPointsDataFrame"){
+    known = check_SPDF(known, isoscape[[1]], bySite, ni)
+  } else{
+    stop("invalid object provided for known")
+  }
+
   #check valiStation
   if(bySite){
     if(valiStation > (length(unique(known$Site_ID)) - 3)){
@@ -121,22 +108,6 @@ QA = function(known, isoscape, bySite = TRUE,
   #check by
   if(!(as.integer(by) == by) || by < 1 || by > 25){
     stop("by must be an integer between 1 and 25")
-  }
-  
-  #check mask
-  if(!is.null(mask)) {
-    if(class(mask)[1] == "SpatialPolygonsDataFrame" || 
-       class(mask)[1] == "SpatialPolygons"){
-      if(is.na(sp::proj4string(mask))){
-        stop("mask must have coordinate reference system")
-      }
-      if(sp::proj4string(mask) != sp::proj4string(isoscape)){
-        mask = sp::spTransform(mask, raster::crs(isoscape))
-        warning("mask was reprojected")
-      }
-    } else {
-      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
-    }
   }
   
   #check name
@@ -190,12 +161,25 @@ QA = function(known, isoscape, bySite = TRUE,
       m = known[-val_stations[i,],]
     }
     
-    class(m) = "QAData"
-    rescale = calRaster(m, isoscape, mask, genplot = FALSE, 
-                                  verboseLM = FALSE)
-    
+    if(ni > 1){
+      rescales = list()
+      for(j in 1:ni){
+        m_sub = m
+        m_sub@data = m_sub@data[,(j * 2 - 1):(j * 2)]
+        class(m_sub) = "QAData"
+        rescales[[j]] = calRaster(m_sub, isoscape[[j]], mask, 
+                                  genplot = FALSE, verboseLM = FALSE)[[1]]
+      }
+      rescale = isoStack(rescales)
+    } else{
+      class(m) = "QAData"
+      rescale = calRaster(m, isoscape, mask, genplot = FALSE, 
+                          verboseLM = FALSE)
+    }
+
     pd = pdRaster(rescale, 
-                  unknown = data.frame(row.names(v@data), v@data[,1]), 
+                  unknown = data.frame(row.names(v@data), 
+                                       v@data[,seq(1, ni*2-1, by=2)]), 
                   genplot = FALSE)
 
     # pd value for each validation sample or site
@@ -240,7 +224,7 @@ QA = function(known, isoscape, bySite = TRUE,
           prption_byProb[i, j] = NA
         }
       } else{
-        if(any(!is.na(rv_sm))){
+        if(any(!is.na(rv_temp))){
           prption_byProb[i, j] = sum(rv_temp, na.rm = TRUE) /
             sum(!is.na(rv_temp))
         } else{
@@ -271,7 +255,7 @@ QA = function(known, isoscape, bySite = TRUE,
           prption_byArea[i, j] = NA
         }
       } else{
-        if(any(!is.na(rv_sm))){
+        if(any(!is.na(rv_temp))){
           prption_byArea[i, j] = sum(rv_temp, na.rm = TRUE) /
             sum(!is.na(rv_temp))
         } else{
@@ -294,4 +278,113 @@ QA = function(known, isoscape, bySite = TRUE,
                     "random_prob_density", "by")
   class(result) = "QA"
   return(result)
+}
+
+check_SOD = function(known, isoscape, bySite){
+  
+  col_site = NULL
+  
+  #check quality of SOD
+  if(is.null(known$data) || is.null(known$marker)){
+    stop("missing information in subOrigData known")
+  }
+  #find data columns
+  col_m = match(known$marker, names(known$data))
+  col_sd = match(paste0(known$marker, ".sd"), names(known$data))
+  if(is.na(col_m) | is.na(col_sd)){
+    stop("cannot match marker to data table in subOrigData known")
+  }
+  #find site column
+  if(bySite){
+    col_site = match("Site_ID", names(known$data))
+    if(is.na(col_site)){
+      stop("no Site_ID field in known; provide Site_IDs or use bySite = FALSE")
+    }
+  }
+  #find samples column
+  col_sample = match("Sample_ID", names(known$data))
+  #pull out SPDF
+  known = known$data
+  #simplify data slot
+  known@data = known@data[, c(col_m, col_sd, col_site, col_sample)]
+  #check projection
+  if(is.na(proj4string(known))) {
+    stop("known must have valid coordinate reference system")
+  } 
+  if(proj4string(known) != proj4string(isoscape)){
+    known = spTransform(known, crs(isoscape))
+    warning("known was reprojected")
+  } 
+  
+  return(known)
+}
+
+check_SPDF = function(known, isoscape, bySite, ni){
+  
+  col_site = NULL
+  
+  #check for enough columns
+  if(ncol(known@data) < ni * 2){
+    if(ncol(known@data) == 1 & ni == 1){
+      warning("use of known with 1 data column is depreciated; known 
+            should include the measured 
+            isotope values and 1 sd uncertainty for each
+            isotope system; assuming equal uncertainty for all samples")
+      known@data[,2] = rep(0.0001, nrow(known@data))
+    } else{
+      stop("known must include the measured 
+            isotope values and 1 sd uncertainty for each sample")
+    }
+  }
+  
+  #check all data columns are numeric w/ no missing values
+  for(i in 1:(ni*2)){
+    if(!is.numeric(known@data[,i])){
+      stop("non-numeric data in sample value fields of known")
+    }
+    if(any(is.na(known@data[, i])) || 
+       any(is.nan(known@data[, i])) || 
+       any(is.null(known@data[, i]))){
+      stop("Missing values detected in known sample value fields")
+    }
+  }
+  
+  #check that all SD values are greater than zero
+  for(i in seq(2, ni*2, by = 2)){
+    if(any(!(known@data[, i] > 0))){
+      stop("negative or zero values found in known uncertainties")
+    }
+  }
+  
+  #check for Site_ID column
+  if(bySite){
+    col_site = match("Site_ID", names(known@data))
+    if(is.na(col_site)){
+      stop("no Site_ID field in known; provide Site_IDs or use bySite = FALSE")
+    }
+  }
+  
+  
+  if(!is.null(col_site)){
+    if(any(is.na(known@data[, col_site])) || 
+       any(is.nan(known@data[, col_site])) || 
+       any(is.null(known@data[, col_site]))){
+      stop("Missing values detected in sites field")
+    }
+  }
+  if(is.na(proj4string(known))) {
+    stop("known must have valid coordinate reference system")
+  } 
+  if(proj4string(known) != proj4string(isoscape)){
+    known = spTransform(known, crs(isoscape))
+    warning("known was reprojected")
+  } 
+  if(nrow(known) < 10){
+    warning("there are fewer than 10 known samples")
+  }
+  if(nrow(known) < 3){
+    stop("QA requires at least 3 known samples")
+  }
+  
+  return(known)
 }
