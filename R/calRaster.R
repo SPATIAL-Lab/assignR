@@ -131,7 +131,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #populate the dependent variable values
   tissue.iso = known@data[, col_m]
-  tissue.iso.wt = 1 / known@data[, col_sd]^2
+  tissue.iso.sd = known@data[, col_sd]
+  tissue.iso.wt = 1 / tissue.iso.sd^2
 
   #populate the independent variable values
   if (interpMethod == 1) {
@@ -141,6 +142,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     isoscape.iso = extract(isoscape, known,
                                     method = "bilinear")
   }
+  #protect against negative values from interpolation
+  isoscape.iso[,2] = pmax(isoscape.iso[,2], cellStats(isoscape[[2]], min))
 
   #warn if some known sites have NA isoscape values
   if (any(is.na(isoscape.iso[, 1]))) {
@@ -224,11 +227,13 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     isoscape.dev = c(isoscape.dev, isoscape.sim[,i] - isoscape.iso[,1])
     tissue.dev = c(tissue.dev, lm.sim$residuals)
   }
-
+  
+  ti.corr = cor(isoscape.dev, tissue.dev)^2
+  
   #combine uncertainties of isoscape and rescaling function
-  #rescaling variance is added variance from simulated fits
-  sd = (isoscape[[2]]^2 + (var(tissue.dev) - var(isoscape.dev)))^0.5
-
+  #rescaling variance is frac of model variance uncorrelated w/ isoscape error
+  sd = sqrt(isoscape[[2]]^2 + var(lmResult$residuals) * (1-ti.corr))
+  
   #stack the output rasters and apply names
   isoscape.rescale = stack(isoscape.rescale, sd)
   names(isoscape.rescale) = c("mean", "sd")

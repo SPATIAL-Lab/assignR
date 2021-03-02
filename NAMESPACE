@@ -21,6 +21,6 @@ importFrom(raster, crs, crop, plot, values, getValues, setValues, minValue,
            raster, resample, mask, intersect)
 importFrom(grDevices, dev.off, pdf, png)
 importFrom(graphics, abline, boxplot, legend, lines, par, text, title)
-importFrom(stats, coef, cov, dnorm, lm, median, na.omit, rnorm, sd, var)
+importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var)
 importFrom(utils, data, setTxtProgressBar, txtProgressBar, tail)
 importFrom(mvnfast, dmvn)
