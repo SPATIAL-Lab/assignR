@@ -1,8 +1,12 @@
 isoStack = function(..., clean = TRUE){
-  
+
   r = list(...)
   
-  if(length(r) < 2){
+  if(class(r[[1]])[1] == "list"){
+    r = unlist(r, recursive = FALSE)
+  }
+  
+  if(class(r) != "list" | length(r) < 2){
     stop("... must be a list containing multiple isoscapes")
   }
   n = length(r)
@@ -23,6 +27,9 @@ isoStack = function(..., clean = TRUE){
   }
   
   if(compareRaster(r, rowcol = FALSE, res = TRUE, stopiffalse = FALSE)){
+    #mask
+    r = maskIso(r, n)
+    
     #assign class
     class(r) = "isoStack"
     
@@ -67,18 +74,8 @@ isoStack = function(..., clean = TRUE){
       r[[i]] = resample(r[[i]], r.targ)
     }
   }
-    
-  #Create mask
-  m = r[[1]]
-  for(i in 2:n){
-    m = m * r[[i]]
-  }
-  m = m[[1]] * m[[2]]
 
-  #Apply mask
-  for(i in 1:n){
-    r[[i]] = mask(r[[i]], m)
-  }
+  r = maskIso(r, n)
   
   #assign class
   class(r) = "isoStack"
@@ -108,4 +105,20 @@ plot.isoStack = function(x, ...){
   for(i in x){
     plot(i)
   }
+}
+
+maskIso = function(r, n){
+  #Create mask
+  m = r[[1]]
+  for(i in 2:n){
+    m = m * r[[i]]
+  }
+  m = m[[1]] * m[[2]]
+  
+  #Apply mask
+  for(i in 1:n){
+    r[[i]] = mask(r[[i]], m)
+  }
+  
+  return(r)
 }

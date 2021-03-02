@@ -3,7 +3,7 @@
 \alias{plot.isoStack}
 
 \title{
-Plot stacked isoscapes
+Plot method for stacked isoscapes
 }
 
 \description{
