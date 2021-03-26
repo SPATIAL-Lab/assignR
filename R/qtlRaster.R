@@ -25,7 +25,7 @@ qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, out
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){
-      warning("outDir does not exist, creating")
+      message("outDir does not exist, creating")
       dir.create(outDir)
     }
   }

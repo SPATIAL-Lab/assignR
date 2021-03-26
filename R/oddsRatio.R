@@ -1,4 +1,5 @@
 oddsRatio = function(pdR, inputP){
+  
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
   }
@@ -10,7 +11,7 @@ oddsRatio = function(pdR, inputP){
     }
     if(proj4string(inputP) != proj4string(pdR)){
       inputP = spTransform(inputP, crs(pdR))
-      warning("inputP was reprojected")
+      message("inputP was reprojected")
     }
     
     n = length(inputP)
@@ -45,7 +46,7 @@ oddsRatio = function(pdR, inputP){
     }
     if(proj4string(inputP) != proj4string(pdR)){
       inputP = spTransform(inputP, crs(pdR))
-      warning("inputP was reprojected")
+      message("inputP was reprojected")
     }
     
     extrVals = extract(pdR, inputP)

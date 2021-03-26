@@ -59,7 +59,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
         ref_scale = ref_scale.anchor
         wt = paste("ref_scale is calibrated to another scale. Returning values on",
                    ref_scale, "scale.")
-        warning(wt)
+        message(wt)
       }
       trans_out = trans(start_scales, samples_scales, samples, ref_scale, 
                         am, cal_table, marker, sd_col, niter)
@@ -115,7 +115,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
         ref_scale = ref_scale.anchor
         wt = paste("ref_scale is calibrated to another scale. Returning values on",
                    ref_scale, "scale.")
-        warning(wt)
+        message(wt)
       }
       trans_out = trans(start_scales, samples_scales, samples, ref_scale, 
                         am, cal_table, marker, sd_col, niter)

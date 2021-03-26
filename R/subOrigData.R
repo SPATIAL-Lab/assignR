@@ -60,7 +60,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
         stop("mask must have coordinate reference system")
       } else if(!identicalCRS(knownOrig_sites, mask)) {
         mask = spTransform(mask, proj4string(knownOrig_sites))
-        warning("mask was reprojected")
+        message("mask was reprojected")
       }
       result_sites = knownOrig_sites[mask,]
     } else {

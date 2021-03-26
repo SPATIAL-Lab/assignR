@@ -136,6 +136,13 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   cellmask = apply(cbind(meanV, errorV), 1, anyNA)
   cells = cells[!cellmask]
   
+  #sanity check
+  cd = cor(meanV, use = "pairwise.complete.obs")^2
+  if(any(cd > 0.7)){
+    warning("two or more isoscapes have shared variance > 0.7, added information
+            will be limited, and specificity of assignments may be inflated")
+  }
+  
   dev = d.cell = cov(meanV, use = "pairwise.complete.obs")
   v = sqrt(diag(dev))
   d.l = list()
@@ -246,7 +253,7 @@ check_prior = function(prior, r){
     } 
     if(proj4string(prior) != proj4string(r[[1]])) {
       prior = projectRaster(prior, crs = crs(r[[1]]))
-      warning("prior was reprojected")
+      message("prior was reprojected")
     }
     compareRaster(r[[1]], prior)
   }
@@ -265,7 +272,7 @@ check_options = function(genplot, outDir){
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){
-      warning("outDir does not exist, creating")
+      message("outDir does not exist, creating")
       dir.create(outDir)
     }
   }
@@ -283,7 +290,7 @@ check_mask = function(mask, r){
       } 
       if(proj4string(mask) != proj4string(r[[1]])) {
         mask = spTransform(mask, crs(r[[1]]))
-        warning("mask was reprojected")
+        message("mask was reprojected")
       }
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
@@ -327,7 +334,7 @@ process_refTrans = function(unknown){
     if(ncol(unknown$data) == 3){
       un = data.frame("ID" = seq(1:nrow(unknown$data)), unknown$data[,1])
       names(un)[2] = names(unknown$data)[1]
-      warning("no sample IDs in refTrans object, assigning numeric sequence")
+      message("no sample IDs in refTrans object, assigning numeric sequence")
     } else if(ncol(unknown$data) == 4){
       un = unknown$data[,1:2]
     } else{

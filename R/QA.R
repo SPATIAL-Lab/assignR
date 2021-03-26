@@ -2,6 +2,17 @@ QA = function(known, isoscape, bySite = TRUE,
               valiStation = 1, valiTime = 50, by = 2, 
               mask = NULL, setSeed = TRUE, name = NULL){
 
+  #space to handle messages and warnings
+  mstack = wstack = character(0)
+  addm = function(cnd){
+    mstack <<- append(mstack, cnd$message)
+    cnd_muffle(cnd)
+  }
+  addw = function(cnd){
+    wstack <<- append(wstack, cnd$message)
+    cnd_muffle(cnd)
+  }
+  
   #check bySite
   if(!is.logical(bySite)){
     stop("bySite must be logical")
@@ -51,7 +62,11 @@ QA = function(known, isoscape, bySite = TRUE,
       }
       #convert each SOD into SPDF
       for(i in 1:ni){
-        known[[i]] = check_SOD(known[[i]], isoscape[[i]], bySite)
+        known[[i]] = withCallingHandlers(
+          message = addm,
+          warning = addw,
+          check_SOD(known[[i]], isoscape[[i]], bySite)
+        ) 
       }
       #merge by sample - ?support partial data?
       k.spdf = known[[1]]
@@ -78,11 +93,21 @@ QA = function(known, isoscape, bySite = TRUE,
     } 
     #if ni == 1
   } else{
-    known = check_SOD(known, isoscape, bySite)
+    if(class(known)[1] == "subOrigData"){
+      known = withCallingHandlers(
+        message = addm,
+        warning = addw,
+        check_SOD(known, isoscape, bySite)
+      )       
+    }
   }
   #SOD or SOD list will now be converted to this
   if(class(known)[1] == "SpatialPointsDataFrame"){
-    known = check_SPDF(known, isoscape[[1]], bySite, ni)
+    known = withCallingHandlers(
+      message = addm,
+      warning = addw,
+      check_SPDF(known, isoscape[[1]], bySite, ni)
+    )
   } else{
     stop("invalid object provided for known")
   }
@@ -167,20 +192,32 @@ QA = function(known, isoscape, bySite = TRUE,
         m_sub = m
         m_sub@data = m_sub@data[,(j * 2 - 1):(j * 2)]
         class(m_sub) = "QAData"
-        rescales[[j]] = calRaster(m_sub, isoscape[[j]], mask, 
-                                  genplot = FALSE, verboseLM = FALSE)[[1]]
+        rescales[[j]] = withCallingHandlers(
+          message = addm,
+          warning = addw,
+          calRaster(m_sub, isoscape[[j]], mask, genplot = FALSE, 
+                    verboseLM = FALSE)[[1]]
+        )
       }
       rescale = isoStack(rescales)
     } else{
       class(m) = "QAData"
-      rescale = calRaster(m, isoscape, mask, genplot = FALSE, 
-                          verboseLM = FALSE)
+      rescale = withCallingHandlers(
+        message = addm,
+        warning = addw,
+        calRaster(m, isoscape, mask, genplot = FALSE, 
+                            verboseLM = FALSE)
+      )
     }
 
-    pd = pdRaster(rescale, 
-                  unknown = data.frame(row.names(v@data), 
-                                       v@data[,seq(1, ni*2-1, by=2)]), 
-                  genplot = FALSE)
+    pd = withCallingHandlers(
+      message = addm,
+      warning = addw,
+      pdRaster(rescale, unknown = 
+                 data.frame(row.names(v@data), 
+                            v@data[,seq(1, ni*2-1, by=2)]), 
+               genplot = FALSE)
+    )
 
     # pd value for each validation sample or site
     pd_temp = double(nlayers(pd))
@@ -269,6 +306,13 @@ QA = function(known, isoscape, bySite = TRUE,
     setTxtProgressBar(pb, i)
   }
 
+  #clean up warnings and messages
+  wstack = unique(wstack)
+  mstack = unique(mstack)
+  trsh = lapply(wstack, warning, call. = FALSE)
+  cat("\n")
+  message(mstack)
+  
   random_prob_density=1/length(na.omit(getValues(isoscape[[1]])))
 
   result = list(name, val_stations, pd_v, prption_byArea, 
@@ -313,7 +357,7 @@ check_SOD = function(known, isoscape, bySite){
   } 
   if(proj4string(known) != proj4string(isoscape)){
     known = spTransform(known, crs(isoscape))
-    warning("known was reprojected")
+    message("known was reprojected")
   } 
   
   return(known)
@@ -364,7 +408,6 @@ check_SPDF = function(known, isoscape, bySite, ni){
     }
   }
   
-  
   if(!is.null(col_site)){
     if(any(is.na(known@data[, col_site])) || 
        any(is.nan(known@data[, col_site])) || 
@@ -377,7 +420,7 @@ check_SPDF = function(known, isoscape, bySite, ni){
   } 
   if(proj4string(known) != proj4string(isoscape)){
     known = spTransform(known, crs(isoscape))
-    warning("known was reprojected")
+    message("known was reprojected")
   } 
   if(nrow(known) < 10){
     warning("there are fewer than 10 known samples")

@@ -50,7 +50,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     if(class(known) == "QAData"){
       class(known) = "SpatialPointsDataFrame"
     } else{
-      warning("user-provided known; assuming measured isotope value and 1 sd
+      message("user-provided known; assuming measured isotope value and 1 sd
             uncertainty are contained in columns 1 and 2, respectively")
     }
     col_m = 1
@@ -74,7 +74,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   } 
   if(proj4string(known) != proj4string(isoscape)){
     known = spTransform(known, crs(isoscape))
-    warning("known was reprojected")
+    message("known was reprojected")
   } 
 
   #check that mask is valid and has defined, correct CRS
@@ -86,7 +86,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
       }
       if(proj4string(mask) != proj4string(isoscape)){
         mask = spTransform(mask, crs(isoscape))
-        warning("mask was reprojected")
+        message("mask was reprojected")
       }
     } else {
       stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
@@ -105,7 +105,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){
-      warning("outDir does not exist, creating")
+      message("outDir does not exist, creating")
       dir.create(outDir)
     }
   }
