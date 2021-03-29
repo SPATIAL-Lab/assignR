@@ -33,7 +33,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get install libcurl4-openssl-dev
-          sudo apt-get install binutils libproj-dev gdal-bin
+          sudo apt-get install gdal-bin proj-bin libgdal-dev libproj-dev
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
