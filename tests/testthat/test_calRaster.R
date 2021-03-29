@@ -53,7 +53,7 @@ test_that("calRaster can correctly uses known-origin tissue data to rescale a ma
         expect_error(calRaster(known = d_noCRS, isoscape = d2h_world))
         expect_error(calRaster(known = d_hasNA, isoscape = d2h_world, ignore.NA = F))
         expect_error(calRaster(known = d, isoscape = d2h_world_na, ignore.NA = FALSE))
-        expect_warning(calRaster(known = d_diffProj, isoscape = d2h_world))
+        expect_message(calRaster(known = d_diffProj, isoscape = d2h_world))
         expect_warning(calRaster(known = d, isoscape = d2h_world, mask = mask_diffProj))
         expect_warning(calRaster(known = d, isoscape = d2h_world_na))
 })

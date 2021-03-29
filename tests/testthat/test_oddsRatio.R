@@ -56,7 +56,7 @@ test_that("pdRaster can correctly calculate ratio of odds
             expect_error(oddsRatio(asn, s1))
             expect_error(oddsRatio(asn, pp12_noCRS))
             
-            expect_warning(oddsRatio(asn, s12_diffProj))
-            expect_warning(oddsRatio(asn, pp12_diffProj))
+            expect_message(oddsRatio(asn, s12_diffProj))
+            expect_message(oddsRatio(asn, pp12_diffProj))
             
 })

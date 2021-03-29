@@ -10,9 +10,7 @@ un = data.frame(id,d2H)
 asn = pdRaster(r, unknown = un, mask = naMap)
 u = unionP(asn)
 
-test_that("unionP can correctly calculate probabilities 
-          that at least one individual came from each location 
-          in the assignment area (union of probabilities)",{
+test_that("unionP works",{
             expect_is(u, "RasterLayer")
             expect_error(unionP(d2H))
 })

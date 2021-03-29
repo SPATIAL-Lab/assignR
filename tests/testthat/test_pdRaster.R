@@ -45,6 +45,5 @@ test_that("pdRaster can correctly calculate posterior probabilities of origin
             expect_error(pdRaster(r, unknown = un, outDir = 2))
             expect_error(pdRaster(r, unknown = un, mask = mask_noCRS))
             expect_error(pdRaster(r, unknown = un, mask = 2))
-            expect_warning(pdRaster(r, unknown = un, mask = mask_diffProj, genplot = FALSE))
-            
+            expect_message(pdRaster(r, unknown = un, mask = mask_diffProj, genplot = FALSE))
 })

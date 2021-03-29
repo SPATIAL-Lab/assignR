@@ -12,12 +12,7 @@ q1 = qtlRaster(asn, threshold = 0.1, thresholdType = "area")
 q2 = qtlRaster(asn, threshold = 0.1, thresholdType = "prob")
 q3 = qtlRaster(asn, threshold = 0)
 
-test_that("qtlRaster can correctly: Selects the grid cells of 
-          probability density rasters with the highest probability 
-          and returns rasters with these cell values set to 1;
-          Cells are selected based on the user-specified quantile threshold 
-          so that the most-probable cells representing a given fraction 
-          of the assignment area or posterior probability are returned.",{
+test_that("qtlRaster works",{
             expect_is(q1, "RasterStack")
             expect_equal(nlayers(q1), 4)
             expect_equal(nlayers(q2), 4)
