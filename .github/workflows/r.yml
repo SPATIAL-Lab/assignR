@@ -23,7 +23,7 @@ jobs:
           - {os: macOS-latest,   r: 'release'}
           - {os: ubuntu-18.04,   r: 'release'}
           - {os: windows-latest,   r: 'devel'}
-          - {os: windows-latest,   r: '3.5'}
+          - {os: windows-latest,   r: '3.6'}
           
     steps:
       - uses: actions/checkout@v2.3.4
