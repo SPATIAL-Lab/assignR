@@ -22,6 +22,8 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: ubuntu-18.04,   r: 'release'}
+          - {os: ubuntu-18.04,   r: 'devel'}
+          - {os: ubuntu-18.04,   r: '3.5'}
           
     steps:
       - uses: actions/checkout@v2.3.4
