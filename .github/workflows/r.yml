@@ -21,6 +21,7 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest,   r: 'release'}
+          - {os: ubuntu-18.04,   r: 'release'}
           
     steps:
       - uses: actions/checkout@v2.3.4
@@ -28,6 +29,10 @@ jobs:
         uses: r-lib/actions/setup-r@master
         with:
           r-version: ${{ matrix.r-version }}
+      - name: Linux setup
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install libcurl4-openssl-dev
       - name: Install dependencies
         run: |
           install.packages(c("remotes", "rcmdcheck"))
