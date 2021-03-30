@@ -12,7 +12,7 @@ un4 = data.frame(id, d2H, d2H.sd, "sam" = d2H_cal)
 un5 = data.frame(id, d2H, d2H.sd, "d2H_cal" = rep("sam", 5))
 un6 = data.frame(id, "d18O" = d2H, "d18O.sd" = d2H.sd, 
                  "d18O_cal" = rep("UT_O_4", 5))
-r = refTrans(un, niter = 100)
+r = refTrans(un1, niter = 100)
 
 test_that("refTrans can correctly transform data",{
   expect_s3_class(r, "refTrans")
