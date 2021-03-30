@@ -3,7 +3,6 @@
 ^data-raw$
 ^n3qafliajlfewe$
 ^cran-comments\.md$
-^\.travis\.yml$
 ^CRAN-RELEASE$
 ^manuscripts$
 <<<<<<< HEAD
@@ -14,3 +13,4 @@
 >>>>>>> 79146b21e9e5f977d8ddab23bba1f84504844c48
 ^doc$
 ^Meta$
+^\.github$

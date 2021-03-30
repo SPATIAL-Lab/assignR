@@ -14,5 +14,5 @@ test_that("plot.QA can correctly plot the output from QA",{
             expect_error(plot.QA(d1))
             expect_error(plot.QA(qa1, outDir = 2))
             expect_silent(plot.QA(qa1, qa2))
-            
+            expect_silent(plot.QA(qa1))
 })
