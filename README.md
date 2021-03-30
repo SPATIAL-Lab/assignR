@@ -53,7 +53,7 @@ library(assignR)
 *plot.QA* - Plot results of one or more quality analyses from QA function
 
 <!-- badges: start -->
-  [![Travis build status](https://travis-ci.com/SPATIAL-Lab/assignR.svg?branch=master)](https://travis-ci.com/SPATIAL-Lab/assignR)
+  [![Build status](https://github.com/SPATIAL-Lab/assignR/actions/workflows/r.yml/badge.svg)](https://github.com/SPATIAL-Lab/assignR/actions)
   [![codecov](https://codecov.io/gh/SPATIAL-Lab/assignR/branch/master/graph/badge.svg)](https://codecov.io/gh/SPATIAL-Lab/assignR) 
   <!-- badges: end -->
 
