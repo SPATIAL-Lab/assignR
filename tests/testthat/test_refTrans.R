@@ -23,6 +23,6 @@ test_that("refTrans can correctly transform data",{
   expect_error(refTrans(un5))
   expect_error(refTrans(un1, marker = "d18O"))
   expect_s3_class(refTrans(un6, marker = "d18O", ref_scale = "VSMOW_O",
-                           niter = 100))
+                           niter = 100), "refTrans")
 })
   
