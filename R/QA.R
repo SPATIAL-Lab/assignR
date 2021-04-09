@@ -31,6 +31,10 @@ QA = function(known, isoscape, bySite = TRUE,
         stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
       }
+      if(class(i)[1] == "RasterStack"){
+        proj4string(i[[1]]) = proj4string(i[[2]]) =
+          proj4string(i)
+      }
     }
   } else{
     ni = 1
@@ -47,6 +51,10 @@ QA = function(known, isoscape, bySite = TRUE,
       if(nlayers(isoscape) != 2){
         stop("Input isoscape should be RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
+      }
+      if(class(isoscape)[1] == "RasterStack"){
+        proj4string(isoscape[[1]]) = proj4string(isoscape[[2]]) =
+          proj4string(isoscape)
       }
     } else {
       stop("isoscape should be a RasterStack or RasterBrick")
@@ -106,7 +114,11 @@ QA = function(known, isoscape, bySite = TRUE,
     known = withCallingHandlers(
       message = addm,
       warning = addw,
-      check_SPDF(known, isoscape[[1]], bySite, ni)
+      if(ni > 1){
+        check_SPDF(known, isoscape[[1]], bySite, ni)
+      } else{
+        check_SPDF(known, isoscape, bySite, ni)
+      }
     )
   } else{
     stop("invalid object provided for known")
