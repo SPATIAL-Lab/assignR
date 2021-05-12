@@ -137,8 +137,9 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   cells = cells[!cellmask]
   
   #sanity check
-  cd = cor(meanV, use = "pairwise.complete.obs")^2
-  if(any(cd > 0.7)){
+  cd = cdt = cor(meanV, use = "pairwise.complete.obs")^2
+  diag(cdt) = NA
+  if(any(cdt > 0.7, na.rm = TRUE)){
     warning("two or more isoscapes have shared variance > 0.7, added information
             will be limited, and specificity of assignments may be inflated")
   }
