@@ -34,7 +34,7 @@ jobs:
       - name: Set up pandoc
         uses: r-lib/actions/setup-pandoc@master
         with:
-          pandoc-version: '2.11.4'
+          pandoc-version: '2.7.3'
       - run: echo "# Test" | pandoc -t html
       - name: Linux setup
         if: runner.os == 'Linux'
