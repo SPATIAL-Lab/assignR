@@ -27,6 +27,7 @@ jobs:
           
     steps:
       - uses: actions/checkout@v2.3.4
+      - uses: docker://pandoc/core:2.9
       - name: Set up R ${{ matrix.config.r }}
         uses: r-lib/actions/setup-r@master
         with:
