@@ -72,8 +72,6 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
       if(nrow(result) > 0) {
         result_sites = result_sites[result_sites$Site_ID %in% 
                                       result$Site_ID,]
-        plot(mask, axes = TRUE)
-        plot(result_sites, add = TRUE, col = "red")
       } else {
         stop("No samples found in mask\n")
       }
@@ -84,9 +82,6 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
   } else {
     result_sites = knownOrig_sites[knownOrig_sites$Site_ID %in%
                                      result$Site_ID,]
-    plot(wrld_simpl, axes = TRUE)
-    plot(result_sites, add = TRUE, col = "red", cex = 0.5)
-    
   }
   
   message(paste(length(result[,1]),"samples are found from", 
@@ -122,6 +117,14 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
     return_obj = list("data" = result_data, "sources" = result_sources,
                       "chains" = NULL, "marker" = marker)
     class(return_obj) = "subOrigData"
+  }
+  
+  if(is.null(mask)){
+    plot(wrld_simpl, axes = TRUE)
+    plot(result_data, add = TRUE, col = "red", cex = 0.5)
+  } else{
+    plot(mask, axes = TRUE)
+    plot(result_data, add = TRUE, col = "red")
   }
   
   return(return_obj)
