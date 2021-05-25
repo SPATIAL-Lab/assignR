@@ -1,15 +1,17 @@
 # assignR news
 
 ## assignR 2.0.0.9000
-* added isoStack function to stack multiple isoscapes in a single data object; added plot s3 method for this class
-* update pdRaster to support multivariate assignment
+* Add isoStack function to stack multiple isoscapes in a single data object; added plot s3 method for this class
+* Update pdRaster to support multivariate assignment
+* Add option to include spatial prior in QA
+* Bug fixes
 
 ## assignR 2.0.0
 
 * knownOrig database has been expanded and reformatted
 * New data objects document different calibration standards used to generate known-origin H and O isotope data
 * subOrigData supports transformation of data among different calibration standard scales using the 'standard-chain' method of Magozzi et al. (in press); format of return object from this function has changed
-* calRaster changes including new format for input object "known" and use of weighted least squares regression; tissue isoscape variance calculation updated to a + b - c, where a is isoscape gridcell variance, b is the residual variance of tissue predictions made from isoscape-tissue rescaling functions fit using values sampled from the isoscape with noise, and c is the variance of the sampled isoscape values   
+* calRaster changes including new format for input object "known" and use of weighted least squares regression; tissue isoscape variance calculation updated to a + b - c, where a is isoscape gridcell variance, b is the residual variance of tissue predictions made from isoscape-tissue rescaling functions fit using values sampled from the isoscape with noise, and c is the variance of the sampled isoscape values
 * QA changes including new format for input object "known" and option to resample known data by site rather than by sample; for bySite option returned results are the average of site-level average statistics; argument order changed for consistency with calRaster
 * sp objects updated to support WKT2_2019 strings
 

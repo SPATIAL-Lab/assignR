@@ -1,7 +1,7 @@
 ---
 title: "assignR Examples"
 author: "Gabe Bowen, Chao Ma"
-date: "November 10, 2020"
+date: "May 20, 2021"
 output: html_document
 ---
 
@@ -9,15 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-This vignette introduces the basic functionality of the *assignR* package using data bundled with the package. We'll review how to access compiled data for known-origin biological samples and environmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate an assignment quality analysis tool useful in study design, method comparison, and uncertainty analysis. 
-
 *****
-Let's install the package - This vignette version demos the latest features from the development version, which is installed via GitHub.
+This vignette demonstrates the latest features from the development version, which is installed via GitHub.
 
 ```{r install, eval=FALSE}
 library(devtools)
 install_github("SPATIAL-Lab/assignR@*release")
 ```
+
+This vignette introduces the basic functionality of the *assignR* package using data bundled with the package. We'll review how to access compiled data for known-origin biological samples and environmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate an assignment quality analysis tool useful in study design, method comparison, and uncertainty analysis. 
 
 *****
 Let's load the package 
@@ -74,7 +74,7 @@ Load H isotope data for North American Loggerhead Shrike from the package databa
 d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
 ```
 
-By default, the *subOrigData* function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards (Magozzi et al., revised). The calibrations used are documented in the function's return object.  
+By default, the *subOrigData* function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards [Magozzi et al., 2021](https://doi.org/10.1111/2041-210X.13556). The calibrations used are documented in the function's return object.
 
 ```{r birdChains}
 d$chains
@@ -234,7 +234,7 @@ How good are the geographic assignments? What area or probability threshold shou
 
 We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).  
 
-```{r QA1, warning=FALSE}
+```{r QA1, warning=FALSE, results='hide'}
 qa1 = QA(d, d2h_lrNA, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "normal")
 ```
 
@@ -264,7 +264,7 @@ plot(d2h_fuzzy)
 *****
 We'll combine the fuzzy isoscape with the uncertainty layer from the original isoscape, then rerun *QA* using the new version. Obviously this is not something you'd do in real work, but as an example it allows us to ask the question "how would the quality of my assignments change if my isoscape predictions were of reduced quality?". 
 
-```{r QA2, warning=FALSE}
+```{r QA2, warning=FALSE, results='hide'}
 d2h_fuzzy = brick(d2h_fuzzy, d2h_lrNA[[2]])
 qa2 = QA(d, d2h_fuzzy, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "fuzzy")
 ```
@@ -281,5 +281,3 @@ Assignments made using the fuzzy isoscape are generally poorer than those made w
 *****
 *****
 Questions or comments? <gabe.bowen@utah.edu>
-
-

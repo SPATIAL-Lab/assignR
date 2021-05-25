@@ -12,7 +12,7 @@ How well does a given isoscape and known origin data set constrain the geographi
 
 \usage{
 QA(known, isoscape, bySite = TRUE, valiStation = 1, valiTime = 50, 
-  by = 2, mask = NULL, setSeed = TRUE, name = NULL)
+  by = 2, prior = NULL, mask = NULL, setSeed = TRUE, name = NULL)
 }
 
 \arguments{
@@ -27,6 +27,8 @@ subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue
   \item{valiTime}{numeric. How many times do you want to randomly draw validation samples and run the validation? Must be an integer equal to or greater than one. 
 }
   \item{by}{integer. Threshold increment to use in evaluating assignment performance. Must be between 1 and 25.}
+  \item{prior}{raster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{isoscape}.
+}
   \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
 }
   \item{setSeed}{logical. Do you want to \code{set.seed()} when you randomly draw validation stations? \dQuote{TRUE} gives the same sequence of random draws each time the function is called.

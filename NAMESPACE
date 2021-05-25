@@ -15,7 +15,7 @@ S3method(plot,isoStack)
 import(rgdal)
 import(maptools)
 importFrom(sp, proj4string, spTransform, spplot, plot, identicalCRS, merge)
-importFrom(raster, crs, crop, plot, values, getValues, setValues, minValue, 
+importFrom(raster, crs, "crs<-", crop, plot, values, getValues, setValues, minValue, 
             maxValue, extract, stack, ncell, nlayers, writeRaster, cellStats, 
            overlay, projectRaster, compareRaster, res, extent, compareCRS,
            raster, resample, mask, intersect)

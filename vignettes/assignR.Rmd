@@ -230,7 +230,7 @@ How good are the geographic assignments? What area or probability threshold shou
 
 We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).  
 
-```{r QA1, warning=FALSE}
+```{r QA1, warning=FALSE, results='hide'}
 qa1 = QA(d, d2h_lrNA, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "normal")
 ```
 
@@ -260,7 +260,7 @@ plot(d2h_fuzzy)
 *****
 We'll combine the fuzzy isoscape with the uncertainty layer from the original isoscape, then rerun *QA* using the new version. Obviously this is not something you'd do in real work, but as an example it allows us to ask the question "how would the quality of my assignments change if my isoscape predictions were of reduced quality?". 
 
-```{r QA2, warning=FALSE}
+```{r QA2, warning=FALSE, results='hide'}
 d2h_fuzzy = brick(d2h_fuzzy, d2h_lrNA[[2]])
 qa2 = QA(d, d2h_fuzzy, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "fuzzy")
 ```

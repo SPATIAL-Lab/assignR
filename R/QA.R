@@ -1,6 +1,7 @@
 QA = function(known, isoscape, bySite = TRUE, 
               valiStation = 1, valiTime = 50, by = 2, 
-              mask = NULL, setSeed = TRUE, name = NULL){
+              prior = NULL, mask = NULL, setSeed = TRUE, 
+              name = NULL){
 
   #space to handle messages and warnings
   mstack = wstack = character(0)
@@ -32,8 +33,7 @@ QA = function(known, isoscape, bySite = TRUE,
          (mean and standard deviation)")
       }
       if(class(i)[1] == "RasterStack"){
-        proj4string(i[[1]]) = proj4string(i[[2]]) =
-          proj4string(i)
+        crs(i[[1]]) = crs(i[[2]]) = crs(i)
       }
     }
   } else{
@@ -45,7 +45,7 @@ QA = function(known, isoscape, bySite = TRUE,
     
     if(class(isoscape)[1] == "RasterStack" | 
         class(isoscape)[1] == "RasterBrick") {
-      if(is.na(sp::proj4string(isoscape))) {
+      if(is.na(crs(isoscape))) {
         stop("isoscape must have valid coordinate reference system")
       }
       if(nlayers(isoscape) != 2){
@@ -53,8 +53,7 @@ QA = function(known, isoscape, bySite = TRUE,
          (mean and standard deviation)")
       }
       if(class(isoscape)[1] == "RasterStack"){
-        proj4string(isoscape[[1]]) = proj4string(isoscape[[2]]) =
-          proj4string(isoscape)
+        crs(isoscape[[1]]) = crs(isoscape[[2]]) = crs(isoscape)
       }
     } else {
       stop("isoscape should be a RasterStack or RasterBrick")
@@ -228,7 +227,7 @@ QA = function(known, isoscape, bySite = TRUE,
       pdRaster(rescale, unknown = 
                  data.frame(row.names(v@data), 
                             v@data[,seq(1, ni*2-1, by=2)]), 
-               genplot = FALSE)
+               prior = prior, genplot = FALSE)
     )
 
     # pd value for each validation sample or site
