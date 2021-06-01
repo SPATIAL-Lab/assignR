@@ -36,6 +36,8 @@ jobs:
         with:
           pandoc-version: '2.7.3'
       - run: echo "# Test" | pandoc -t html
+      - name: Set up tinytex
+        uses: r-lib/actions/setup-tinytex@master
       - name: Linux setup
         if: runner.os == 'Linux'
         run: |
