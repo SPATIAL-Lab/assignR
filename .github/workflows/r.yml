@@ -22,7 +22,7 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: ubuntu-18.04,   r: 'release'}
-          - {os: windows-latest,   r: 'devel'}
+#          - {os: windows-latest,   r: 'devel'}
           - {os: windows-latest,   r: '3.6'}
           
     steps:
@@ -36,9 +36,9 @@ jobs:
         with:
           pandoc-version: '2.7.3'
       - run: echo "# Test" | pandoc -t html
-      - name: Windows setup
-        if: runner.os == 'Windows'
-        run: nuget install CurlThin.Native -Version 0.0.8
+#      - name: Windows setup
+#        if: runner.os == 'Windows'
+#        run: nuget install CurlThin.Native -Version 0.0.8
       - name: Linux setup
         if: runner.os == 'Linux'
         run: |
