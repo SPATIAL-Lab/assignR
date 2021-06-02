@@ -50,5 +50,10 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - name: Check
+        if: matrix.config.r != 'devel'
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+        shell: Rscript {0}
+      - name: Check devel
+        if: matrix.config.r == 'devel'
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-multi-arch"), error_on = "error")
         shell: Rscript {0}
