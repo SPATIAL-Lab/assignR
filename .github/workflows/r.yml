@@ -55,5 +55,5 @@ jobs:
         shell: Rscript {0}
       - name: Check devel
         if: matrix.config.r == 'devel'
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-multi-arch"), error_on = "error")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--no-multiarch"), error_on = "error")
         shell: Rscript {0}
