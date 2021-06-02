@@ -9,7 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-*****
+# Setup and Introduction
+
 This vignette demonstrates the latest features from the development version, which is installed via GitHub.
 
 ```{r install, eval=FALSE}
@@ -17,12 +18,12 @@ library(devtools)
 install_github("SPATIAL-Lab/assignR@*release")
 ```
 
-This vignette introduces the basic functionality of the *assignR* package using data bundled with the package. We'll review how to access compiled data for known-origin biological samples and environmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate an assignment quality analysis tool useful in study design, method comparison, and uncertainty analysis. 
+We will introduce the basic functionality of **assignR** using data bundled with the package. We'll review how to access data for known-origin biological samples and environmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate a quality analysis tool useful in study design, method comparison, and uncertainty analysis.
 
 *****
-Let's load the package 
+Let's load **assignR** and two other packages we'll need. 
 
-```{r install, message=FALSE, warning=FALSE, results="hide"}
+```{r load, message=FALSE, warning=FALSE, results="hide"}
 library(assignR)
 library(raster)
 library(sp)
@@ -37,7 +38,7 @@ plot(naMap)
 ```
 
 *****
-Load and plot a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), and resolution has been reduced to speed up processing in these examples. Full-resolution global growing season isoscapes are included in the package as *d2h_world.rda* and *d18o_world.rda*. 
+Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution global growing season isoscapes are included in the package as `d2h_world.rda` and `d18o_world.rda`. 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
 data("d2h_lrNA")
@@ -45,7 +46,7 @@ plot(d2h_lrNA)
 ```
 
 *****
-The package includes a database of H and O isotope data for known origin samples (*knownOrig.rda*), which consists of three features (*sites*, *samples*, and *sources*). Let's load it and have a look. First we'll get the names of the data fields available in the tables.
+The package includes a database of H and O isotope data for known origin samples (`knownOrig.rda`), which consists of three features (`sites`, `samples`, and `sources`). Let's load it and have a look. First we'll get the names of the data fields available in the tables.
 
 ```{r knownOrig_names}
 data("knownOrig")
@@ -54,7 +55,7 @@ names(knownOrig$samples)
 names(knownOrig$sources)
 ```
 
-The *sites* feature is a spatial object that records the geographic location of all sites from which samples are available.
+The `sites` feature is a spatial object that records the geographic location of all sites from which samples are available.
 
 ```{r knownOrig_sites, fig.width=5, fig.asp=0.8}
 plot(assignR:::wrld_simpl)
@@ -71,43 +72,43 @@ unique(knownOrig$samples$Taxon)
 Load H isotope data for North American Loggerhead Shrike from the package database.
 
 ```{r birdData, fig.width=5, fig.asp=0.8}
-d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
+Ll_d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
 ```
 
-By default, the *subOrigData* function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards [Magozzi et al., 2021](https://doi.org/10.1111/2041-210X.13556). The calibrations used are documented in the function's return object.
+By default, the `subOrigData` function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards [Magozzi et al., 2021](https://doi.org/10.1111/2041-210X.13556). The calibrations used are documented in the function's return object.
 
 ```{r birdChains}
-d$chains
+Ll_d$chains
 ```
 
-Information on these calibrations is contained in the *stds.rda* data file. 
+Information on these calibrations is contained in the `stds.rda` data file. 
 
 Transformation is important when blending data from different labs or papers because different reference scales have been used to calibrate published data and these calibrations are not always comparable. In this case all the data come from one paper:
 
 ```{r birdSources}
-d$sources[,1:3]
+Ll_d$sources[,1:3]
 ```
 
-If we didn't want to transform the data, and instead wished to use the reference scale from the original publication, we can specify that in our call to *subOrigData*. Keep in mind that any subsequent analyses using these data will be based on this calibration scale: for example, if you wish to assign samples of unknown origin, the values for those samples should be reported on the same scale.
+If we didn't want to transform the data, and instead wished to use the reference scale from the original publication, we can specify that in our call to `subOrigData`. Keep in mind that any subsequent analyses using these data will be based on this calibration scale: for example, if you wish to assign samples of unknown origin, the values for those samples should be reported on the same scale.
 
 ```{r birdNoTrans, fig.width=5, fig.asp=0.8}
-d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap, ref_scale = NULL)
-d$sources$H_std_scale
+Ll_d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap, ref_scale = NULL)
+Ll_d$sources$H_cal
 ```
 
 For a real application you would want to explore the database to find measurements that are appropriate to your study system (same or similar taxon, geographic region, measurement approach, etc.) or collect and import known-origin data that are specific to your system.
 
 *****
-# Isoscape Calibration and Probability of Origin for Unknown Samples 
+# Single-isoscape Calibration and Probability of Origin Estimates 
 
-We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. *calRaster* fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a sample-type specific isoscape.
+We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. `calRaster` fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a calibrated, sample-type specific isoscape.
 
 ```{r calRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
-r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
+d2h_Ll = calRaster(known = Ll_d, isoscape = d2h_lrNA, mask = naMap)
 ```
 
 *****
-Let's create some hypothetical sample IDs and values to demonstrate how samples of unknown origin can be assigned to the calibrated isoscape. The isotope values are drawn from a random distribution with a standard deviation of 8 per mil, which is a pretty reasonable variance for conspecific residents at a single location. We'll also add made-up values for the analytical uncertainty for each sample and a column recording the calibration scale used for our measurements (see below). If you had real measured data for your study samples you would load them here, instead.
+Let's create some hypothetical samples to use in demonstrating how we can evaluate the probability that the samples originated from different parts of the isoscape. The isotope values are drawn from a random distribution with a standard deviation of 8 per mil, which is a pretty reasonable variance for conspecific residents at a single location. We'll also add made-up values for the analytical uncertainty for each sample and a column recording the calibration scale used for our measurements. If you had real measured data for your study samples you would load them here, instead.
 
 ```{r samples}
 id = letters[1:5]
@@ -115,39 +116,98 @@ set.seed(123)
 d2H = rnorm(5, -110, 8)
 d2H.sd = runif(5, 1.5, 2.5)
 d2H_cal = rep("UT_H_1", 5)
-un = data.frame(id, d2H, d2H.sd, d2H_cal)
-print(un)
+Ll_un = data.frame(id, d2H, d2H.sd, d2H_cal)
+print(Ll_un)
 ```
 
-As discussed above, one issue that must be considered with any organic H or O isotope data is the reference scale used by the laboratory producing the data. The reference scale for your unknown samples should be the same as that for the known origin data used in calRaster. Remember that the scale for our known origin data 'd' is *OldEC.1_H_1*. Let's assume that our fake data were normalized to the *UT_H_1* scale. The *refTrans* function allows us to convert between the two.
+As discussed above, one issue that must be considered with any organic H or O isotope data is the reference scale used by the laboratory producing the data. The reference scale for your unknown samples should be the same as that for the known origin data used in calRaster. Remember that the scale for our known origin data `d` is *OldEC.1_H_1*. Let's assume that our fake data were normalized to the *UT_H_1* scale. The `refTrans` function allows us to convert between the two.
 
 ```{r refTrans}
-un = refTrans(un, ref_scale = "OldEC.1_H_1")
-print(un)
+Ll_un = refTrans(Ll_un, ref_scale = "OldEC.1_H_1")
+print(Ll_un)
 ```
 
 Notice that both the d2H values and the uncertainties have been updated to reflect the scale transformation.
 
 *****
-Produce posterior probability density maps used to the assign the unknown origin samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf)
+Now we will produce posterior probability density maps for the unknown samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf)
 
 ```{r pdRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
-asn = pdRaster(r, unknown = un$data)
+Ll_prob = pdRaster(d2h_Ll, unknown = Ll_un)
 ```
 
-Cell values in these maps are small because each cell's value represents the probability that this one cell, out of all of them on the map, is the actual origin of the sample. Together, all cell values on the map should sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.
+Cell values in these maps are small because each cell's value represents the probability that this one cell, out of all of them on the map, is the actual origin of the sample. Together, all cell values on the map sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.
 
 ```{r sums}
-cellStats(asn[[1]], 'sum')
+cellStats(Ll_prob[[1]], 'sum')
 ```
 
-Check out the help page for *pdRaster* for additional options, including the use of informative prior probabilities.
+Check out the help page for `pdRaster` for additional options, including the use of informative prior probabilities.
+
+*****
+# Multi-isoscape Analysis 
+
+We can also use multiple isoscapes to (potentially) add power to our analyses. We will start by calibrating a H isoscape for the monarch butterfly, *Danaus plexippus*.
+
+```{r Dp, fig.width=5, fig.asp=0.8, out.width='45%'}
+Dp_d = subOrigData(taxon = "Danaus plexippus")
+d2h_Dp = calRaster(Dp_d, d2h_lrNA)
+```
+
+*****
+Our second isoscape represents ^87^Sr/^86^Sr values across our study region, the state of Michigan. It was published by [Bataille and Bowen, 2012](https://doi.org/10.1016/j.chemgeo.2012.01.028), obtained from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), cropped and aggregated to coarser resolution, and a rough estimate of uncertainty added.
+
+In this case, we do not have any known-origin tissue samples to work with. However, our isoscape was developed to approximate the bioavailable Sr pool, and Sr isotopes are not strongly fractionated in food webs. Thus, our analysis will assume that the isoscape provides a good representation of the expected Sr values for our study species without calibration.
+
+Let's look at the Sr isoscape and compare it with our butterfly H isoscape.
+
+```{r srIso, fig.width=5, fig.asp=0.8, out.width='45%'}
+data("sr_MI")
+plot(sr_MI$weathered.mean)
+proj4string(sr_MI)
+proj4string(d2h_Dp$isoscape.rescale)
+```
+
+Notice that the we have two different spatial data objects, one for Sr and one for d2H, and that they have different extents and projections. In order to conduct a multi-isotope analysis, we'll first combine these into a single object using the `isoStack` function. In addition to combining the objects, this function resolves differences in their projection, resolution, and extent. It's always a good idea to check that the properties of the isoStack components are consistent with your expectations.
+
+```{r isoStack}
+Dp_multi = isoStack(d2h_Dp, sr_MI)
+lapply(Dp_multi, proj4string)
+lapply(Dp_multi, bbox)
+```
+
+*****
+Now we'll generate a couple of hypothetical unknown samples to use in our analysis. It is important that our isotopic markers appear here in the same order as in the `isoStack` object we created above.
+
+```{r Dp_unknown}
+Dp_unk = data.frame("ID" = c("A", "B"), "d2H" = c(-86, -96), "Sr" = c(0.7089, 0.7375))
+```
+
+*****
+We are ready to make our probability maps. First let's see how our posterior probabilities would look if we only used the hydrogen isotope data.
+
+```{r Dp_Honly, fig.width=5, fig.asp=0.8, out.width='45%'}
+Dp_pd_Honly = pdRaster(Dp_multi[[1]], Dp_unk[,-3])
+```
+
+We see pretty clear distinctions between the two samples, driven by a strong SW-NE gradient in the tissue isoscape H values across the state.
+
+*****
+What if we add the Sr information to the analysis? The syntax for running `pdRaster` is the same, but now we provide our isoStack object in place of the single isoscape. The function will use the spatial covariance of the isoscape values to approximate the error covariance for the two (or more) markers and return poterior probabilities based on the multivariate normal probability density function evaluated at each grid cell.
+
+```{r Dp_multi, fig.width=5, fig.asp=0.8, out.width='45%'}
+Dp_pd_multi = pdRaster(Dp_multi, Dp_unk)
+```
+
+Note that the addition of Sr data greatly strengthens the geographic constraints on our hypothetical unknown samples: the difference between the highest and lowest posterior probabilities is much larger than with H only, and the pattern of high probabilities reflects the regionalization characteristic of the Sr isoscape. This is especially true for sample B, which has a fairly distinctive, high ^87^Sr/^86^Sr value.   
 
 *****
 # Post-hoc Analysis
 ## Odds Ratio
 
-The *oddsRatio* tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likely from France or Spain?", or "how likely is this hypothesized location relative to other possibilities?". 
+Many of the functions in **assignR** are designed to help you analyze and draw inference from the posterior probability surfaces we've created above. For the following examples we'll return to our single-isoscape, Loggerhead shrike analysis, but the tools work identically for multi-isoscape results.
+
+The `oddsRatio` tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likely from France or Spain?", or "how likely is this hypothesized location relative to other possibilities?". 
 
 Let's compare probabilities for two spatial areas - the states of Utah and New Mexico. First we'll load the SpatialPolygons and plot them.
 
@@ -156,15 +216,15 @@ data("states")
 s1 = states[states$STATE_ABBR == "UT",]
 s2 = states[states$STATE_ABBR == "NM",]
 plot(naMap)
-lines(s1, col = c("red"))
-lines(s2, col = c("blue"))
+plot(s1, col = c("red"), add = TRUE)
+plot(s2, col = c("blue"), add = TRUE)
 ```
 
 Get the odds ratio for the two regions. The result reports the odds ratio for the regions (first relative to second) for each of the 5 unknown samples plus the ratio of the areas of the regions. If the isotope values (& prior) were completely uninformative the odds ratios would equal the ratio of areas.
 
 ```{r oddsRatio1}
 s12 = rbind(s1, s2)
-oddsRatio(asn, s12)
+oddsRatio(Ll_prob, s12)
 ```
 
 Here you can see that even though Utah is quite a bit smaller the isotopic evidence suggests it's much more likely to be the origin of each sample. This result is consistent with what you might infer from a first-order comparison of the state map with the posterior probability maps, above.
@@ -177,69 +237,69 @@ pp1 = c(-112,40)
 pp2 = c(-105,33)
 pp12 = SpatialPoints(coords = rbind(pp1,pp2))
 proj4string(pp12) = proj4string(naMap)
-oddsRatio(asn, pp12)
+oddsRatio(Ll_prob, pp12)
 ```
 
 The odds of the first point being the location of origin are pretty high for each sample, and much higher than for the second point.
 
 ## Assignment
 
-Researchers often want to classify their study area in to regions that are and are not likely to be the origin of the sample (effectively 'assigning' the sample to a part of the area). This requires choosing a subjective threshold to define how much of the study domain is represented in the assignment region. *qtlRaster* offers two choices.
+Researchers often want to classify their study area in to regions that are and are not likely to be the origin of the sample (effectively 'assigning' the sample to a part of the area). This requires choosing a subjective threshold to define how much of the study domain is represented in the assignment region. `qtlRaster` offers two choices.
 
-Extract 10% of the study area, giving maps that show the 10% of grid cells with the highest posterior probability for each sample.
+Let's extract 10% of the study area, giving maps that show the 10% of grid cells with the highest posterior probability for each sample.
 
 ```{r qtlRaster1, fig.width=5, fig.asp=0.8, out.width='45%'}
-qtlRaster(asn, threshold = 0.1)
+qtlRaster(Ll_prob, threshold = 0.1)
 ```
 
 *****
-Extract 80% of the posterior probability density, giving maps that show the smallest region within which there is an 80% chance each sample originated.
+Now we'll instead extract 80% of the posterior probability density, giving maps that show the smallest region within which there is an 80% chance each sample originated.
 
 ```{r qtlRaster2, fig.width=5, fig.asp=0.8, out.width='45%'}
-qtlRaster(asn, threshold = 0.8, thresholdType = "prob")
+qtlRaster(Ll_prob, threshold = 0.8, thresholdType = "prob")
 ```
 
 Comparing the two results, the probability-based assignment regions are broader. This suggests that we'll need to assign to more than 10% of the study area if we want to correctly assign 80% or more of our samples. We'll revisit this below and see how we can chose thresholds that are as specific as possible while achieving a desired level of assignment 'quality'.
 
 ## Summarization
 
-Most studies involve assigning multiple individuals, and often it is desirable to summarize the results from these individuals. *jointP* and *unionP* offer two options for summarizing posterior probabilities from multiple samples.
+Most studies involve multiple unknown samples, and often it is desirable to summarize the results from these individuals. `jointP` and `unionP` offer two options for summarizing posterior probabilities from multiple samples.
 
-Calculate the probability that **all** samples came from any given grid cell in the analysis area. Note that this summarization will only be useful if all samples are truly derived from a single population of common geographic origin.
+`jointP` calculates the probability that **all** samples came from each grid cell in the analysis area. Note that this summarization will only be useful if all samples are truly derived from a single population of common geographic origin.
 
 ```{r jointP, fig.width=5, fig.asp=0.8}
-jointP(asn)
+jointP(Ll_prob)
 ```
 
 *****
-Calculate the probability that **any** sample came from any given grid cell in the analysis area. In this case we'll save the output to a variable for later use.
+`unionP` calculates the probability that **any** sample came from each grid cell in the analysis area. In this case we'll save the output to a variable for later use.
 
 ```{r unionP, fig.width=5, fig.asp=0.8}
-up = unionP(asn)
+Ll_up = unionP(Ll_prob)
 ```
 
-The results from *unionP* highlight a broader region, as you might expect.
+The results from `unionP` highlight a broader region, as you might expect.
 
 *****
-Any of the other post-hoc analysis tools can be applied to the summarized results. Here we'll use *qtlRaster* to identify the 10% of the study area that is most likely to be the origin of one or more samples.
+Any of the other post-hoc analysis tools can be applied to the summarized results. Here we'll use `qtlRaster` to identify the 10% of the study area that is most likely to be the origin of one or more samples.
 
 ```{r qtlRaster3, fig.width=5, fig.asp=0.8}
-qtlRaster(up, threshold = 0.1)
+qtlRaster(Ll_up, threshold = 0.1)
 ```
 
 *****
-## Quality analysis and method comparison
+# Quality analysis and method comparison
 
-How good are the geographic assignments? What area or probability threshold should be used? Is it better to use isoscape *A* or *B* for my analysis? These questions can be answered through split-sample validation using *QA*.
+How good are the geographic assignments? What area or probability threshold should be used? Is it better to use isoscape *A* or *B* for my analysis? These questions can be answered through split-sample validation using `QA`.
 
-We will run quality assessment on the known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used (this one took about two minutes on my desktop PC).  
+We will run quality assessment on the Loggerhead shrike known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used. 
 
 ```{r QA1, warning=FALSE, results='hide'}
-qa1 = QA(d, d2h_lrNA, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "normal")
+qa1 = QA(Ll_d, d2h_lrNA, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "normal")
 ```
 
 *****
-Plot the result. (Please note that because of changes in R's random number generator your results may not exactly match those shown here if you are using R version 3.5.X.)
+We can plot the result using `plot`.
 
 ```{r plot.QA1, fig.width=4, fig.asp=1, out.width='45%'}
 plot(qa1)
@@ -247,7 +307,7 @@ plot(qa1)
 
 The first three panels show three metrics, granularity (higher is better), bias (closer to 1:1 is better), and sensitivity (higher is better). The second plot shows the posterior probabilities at the known locations of origin relative to random (=1, higher is better). More information is provided in [Ma et al., 2020](https://doi.org/10.1111/2041-210X.13426).
 
-A researcher might refer to the sensitivity plot, for example, to assess what *qtlRaster* area threshold would be required to obtain 90% correct assignments in their study system. Here it's somewhere between 0.25 and 0.3.
+A researcher might refer to the sensitivity plot, for example, to assess what `qtlRaster` area threshold would be required to obtain 90% correct assignments in their study system. Here it's somewhere between 0.25 and 0.3.
 
 *****
 How would using a different isoscape or different known origin dataset affect the analysis? Multiple QA objects can be compared to make these types of assessments.
@@ -262,15 +322,15 @@ plot(d2h_fuzzy)
 ```
 
 *****
-We'll combine the fuzzy isoscape with the uncertainty layer from the original isoscape, then rerun *QA* using the new version. Obviously this is not something you'd do in real work, but as an example it allows us to ask the question "how would the quality of my assignments change if my isoscape predictions were of reduced quality?". 
+We'll combine the fuzzy isoscape with the uncertainty layer from the original isoscape, then rerun `QA` using the new version. Obviously this is not something you'd do in real work, but as an example it allows us to ask the question "how would the quality of my assignments change if my isoscape predictions were of reduced quality?". 
 
 ```{r QA2, warning=FALSE, results='hide'}
 d2h_fuzzy = brick(d2h_fuzzy, d2h_lrNA[[2]])
-qa2 = QA(d, d2h_fuzzy, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "fuzzy")
+qa2 = QA(Ll_d, d2h_fuzzy, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "fuzzy")
 ```
 
 *****
-Now *plot* to compare.
+Now we can `plot` to compare.
 
 ```{r plot.QA2, fig.width=4, fig.asp=1, out.width='45%'}
 plot(qa1, qa2)

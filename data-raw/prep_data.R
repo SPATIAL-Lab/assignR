@@ -2,6 +2,8 @@ options(stringsAsFactors = FALSE)
 library(openxlsx)
 library(sp)
 library(devtools)
+library(raster)
+library(assignR)
 
 #WGS84 projection
 p = CRS("+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs")
@@ -70,5 +72,16 @@ knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples,
 
 stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
   
+#Prepare MI strontium isoscape
+sr = raster("data-raw/weathered/weathered")
+srun = setValues(sr, getValues(sr) * 0.01)
+sr = brick(sr, srun)
+states.proj = spTransform(states, crs(sr))
+mi = states.proj[states.proj$STATE_NAME == "Michigan",]
+sr_MI = mask(sr, mi)
+sr_MI = crop(sr_MI, mi)
+names(sr_MI) = c("weathered.mean", "weathered.sd")
+sr_MI = aggregate(sr_MI, 10)
+
 #Write it all to /data/
-use_data(knownOrig, stds, overwrite = TRUE)
+use_data(knownOrig, stds, sr_MI, overwrite = TRUE)

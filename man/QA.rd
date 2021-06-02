@@ -17,7 +17,7 @@ QA(known, isoscape, bySite = TRUE, valiStation = 1, valiTime = 50,
 
 \arguments{
   \item{known}{
-subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue isotope data from the \code{subOrigData} function or provided by user. User-provided data must be formatted as subOrgData objects (see \code{\link{subOrigData}}) or a SpatialPointsDataFrame (see Details).
+subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue isotope data from the \code{subOrigData} function or provided by user. User-provided data must be formatted as subOrigData objects (see \code{\link{subOrigData}}) or a SpatialPointsDataFrame (see Details).
 }
   \item{isoscape}{RasterStack or RasterBrick with two layers or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the environmental isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
 }

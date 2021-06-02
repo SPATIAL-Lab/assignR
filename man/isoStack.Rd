@@ -7,7 +7,7 @@ Stack isoscapes
 }
 
 \description{
-Combine multiple isoscapes into a single data object, including optional reconsiliation of raster properties.
+Combine multiple isoscapes into a single data object, including optional reconciliation of raster properties.
 }
 
 \usage{
@@ -24,7 +24,7 @@ isoStack(..., clean = TRUE)
 }
 
 \details{
-If \code{clean} = TRUE all rasters are projected to the projection of the first object in \code{...} and then resampled to the highest spatial resoluction and smallest common spatial extent within \code{...}. Finally, cells containing NA in any layer within \code{...} are masked across all layers.
+If \code{clean} = TRUE all rasters are projected to the projection of the first object in \code{...} and then resampled to the highest spatial resolution and smallest common spatial extent within \code{...}. Finally, cells containing NA in any layer within \code{...} are masked across all layers.
 
 If \code{clean} = FALSE any differences in raster properties between isoscapes will produce an error. 
 }
