@@ -3,6 +3,7 @@ library(assignR)
 library(raster)
 data("naMap")
 data("d2h_lrNA")
+data("sr_MI")
 
 d = subOrigData(group = "Modern human", mask = naMap)
 r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap, genplot = FALSE)
@@ -15,6 +16,9 @@ r2 = r
 r2[[1]][[1]] = r2[[1]][[1]] + rnorm(ncell(r2[[1]][[1]]), 0, 10)
 rmulti = isoStack(r, r2)
 un2 = refTrans(un)
+
+r3 = isoStack(r, sr_MI)
+un3 = data.frame(id, d2H, "Sr" = 0.710)
 
 mask_noCRS = naMap
 crs(mask_noCRS) = NA
@@ -34,6 +38,7 @@ test_that("pdRaster can correctly calculate posterior probabilities of origin
                                          genplot = FALSE))
             expect_is(pdRaster(rmulti, list(un2, un2), mask = naMap, 
                                genplot = FALSE), "RasterLayer")
+            expect_is(pdRaster(r3, un3), "RasterLayer")
             expect_error(pdRaster(r$lm.model, unknown = un))
             expect_error(pdRaster(r$isoscape.rescale$mean, unknown = un))
             expect_error(pdRaster(stack(r$isoscape.rescale,r$isoscape.rescale), un))
