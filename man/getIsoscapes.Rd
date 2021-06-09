@@ -19,7 +19,7 @@ getIsoscapes(isoType = "GlobalPrecipGS", timeout = 1200)
 character string indicating which isoscapes are requested: see 'Details'.
 }
   \item{timeout}{
-numeric. Maximum alowed file download time, in seconds. Some isoscape archives exceed 2 GB in size and may require long download times on slow connections.
+integer. Maximum allowed file download time, in seconds. Some isoscape archives exceed 2 GB in size and may require long download times on slow connections. This option may not work on all system configurations.
 }
 }
 
