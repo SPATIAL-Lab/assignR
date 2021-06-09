@@ -1,5 +1,3 @@
-context("refTrans")
-library(assignR)
 id = letters[1:5]
 set.seed(123)
 d2H = rnorm(5, -110, 8)
@@ -20,7 +18,7 @@ test_that("refTrans can correctly transform data",{
   expect_error(refTrans(un2))
   expect_error(refTrans(un3))
   expect_error(refTrans(un4))
-  expect_error(refTrans(un5))
+  expect_error(suppressWarnings(refTrans(un5)))
   expect_error(refTrans(un1, marker = "d18O"))
   expect_s3_class(refTrans(un6, marker = "d18O", ref_scale = "VSMOW_O",
                            niter = 100), "refTrans")

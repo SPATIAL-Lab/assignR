@@ -1,5 +1,3 @@
-context("getIsoscapes")
-library(assignR)
 iso = getIsoscapes("CaribSr")
 iso2 = getIsoscapes("CaribSr")
 
