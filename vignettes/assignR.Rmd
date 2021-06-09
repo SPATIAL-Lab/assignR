@@ -150,7 +150,7 @@ d2h_Dp = calRaster(Dp_d, d2h_lrNA)
 ```
 
 *****
-Our second isoscape represents ^87^Sr/^86^Sr values across our study region, the state of Michigan. It was published by [Bataille and Bowen, 2012](https://doi.org/10.1016/j.chemgeo.2012.01.028), obtained from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), cropped and aggregated to coarser resolution, and a rough estimate of uncertainty added.
+Our second isoscape represents ^87^Sr/^86^Sr values across our study region, the state of Michigan. It was published by [Bataille and Bowen, 2012](https://doi.org/10.1016/j.chemgeo.2012.01.028), obtained from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), cropped and aggregated to coarser resolution, and a rough estimate of uncertainty added.
 
 In this case, we do not have any known-origin tissue samples to work with. However, our isoscape was developed to approximate the bioavailable Sr pool, and Sr isotopes are not strongly fractionated in food webs. Thus, our analysis will assume that the isoscape provides a good representation of the expected Sr values for our study species without calibration.
 
