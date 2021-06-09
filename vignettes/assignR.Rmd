@@ -33,7 +33,7 @@ plot(naMap)
 ```
 
 *****
-Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution global growing season isoscapes are included in the package as `d2h_world.rda` and `d18o_world.rda`. 
+Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution global growing season isoscapes are included in the package as `d2h_world.rda` and `d18o_world.rda`. 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
 data("d2h_lrNA")
@@ -125,7 +125,7 @@ print(Ll_un)
 Notice that both the d2H values and the uncertainties have been updated to reflect the scale transformation.
 
 *****
-Now we will produce posterior probability density maps for the unknown samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://www.researchgate.net/profile/Michael_Wunder/publication/226054272_Using_Isoscapes_to_Model_Probability_Surfaces_for_Determining_Geographic_Origins/links/00b49526ab1e02ed11000000.pdf)
+Now we will produce posterior probability density maps for the unknown samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://doi.org/10.1007/978-90-481-3354-3_12)
 
 ```{r pdRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
 Ll_prob = pdRaster(d2h_Ll, unknown = Ll_un)
@@ -150,7 +150,7 @@ d2h_Dp = calRaster(Dp_d, d2h_lrNA)
 ```
 
 *****
-Our second isoscape represents ^87^Sr/^86^Sr values across our study region, the state of Michigan. It was published by [Bataille and Bowen, 2012](https://doi.org/10.1016/j.chemgeo.2012.01.028), obtained from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), cropped and aggregated to coarser resolution, and a rough estimate of uncertainty added. 
+Our second isoscape represents ^87^Sr/^86^Sr values across our study region, the state of Michigan. It was published by [Bataille and Bowen, 2012](https://doi.org/10.1016/j.chemgeo.2012.01.028), obtained from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), cropped and aggregated to coarser resolution, and a rough estimate of uncertainty added.
 
 In this case, we do not have any known-origin tissue samples to work with. However, our isoscape was developed to approximate the bioavailable Sr pool, and Sr isotopes are not strongly fractionated in food webs. Thus, our analysis will assume that the isoscape provides a good representation of the expected Sr values for our study species without calibration.
 
