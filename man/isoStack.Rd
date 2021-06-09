@@ -36,11 +36,11 @@ Returns an object of class \dQuote{isoStack}, a list containing the isoscapes ob
 \examples{
 # load two isoscapes
 data("d2h_lrNA")
-data("d18o_world")
+data("sr_MI")
 
 #stack them
-h_o = isoStack(list(d2h_lrNA, d18o_world))
+h_s = isoStack(list(d2h_lrNA, sr_MI))
 
 #plot isoStack
-plot(h_o)
+plot(h_s)
 }

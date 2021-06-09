@@ -73,7 +73,8 @@ knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples,
 stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
   
 #Prepare MI strontium isoscape
-sr = raster("data-raw/weathered/weathered")
+sr = getIsoscapes("USSr")
+sr = sr$sr_weath
 srun = setValues(sr, getValues(sr) * 0.01)
 sr = brick(sr, srun)
 states.proj = spTransform(states, crs(sr))

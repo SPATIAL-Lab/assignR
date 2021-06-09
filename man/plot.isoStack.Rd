@@ -29,12 +29,12 @@ Plot the output from \code{\link{isoStack}}.
 
 \examples{
 # load two isoscapes
-data("d18o_world")
 data("d2h_lrNA")
+data("sr_MI")
 
 #stack them
-o_h = isoStack(d18o_world, d2h_lrNA)
+h_s = isoStack(list(d2h_lrNA, sr_MI))
 
 #plot isoStack
-plot(o_h)
+plot(h_s)
 }

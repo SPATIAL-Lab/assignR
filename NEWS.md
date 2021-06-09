@@ -2,6 +2,7 @@
 
 ## assignR 2.1.0
 * Add isoStack function to stack multiple isoscapes in a single data object; added plot s3 method for this class
+* Add getIsoscape function supporting download of gridded isotope maps; removed global precipitation maps previously distributed with package
 * Update pdRaster and QA to support multivariate analysis
 * Add option to include spatial prior in QA
 * Bug fixes
