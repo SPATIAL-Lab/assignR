@@ -28,19 +28,16 @@ d2h_lrNA_with9999 = setValues(d2h_lrNA, tempVals)
 
 d2h_lrNA_na = crop(d2h_lrNA, naMap)
 
-r1 = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap, genplot = FALSE)
-r2 = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap, interpMethod = 1, genplot = FALSE)
-r3 = calRaster(known = d, isoscape = d2h_lrNA_with9999, NA.value = 9999, genplot = FALSE)
+r3 = calRaster(known = d, isoscape = d2h_lrNA_with9999, NA.value = 9999, 
+               interpMethod = 1, genplot = FALSE)
 
 test_that("calRaster can correctly uses known-origin tissue data to rescale a map of 
           environmental isotope values to a map of tissue value (and associated uncertainty) 
           using a linear regression model.",{
-        expect_is(r1, "rescale")
-        expect_is(r2, "rescale")
         expect_is(r3, "rescale")
         expect_is(calRaster(known = d_usr_good, isoscape = d2h_lrNA), "rescale")
         expect_output(calRaster(known = d, isoscape = d2h_lrNA, outDir = "temp"))
-        expect_equal(nlayers(r1$isoscape.rescale), 2)
+        expect_equal(nlayers(r3$isoscape.rescale), 2)
         expect_error(calRaster(known = d$data$d2H, isoscape = d2h_lrNA))
         expect_error(calRaster(known = d, isoscape = d2h_lrNA, outDir = 2))
         expect_error(calRaster(known = d, isoscape = d2h_lrNA, interpMethod = 3))

@@ -28,9 +28,6 @@ mask_diffProj = spTransform(naMap, "+init=epsg:28992")
 un_hasNA = un
 un_hasNA[1,2] = NA
 
-#prior = r$isoscape.rescale$mean
-#prior = projectRaster(prior, crs = "+init=epsg:28992")
-
 test_that("pdRaster can correctly calculate posterior probabilities of origin 
           for a sample based on its isotope ratio",{
             expect_warning(pdRaster(r, unknown = un, mask = naMap, genplot = FALSE))

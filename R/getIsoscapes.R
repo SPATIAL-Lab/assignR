@@ -144,7 +144,7 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
   wd = getwd()
   setwd(tempdir())
   ot = getOption("timeout")
-  options(timeout = max(ot, timeout))
+  options(timeout = timeout)
   
   dlf = function(fp, fn, ot, wd){
     dfs = tryCatch({

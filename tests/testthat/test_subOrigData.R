@@ -1,12 +1,11 @@
 context("subOrigData")
 library(assignR)
 d1 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", "Turdus migratorius"))
-d2 = subOrigData(group = c("Passerine"), ref_scale = "US_H_5")
 
 test_that("suOrigData can correctly subset known-origin dataset in the assignR package",{
   expect_equal(class(d1), "subOrigData")
   expect_equal(length(d1$data), 188)
-  expect_is(d2$data, "SpatialPointsDataFrame")
+  expect_is(d1$data, "SpatialPointsDataFrame")
   expect_error(subOrigData(taxon = "Turdus philomelos", mask = naMap))
   expect_error(subOrigData(taxon = "Turdus philomelos", marker = "d14C"))
   expect_warning(subOrigData(taxon = "Charadrius montanus", age_code = c("chick", "newborn")))
