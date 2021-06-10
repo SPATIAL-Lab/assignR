@@ -2,7 +2,7 @@
 
 ## Basic
 
-Data and tools supporting geographic assignment of materials based on their isotopic chemistry. Isoscapes (environmental isotope maps) can be generated externally or defaults (*d2h_world.rda*, *d18o_world.rda*) are provided in the package. Data from samples of known origin are used to calibrate the relationship between isoscape and sample values, and can be provided by the user or extracted from the package database (*knownOrig.rda*). Database data or user-provided known-origin or unknown origin sample data can be transformed among different H and O isotope reference scales to improve comparability (*refTrans*). Functions (*calRaster*, *pdRaster*) support calibrating the isoscape and inverting Bayes theorem to estimate the probability of origin for unknown samples across a geographic study domain. Functions (*QA*, *plot.QA*) allow quality assessment of assignment results and comparison of methods using split-sample tests and known origin data. Functions (*oddsRatio*, *qtlRaster*, *jointP*, *unionP*) support post-hoc classification of results, summarization of results from multiple samples, and comparison of support for different locations.
+Data and tools supporting geographic assignment of materials based on their isotopic chemistry. Isoscapes (environmental isotope maps) can be generated externally or downloaded using the *getIsoscapes* function. Data from samples of known origin are used to calibrate the relationship between isoscape and sample values, and can be provided by the user or extracted from the package database (*knownOrig.rda*). Database data or user-provided known-origin or unknown origin sample data can be transformed among different H and O isotope reference scales to improve comparability (*refTrans*). Functions (*calRaster*, *pdRaster*) support calibrating one or more isoscapes (multiple layers combined using *isoStack*) and inverting the assignment model to estimate the probability of origin for unknown samples across a geographic study domain. Functions (*QA*, *plot.QA*) allow quality assessment of assignment results and comparison of methods using split-sample tests and known origin data. Functions (*oddsRatio*, *qtlRaster*, *jointP*, *unionP*) support post-hoc classification of results, summarization of results from multiple samples, and comparison of support for different locations.
 
 For current production release, see the vignette [here](https://CRAN.R-project.org/package=assignR) and install from CRAN.
 
@@ -16,11 +16,9 @@ library(assignR)
 
 **Datasets**
 
-*d2h_world.rda* - Global growing season precipitation H isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
+*d2h_lrNA.rda* - Low-resolution, North American crop of growing season d2H isoscape, used in examples.
 
-*d2h_lrNA.rda* - Low-resolution, North American crop of d2h_world.rda, used in examples.
-
-*d18o_world.rda* - Global growing season precipitation O isoscape from waterisotopes.org, including predicted mean and 95% confidence interval width
+*sr_MI.rda* - Low-resolution crop of locally-weathered Sr isoscape, used in examples.
 
 *knownOrig.rda*	- Hydrogen and oxygen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 4218 samples)
 
@@ -36,9 +34,15 @@ library(assignR)
 
 *refTrans* - Transform data among reference scales
 
-*calRaster* - Transform environmental isoscape to tissue isoscape
+*getIsoscapes* - Download and unpack isoscapes from waterisotopes.org
 
-*pdRaster* - Assign sample to calibrated tissue isoscape based on tissue isotopic composition
+*isoStack* - Combine multiple isoscapes
+
+*plot.isoStack* - Plot isoStack object
+
+*calRaster* - Transform one or more isoscapes to reflect target sample type
+
+*pdRaster* - Assign sample to calibrated isoscape(S) based on isotopic composition(s)
 
 *qtlRaster* - Select most likely region of origin from posterior probability surface (by cumulative percent area probability)
 
