@@ -16,6 +16,10 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
   setwd(tempdir())
   ot = getOption("timeout")
   options(timeout = timeout)
+  on.exit({
+    options(timeout = ot)
+    setwd(wd)
+  })
   
   dlf = function(fp, fn, ot, wd){
     dfs = tryCatch({
@@ -40,14 +44,17 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
   if(!file.exists(giconfig$dpath.post)){
     dfs = dlf(paste0(dpath.pre, giconfig$dpath.post), giconfig$dpath.post, ot, wd)
     pdlf(dfs, wd, ot, isoType)
-    dlflag = TRUE
-  } else{
-    dlflag = FALSE
   }
   
   procRest = function(fn, lnames, onames){
-    if((!all(lnames %in% list.files())) | dlflag){
+    if(file.exists("zRec.txt")){
+      zRec = readLines("zRec.txt")
+    } else{
+      zRec = "none"
+    }
+    if((!all(lnames %in% list.files())) | (zRec != fn)){
       uz = unzip(fn)
+      writeLines(fn, "zRec.txt")
     }
     rs = list()
     for(i in 1:length(lnames)){
