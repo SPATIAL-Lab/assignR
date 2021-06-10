@@ -104,7 +104,7 @@ GIconfig = list(
     eType = 2
   ),
   "USSurf" = list(
-    dpath.post = "USSws.zip",
+    dpath.post = "USSw.zip",
     lnames = c("d2h.tif", "d2h_se.tif", "d18o.tif", 
                "d18o_se.tif"),
     onames = c("d2h", "d2h_sd", "d18o", "d18o_sd"),
