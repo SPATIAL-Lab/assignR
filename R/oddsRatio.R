@@ -51,11 +51,17 @@ oddsRatio = function(pdR, inputP){
     
     extrVals = extract(pdR, inputP)
     if(nlayers(pdR) > 1){
-      extrVals.p1 = colSums(extrVals[[1]])
-      extrVals.p2 = colSums(extrVals[[2]])
+      extrVals.p1 = colSums(extrVals[[1]], na.rm = TRUE)
+      extrVals.p2 = colSums(extrVals[[2]], na.rm = TRUE)
+      if(any(extrVals.p1 == 0) | any(extrVals.p2 == 0)){
+        stop("No values in P1 and/or P2")
+      }
     } else {
-      extrVals.p1 = sum(extrVals[[1]])
-      extrVals.p2 = sum(extrVals[[2]])
+      extrVals.p1 = sum(extrVals[[1]], na.rm = TRUE)
+      extrVals.p2 = sum(extrVals[[2]], na.rm = TRUE)
+      if(extrVals.p1 == 0 | extrVals.p2 == 0){
+        stop("No values in P1 and/or P2")
+      }
     }
     result1 = (extrVals.p1/(1-extrVals.p1))/(extrVals.p2/(1-extrVals.p2))
     result2 = ncell(crop(pdR, inputP[1,]))/ncell(crop(pdR, inputP[2,]))

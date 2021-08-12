@@ -1,5 +1,8 @@
 # assignR news
 
+## assignR 2.1.1.9000
+* Bug fixes
+
 ## assignR 2.1.1
 * Bug fixes
 
