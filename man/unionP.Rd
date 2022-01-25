@@ -16,7 +16,7 @@ unionP(pdR)
 
 \arguments{
   \item{pdR}{
-RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{pdRaster}. All layers must have common spatial extent and projection.
+RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{pdRaster}.
 }
 }
 
@@ -36,9 +36,9 @@ id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
 un = data.frame(id,d2H)
 
-# assignment
-asn = pdRaster(r, unknown = un, mask = naMap)
+# posterior probabilities
+pp = pdRaster(r, unknown = un, mask = naMap)
 
 # probability that one or more individuals are from a given location
-unionP(asn)
+unionP(pp)
 }

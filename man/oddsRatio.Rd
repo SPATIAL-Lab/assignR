@@ -16,7 +16,7 @@ oddsRatio(pdR, inputP)
 
 \arguments{
   \item{pdR}{
-RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{calRaster}. All layers must have common projection.
+RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{pdRaster}.
 }
   \item{inputP}{
 SpatialPoints or SpatialPolygons (or *DataFrame equivalent) of length 2
@@ -41,8 +41,8 @@ id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
 un = data.frame(id,d2H)
 
-# assignment
-asn = pdRaster(r, unknown = un, mask = naMap)
+# posterior probabilities
+pp = pdRaster(r, unknown = un, mask = naMap)
 
 # SpatialPolygons for two regions of interest
 data("states")
@@ -54,7 +54,7 @@ plot(s2, border = "blue", add=TRUE)
 
 # Get odds ratio for two regions using SpatialPolygon method
 s12 = rbind(s1, s2)
-oddsRatio(asn, s12)                     
+oddsRatio(pp, s12)                     
 
 # Create SpatialPoints for two points of interest
 pp1 = c(-112,40)
@@ -64,6 +64,6 @@ pp12 = SpatialPoints(coords = rbind(pp1,pp2),
 points(pp12, pch = 21, bg = "light blue")
 
 # Get odds ratio for two points using SpatialPoints method
-oddsRatio(asn, pp12)
+oddsRatio(pp, pp12)
 }
 
