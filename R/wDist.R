@@ -116,7 +116,9 @@ c.wDist = function(...){
   for(i in seq_len(length(a))){
     if(class(a[[i]])[1] == "wDist"){
       n = n + 1
-    } 
+    } else{
+      stop("this method only accepts wDist objects as arguments")
+    }
   }
   
   s = matrix(ncol = 16)

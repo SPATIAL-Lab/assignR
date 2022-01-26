@@ -20,6 +20,10 @@ Combine statistics from one or more \code{\link{wDist}} objects in a single data
   }
 }
 
+\value{
+data.frame containing sample IDs, distance, and bearing statistics for each sample in \code{...}
+}
+
 \seealso{
 \code{\link{wDist}}
 }
