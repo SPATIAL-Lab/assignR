@@ -23,31 +23,23 @@ wDist = function(pdR, sites){
   }
   
   #make space
-  ns = length(sites)
-  db = data.frame(character(ns))
-  for(i in 1:16){
-    db = cbind(db, numeric(ns))
-  }
-  d.dens = list()
-  b.dens = list()
-  n = names(pdR)
+  wd = list() 
   
   p = function(y, w){
     Position(function(x) x >= y, w)
   }
   
-  for(i in 1:ns){
+  for(i in seq_along(sites)){
     pdSP = rasterToPoints(pdR[[i]], spatial = TRUE)
     
     d = distGeo(pdSP, sites[i,])
-    b = bearing(sites[i,], pdSP)
+    b = bearing(pdSP, sites[i,])
     w = pdSP@data[,1]
-    d.dens[[i]] = density(d, weights = w)
-    b.dens[[i]] = density(b, weights = w)    
+    d.dens = density(d, weights = w)
+    b.dens = density(b, weights = w)    
     
     #record weighted mean of distance distribution
-    db[i, 1] = n[i]
-    db[i, 2] = weighted.mean(d, w)
+    s = weighted.mean(d, w)
     
     #find and record quantiles within weighted distance distribution
     dw = cbind(d, w)
@@ -57,7 +49,7 @@ wDist = function(pdR, sites){
     }
 
     qts = sapply(c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95), p, w = dw[, 2])
-    db[i, 3:9] = dw[qts, 1]
+    s = c(s, dw[qts, 1])
     
     bw = cbind(b, w)
 
@@ -81,7 +73,7 @@ wDist = function(pdR, sites){
     }
     
     #weighted mean, re-referenced
-    db[i, 10] = weighted.mean(bw[, 1], bw[, 2])
+    s = c(s, weighted.mean(bw[, 1], bw[, 2]))
     
     #find and record quantiles within weighted bearing distribution
     bw = bw[order(bw[, 1]),]
@@ -89,24 +81,63 @@ wDist = function(pdR, sites){
       bw[j, 2] = bw[j, 2] + bw[j-1, 2]
     }
     qts = sapply(c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95), p, w = bw[, 2])
-    db[i, 11:17] = bw[qts, 1]
+    s = c(s, bw[qts, 1])
     
     #rectify bearings
-    db[i, 10:17] = db[i, 10:17] + mpb
-    for(j in 10:17){
-      if(db[i, j] >= 180){
-        db[i, j] = db[i, j] - 360
+    s[9:16] = s[9:16] + mpb
+    for(j in 9:16){
+      if(s[j] >= 180){
+        s[j] = s[j] - 360
       }
+    }
+    names(s) = c("wMeanDist", "w05Dist", "w10Dist", "w25Dist",
+                  "w50Dist", "w75Dist", "w90Dist", "w95Dist", "wMeanBear",
+                  "w05Bear", "w10Bear", "w25Bear", "w50Bear", "w75Bear",
+                  "w90Bear", "w95Bear")
+    
+    wd[[i]] = list(stats = s, d.dens = d.dens, b.dens = b.dens)
+  }
+  
+  names(wd) = names(pdR)
+  
+  class(wd) = "wDist"
+  return(wd)
+}
+
+c.wDist = function(...){
+  
+  a = list(...)
+  
+  if(class(a[[1]])[1] != "wDist"){
+    stop("x must be one or more wDist objects")
+  }
+  
+  n = 0
+  for(i in seq_len(length(a))){
+    if(class(a[[i]])[1] == "wDist"){
+      n = n + 1
+    } 
+  }
+  
+  s = matrix(ncol = 16)
+  k = 1
+  for(i in seq_len(n)){
+    nn = length(a[[i]])
+    for(j in seq_len(length(a[[i]]))){
+      if(k == 1){
+        s = matrix(a[[i]][[j]]$stats, nrow = 1)
+        nms = names(a[[i]][j])
+      } else{
+        s = rbind(s, a[[i]][[j]]$stats)
+        nms = append(nms, names(a[[i]][j]))
+      }
+      k = k + 1
     }
   }
   
-  names(db) = c("sampleID", "wMeanDist", "w05Dist", "w10Dist", "w25Dist",
-                "w50Dist", "w75Dist", "w90Dist", "w95Dist", "wMeanBear",
-                "w05Bear", "w10Bear", "w25Bear", "w50Bear", "w75Bear",
-                "w90Bear", "w95Bear")
-  names(d.dens) = names(b.dens) = n
+  s = as.data.frame(s)
+  names(s) = names(a[[1]][[1]]$stats)
+  s = cbind("Sample_ID" = nms, s)
   
-  wd = list(stats = db, d.dens = d.dens, b.dens = b.dens)
-  class(wd) = "wDist"
-  return(wd)
+  return(s)
 }

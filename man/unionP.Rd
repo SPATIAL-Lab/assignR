@@ -20,6 +20,10 @@ RasterStack or RasterBrick of probability density maps, e.g., as produced by \co
 }
 }
 
+\value{
+RasterLayer.
+}
+
 \examples{
 # load North America boundary and isoscape
 data("naMap")
