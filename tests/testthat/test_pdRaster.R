@@ -5,6 +5,9 @@ suppressWarnings({
   d2H = -80
   d2H.sd = 2
   un = data.frame(id, d2H, d2H.sd, d2H_cal = "UT_H_1")
+  site = d$data[1,]
+  pdr = pdRaster(r, unknown = un, mask = naMap, genplot = FALSE)
+  wd = wDist(pdr, site)
   
   r2 = r
   r2[[1]][[1]] = r2[[1]][[1]] + rnorm(ncell(r2[[1]][[1]]), 0, 10)
@@ -31,6 +34,10 @@ test_that("pdRaster can correctly calculate posterior probabilities of origin
             expect_is(suppressWarnings(pdRaster(rmulti, list(un2, un2), mask = naMap, 
                                genplot = FALSE)), "RasterLayer")
             expect_is(pdRaster(r3, un3), "RasterLayer")
+            expect_is(wd, "wDist")
+            expect_is(c(wd), "data.frame")
+            expect_error(plot(wd, bin = 11))
+            expect_silent(plot(wd))
             expect_error(pdRaster(r$lm.model, unknown = un))
             expect_error(pdRaster(r$isoscape.rescale$mean, unknown = un))
             expect_error(pdRaster(stack(r$isoscape.rescale,r$isoscape.rescale), un))

@@ -1,7 +1,9 @@
 # assignR news
 
 ## assignR 2.1.1.9000
+* Add wDist function and c and plot methods for summarizing weighted distance and bearing distributions using sample collection locations and posterior probability maps
 * Bug fixes
+* Documentation edits
 
 ## assignR 2.1.1
 * Bug fixes

@@ -14,6 +14,7 @@ export(unionP)
 export(wDist)
 S3method(plot,QA)
 S3method(plot,isoStack)
+S3method(plot,wDist)
 S3method(c,wDist)
 import(rgdal)
 import(maptools)
@@ -21,10 +22,11 @@ importFrom(sp, proj4string, spTransform, spplot, plot, identicalCRS, merge)
 importFrom(raster, crs, "crs<-", crop, plot, values, getValues, setValues, minValue, 
             maxValue, extract, stack, ncell, nlayers, writeRaster, cellStats, 
            overlay, projectRaster, compareRaster, res, extent, compareCRS,
-           raster, resample, mask, intersect)
-importFrom(grDevices, dev.off, pdf, png)
-importFrom(graphics, abline, boxplot, legend, lines, par, text, title)
-importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var)
+           raster, resample, mask, intersect, rasterToPoints)
+importFrom(grDevices, dev.off, pdf, png, col2rgb, rgb)
+importFrom(graphics, abline, boxplot, legend, lines, par, text, title, polygon)
+importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var,
+           density, weighted.mean)
 importFrom(utils, data, download.file, setTxtProgressBar, txtProgressBar, 
            tail, unzip)
 importFrom(mvnfast, dmvn)

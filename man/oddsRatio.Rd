@@ -19,7 +19,7 @@ oddsRatio(pdR, inputP)
 RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{pdRaster}.
 }
   \item{inputP}{
-SpatialPoints or SpatialPolygons (or *DataFrame equivalent) of length 2
+SpatialPoints* or SpatialPolygons* object of length 2
 }
 }
 

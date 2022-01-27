@@ -109,7 +109,7 @@ c.wDist = function(...){
   a = list(...)
   
   if(class(a[[1]])[1] != "wDist"){
-    stop("x must be one or more wDist objects")
+    stop("... must be one or more wDist objects")
   }
   
   n = 0
@@ -142,4 +142,130 @@ c.wDist = function(...){
   s = cbind("Sample_ID" = nms, s)
   
   return(s)
+}
+
+plot.wDist = function(x, ..., bin = 20, pty = "both"){
+  
+  if(class(x) != "wDist"){
+    stop("x must be one or more wDist objects")
+  }
+  
+  n = length(x)
+  if(n == 0){
+    stop("x is empty")
+  }
+  if(n > 5){
+    message("x length >5, only the first 5 samples will be plotted")
+    n = 5
+  }
+  
+  if(!is.numeric(bin)){
+    stop("bin must be numeric")
+  }
+  if(length(bin) > 1){
+    stop("bin must be length 1")
+  }
+  if(bin <=0 | bin > 90){
+    stop("bin must be a value between 0 and 90")
+  }
+  if(360 %% bin != 0){
+    stop("bin should be a factor of 360")
+  }
+  
+  if(!(pty %in% c("both", "dist", "bear"))){
+    stop("pty not valid for plot.xist")
+  }
+  
+  if(pty %in% c("both", "dist")){
+    #Distance
+    d.xmax = d.ymax = 0
+    d.dens = list()
+    for(i in seq_len(n)){
+      d.dens[[i]] = x[[i]]$d.dens
+      d.xmax = max(d.xmax, max(d.dens[[i]]$x))
+      d.ymax = max(d.ymax, max(d.dens[[i]]$y))
+    }
+    
+    plot(d.dens[[1]], xlim = c(0, d.xmax), ylim = c(0, d.ymax),
+         main = "", ylab = "Probability density", xlab = "Distance (m)")
+    for(i in seq_len(n-1)){
+      lines(d.dens[[i+1]], col = i+1, )
+    }
+    legend("topright", legend = names(x), lty = 1, col = seq_len(n), 
+           inset = 0.01)    
+  }
+
+  if(pty %in% c("both", "bear")){
+    #Bearing
+    b.dens = list()
+    for(i in seq_len(n)){
+      b.dens[[i]] = x[[i]]$b.dens
+    }
+    
+    arc = function(a1, a2, b){
+      a = seq(a1, a2, by = 0.5)
+      r = 2 * pi * a / 360
+      x = sin(r) * b
+      y = cos(r) * b
+      return(cbind(x, y))
+    }
+    
+    wedge = function(a1, a2, b){
+      xy = arc(a1, a2, b)
+      xy = rbind(c(0,0), xy, c(0,0))
+      return(xy)
+    }
+    
+    bins = seq(-180, 179.9, by = bin)
+    vals = numeric(length(bins))
+    
+    p = par(no.readonly = TRUE)
+    on.exit(par(p))
+    if(n > 3){
+      mfr = 2
+      if(n == 5){
+        mfc = 3
+      }else{
+        mfc = 2
+      }
+    } else{
+      mfr = 1
+      mfc = n
+    }
+    par(mfrow = c(mfr, mfc), mar = c(1,1,3,1))
+    
+    for(i in seq_len(n)){
+      b = b.dens[[i]]$x
+      for(j in seq_along(b)){
+        if(b[j] < -180){
+          b[j] = b[j] + 360
+        } else if(b[j] >= 180){
+          b[j] = b[j] - 360
+        }
+      }
+      y = b.dens[[i]]$y
+      for(j in seq_along(bins)){
+        vals[j] = sum(y[b >= bins[j] & b < bins[j] + bin])
+      }
+      
+      b.max = max(vals)
+      xy = arc(-180, 180, b.max)
+      plot(xy, type = "l", col = "dark grey", axes = FALSE,
+           xlab = "", ylab = "", asp = 1, main = names(x)[i])
+      text(xy[600,1], xy[600,2], signif(b.max, 2), col = "dark grey", pos = 1,
+           offset = 2, adj = c(0,1))
+      lines(arc(-180, 180, b.max/2), col = "dark grey")
+      for(j in c(-180, -90, 0, 90)){
+        lines(wedge(j, j, b.max * 1.05), col = "dark grey")
+      }
+      for(j in seq_along(bins)){
+        xy = wedge(bins[j], bins[j] + bin, vals[j])
+        c = col2rgb(i)
+        polygon(xy, col = rgb(c[1], c[2], c[3],
+                              alpha = 200, maxColorValue = 255))
+      }
+    }
+  }
+
+  return()
 }

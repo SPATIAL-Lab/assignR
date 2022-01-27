@@ -28,7 +28,7 @@ SpatialPoints* object containing the collection locations for the n samples repr
 
 Distances and bearings are calculated on the WGS84 geoid using functions from the \pkg{geosphere} package.
 
-Bearing values correspond to the intial bearing from source to collection location, and are reported on a scale of -180 to +180 degrees. The statistical metrics are rectified so that values for distributions spanning due south are reported correctly. Both weighted bearing and distance distributions are often multimodal, and it is recommended to review the distribution densities to assess the representativeness of the statitics (e.g., using \code{\link{plot.wDist}}). 
+Bearing values correspond to the initial bearing from source to collection location, and are reported on a scale of -180 to +180 degrees. The statistical metrics are rectified so that values for distributions spanning due south are reported correctly. Both weighted bearing and distance distributions are often multimodal, and it is recommended to review the distribution densities to assess the representativeness of the statistics (e.g., using \code{\link{plot.wDist}}). 
 }
 
 \value{
@@ -36,10 +36,10 @@ Returns an object of class \dQuote{wDist}, a list of length n.
   \item{stats}{
 named number. Statistics for the distance (dist, meters) and bearing (bear, degrees) between source and collection locations, including the weighted mean (wMean) and quantile (wXX) values.}
   \item{d.density}{
-density. Weighted kernal density for the distance between source and collection locations (meters). See \code{\link{stats::density()}}. 
+density. Weighted kernel density for the distance between source and collection locations (meters). See \code{\link[stats]{density}}. 
   }
   \item{s.density}{
-density. Weighted kernal density for the bearing between source and collection locations (degrees). See \code{\link{stats::density()}}.
+density. Weighted kernel density for the bearing between source and collection locations (degrees). See \code{\link[stats]{density}}.
   }
 }
 
@@ -65,12 +65,12 @@ un = data.frame(id,d2H)
 pp = pdRaster(r, unknown = un, mask = naMap)
 
 # random collection locations
-sites = d$data[sample(seq(length(d$data)), 5),]
+sites = d$data[sample(seq(length(d$data)), 4),]
 
 # generate a wDist object
 wd = wDist(pp, sites)
 
-# combine stats and print
-c(wd)
+# structure of the wDist object
+str(wd[[1]])
 }
 

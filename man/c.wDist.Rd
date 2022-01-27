@@ -50,7 +50,7 @@ un = data.frame(id,d2H)
 pp = pdRaster(r, unknown = un, mask = naMap)
 
 # random collection locations
-sites = d$data[sample(seq(length(d$data)), 5),]
+sites = d$data[sample(seq(length(d$data)), 4),]
 
 # generate a wDist object
 wd = wDist(pp, sites)
