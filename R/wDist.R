@@ -32,6 +32,10 @@ wDist = function(pdR, sites){
   for(i in seq_along(sites)){
     pdSP = rasterToPoints(pdR[[i]], spatial = TRUE)
     
+    #for safety, using projected data works on most platforms
+    pdSP = spTransform(pdSP, "+proj=longlat +ellps=WGS84")
+    sites = spTransform(sites, "+proj=longlat +ellps=WGS84")
+    
     d = distGeo(pdSP, sites[i,])
     b = bearing(pdSP, sites[i,])
     w = pdSP@data[,1]
@@ -188,6 +192,9 @@ plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
     stop("pty not valid for plot.xist")
   }
   
+  opar = par(no.readonly = TRUE)
+  on.exit(par(opar))
+  
   if(pty %in% c("both", "dist")){
     #Distance
     d.xmax = d.ymax = 0
@@ -231,8 +238,6 @@ plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
     bins = seq(-180, 179.9, by = bin)
     vals = numeric(length(bins))
     
-    p = par(no.readonly = TRUE)
-    on.exit(par(p))
     if(n > 3){
       mfr = 2
       if(n == 5){

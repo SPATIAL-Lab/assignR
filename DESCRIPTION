@@ -1,7 +1,7 @@
 Package: assignR
 Type: Package
 Title: Infer Geographic Origin from Isotopic Data
-Version: 2.1.1.9000
+Version: 2.1.1.9001
 Author: Chao Ma, Gabe Bowen
 Maintainer: Gabe Bowen <gabe.bowen@utah.edu>
 Description: Routines for re-scaling isotope maps using known-origin tissue isotope data, assigning origin of unknown samples, and summarizing and assessing assignment results. Methods are adapted from Wunder (2010, in ISBN:9789048133536) and Vander Zanden, H. B. et al. (2014) <doi:10.1111/2041-210X.12229> as described in Ma, C. et al. (2020) <doi:10.1111/2041-210X.13426>.

@@ -1,7 +1,7 @@
 ---
 title: "assignR Examples"
 author: "Gabe Bowen, Chao Ma"
-date: "May 20, 2021"
+date: "January 26, 2022"
 output: html_document
 ---
 
@@ -155,7 +155,7 @@ d2h_Dp = calRaster(Dp_d, d2h_lrNA)
 ```
 
 *****
-Our second isoscape represents ^87^Sr/^86^Sr values across our study region, the state of Michigan. It was published by [Bataille and Bowen, 2012](https://doi.org/10.1016/j.chemgeo.2012.01.028), obtained from [waterisotopes.org](http://wateriso.utah.edu/waterisotopes/), cropped and aggregated to coarser resolution, and a rough estimate of uncertainty added.
+Our second isoscape represents ^87^Sr/^86^Sr values across our study region, the state of Michigan. It was published by [Bataille and Bowen, 2012](https://doi.org/10.1016/j.chemgeo.2012.01.028), obtained from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), cropped and aggregated to coarser resolution, and a rough estimate of uncertainty added.
 
 In this case, we do not have any known-origin tissue samples to work with. However, our isoscape was developed to approximate the bioavailable Sr pool, and Sr isotopes are not strongly fractionated in food webs. Thus, our analysis will assume that the isoscape provides a good representation of the expected Sr values for our study species without calibration.
 
@@ -193,7 +193,7 @@ Dp_pd_Honly = pdRaster(Dp_multi[[1]], Dp_unk[,-3])
 We see pretty clear distinctions between the two samples, driven by a strong SW-NE gradient in the tissue isoscape H values across the state.
 
 *****
-What if we add the Sr information to the analysis? The syntax for running `pdRaster` is the same, but now we provide our isoStack object in place of the single isoscape. The function will use the spatial covariance of the isoscape values to approximate the error covariance for the two (or more) markers and return poterior probabilities based on the multivariate normal probability density function evaluated at each grid cell.
+What if we add the Sr information to the analysis? The syntax for running `pdRaster` is the same, but now we provide our isoStack object in place of the single isoscape. The function will use the spatial covariance of the isoscape values to approximate the error covariance for the two (or more) markers and return posterior probabilities based on the multivariate normal probability density function evaluated at each grid cell.
 
 ```{r Dp_multi, fig.width=5, fig.asp=0.8, out.width='45%'}
 Dp_pd_multi = pdRaster(Dp_multi, Dp_unk)
@@ -241,6 +241,32 @@ oddsRatio(Ll_prob, pp12)
 ```
 
 The odds of the first point being the location of origin are pretty high for each sample, and much higher than for the second point.
+
+## Distance and Direction of Movement
+
+A common goal in movement research is to characterize the distance or direction of movement for individuals. The `wDist` tool and it's helper methods are designed to leverage the information in the posterior probability surfaces for this purpose. 
+
+The analyses conducted in **assignR** cannot determine a single unique location of origin for a given sample, but the do give the probability that each location on the map is the location of origin. If we know the collection location for a sample, we can calculate the distance and direction between each possible location of origin and the collection site, and weighting these by their posterior probability generate a distribution (and statistics for that distribution) describing the distance and direction of travel.
+
+Let's do a weighted distance analysis for our first two unknown origin loggerhead shrike samples. Since these are pretend samples, we'll pretend that the two point locations we defined above for the `oddsRatio` analysis are the locations at which these samples were collected. Here are those locations plotted with the corresponding posterior probability maps. Then we'll use the functions `c` and `plot` to view the summary statistics and distributions returned by `wDist`.
+
+```{r wDist1, fig.width=5, fig.asp=0.8, out.width='45%'}
+# View the data
+plot(Ll_prob[[1]], main = names(Ll_prob)[1])
+points(pp12[1])
+plot(Ll_prob[[2]], main = names(Ll_prob)[2])
+points(pp12[2])
+```
+
+Now let's run the analysis and use the functions `c` and `plot` to view the summary statistics and distributions returned by `wDist`.
+
+```{r wDist2, fig.width=5, fig.asp=0.8, out.width='45%'}
+wd = wDist(Ll_prob[[1:2]], pp12)
+c(wd)[c(1,2,4,6,8,10,12,14,16)] #only showing select columns for formatting!
+plot(wd)
+```
+
+Comparing these statistics and plots with the data shows how the `wDist` metrics nicely summarize the direction and distance of movement. Both individuals almost certainly moved south from their location of origin to the collection location. Individual a's migration may have been a little bit longer than b's, and in a more southwesterly direction, patterns that are dominated more by the difference in collection locations than the probability surfaces for location of origin. Also notice the multi-modal distance distribution for individual b...these can be common in `wDist` summaries so it's a good ideal to look at the distributions themselves before choosing and interpreting summary statistics.
 
 ## Assignment
 
