@@ -98,9 +98,8 @@ wDist = function(pdR, sites){
     wd[[i]] = list(stats = s, d.dens = d.dens, b.dens = b.dens)
   }
   
-  names(wd) = names(pdR)
-  
   class(wd) = "wDist"
+  names(wd) = names(pdR)
   return(wd)
 }
 
@@ -144,19 +143,32 @@ c.wDist = function(...){
   return(s)
 }
 
-plot.wDist = function(x, ..., bin = 20, pty = "both"){
+plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
   
   if(class(x) != "wDist"){
-    stop("x must be one or more wDist objects")
+    stop("x must be a wDist object")
   }
   
   n = length(x)
   if(n == 0){
     stop("x is empty")
   }
-  if(n > 5){
-    message("x length >5, only the first 5 samples will be plotted")
-    n = 5
+  
+  if(any(round(index) != index)){
+    stop("index values must be integers")
+  }
+  if(length(index) > 5){
+    message("more than 5 values in index, only the first 5 will be plotted")
+    index = index[1:5]
+  }
+  if(length(index) == 5){
+    if(all(index == c(1:5)) & n < 5){
+      index = c(1:n)
+    }
+  }
+  if(any(index > n)){
+    message("index values exceeding length of x will not be plotted")
+    index = index[index <= n]
   }
   
   if(!is.numeric(bin)){
@@ -180,16 +192,16 @@ plot.wDist = function(x, ..., bin = 20, pty = "both"){
     #Distance
     d.xmax = d.ymax = 0
     d.dens = list()
-    for(i in seq_len(n)){
+    for(i in index){
       d.dens[[i]] = x[[i]]$d.dens
       d.xmax = max(d.xmax, max(d.dens[[i]]$x))
       d.ymax = max(d.ymax, max(d.dens[[i]]$y))
     }
     
-    plot(d.dens[[1]], xlim = c(0, d.xmax), ylim = c(0, d.ymax),
+    plot(d.dens[[index[1]]], xlim = c(0, d.xmax), ylim = c(0, d.ymax),
          main = "", ylab = "Probability density", xlab = "Distance (m)")
-    for(i in seq_len(n-1)){
-      lines(d.dens[[i+1]], col = i+1, )
+    for(i in index[-1]){
+      lines(d.dens[[i]], col = i+1, )
     }
     legend("topright", legend = names(x), lty = 1, col = seq_len(n), 
            inset = 0.01)    
@@ -198,7 +210,7 @@ plot.wDist = function(x, ..., bin = 20, pty = "both"){
   if(pty %in% c("both", "bear")){
     #Bearing
     b.dens = list()
-    for(i in seq_len(n)){
+    for(i in index){
       b.dens[[i]] = x[[i]]$b.dens
     }
     
@@ -234,7 +246,7 @@ plot.wDist = function(x, ..., bin = 20, pty = "both"){
     }
     par(mfrow = c(mfr, mfc), mar = c(1,1,3,1))
     
-    for(i in seq_len(n)){
+    for(i in index){
       b = b.dens[[i]]$x
       for(j in seq_along(b)){
         if(b[j] < -180){
@@ -252,8 +264,8 @@ plot.wDist = function(x, ..., bin = 20, pty = "both"){
       xy = arc(-180, 180, b.max)
       plot(xy, type = "l", col = "dark grey", axes = FALSE,
            xlab = "", ylab = "", asp = 1, main = names(x)[i])
-      text(xy[600,1], xy[600,2], signif(b.max, 2), col = "dark grey", pos = 1,
-           offset = 2, adj = c(0,1))
+      text(0.71 * b.max, 0.71 * b.max, signif(b.max, 2), 
+           col = "dark grey", pos = 4, offset = 2)
       lines(arc(-180, 180, b.max/2), col = "dark grey")
       for(j in c(-180, -90, 0, 90)){
         lines(wedge(j, j, b.max * 1.05), col = "dark grey")

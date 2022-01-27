@@ -11,7 +11,7 @@ Plot the output from \code{\link{wDist}}, including weighted kernel density dist
 }
 
 \usage{
-\method{plot}{wDist}(x, ..., bin = 20, pty = "both")
+\method{plot}{wDist}(x, ..., bin = 20, pty = "both", index = c(1:5))
 }
 
 \arguments{
@@ -26,6 +26,9 @@ Plot the output from \code{\link{wDist}}, including weighted kernel density dist
   }
   \item{pty}{
     character. Type of plot to produce. Must be one of \dQuote{dist}, \dQuote{bear}, or \dQuote{both}.
+  }
+  \item{index}{
+    numeric. Which items in x to plot? Numeric vector of up to 5 integers. Values in excess of 5 or exceeding the length of x will be ignored.
   }
 }
 
@@ -67,6 +70,6 @@ wd = wDist(pp, sites)
 # plot distributions
 plot(wd)
 
-# plot only bearing distriubtions with a finer bin size
-plot(wd, bin = 5, pty = "bear")
+# plot bearing distriubtion for sample B with a finer bin size
+plot(wd, bin = 5, pty = "bear", index = 2)
 }

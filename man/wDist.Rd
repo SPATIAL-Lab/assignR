@@ -32,7 +32,7 @@ Bearing values correspond to the initial bearing from source to collection locat
 }
 
 \value{
-Returns an object of class \dQuote{wDist}, a list of length n.
+Returns an object of class \dQuote{wDist}, a list of length n. Each item contains three named objects:
   \item{stats}{
 named number. Statistics for the distance (dist, meters) and bearing (bear, degrees) between source and collection locations, including the weighted mean (wMean) and quantile (wXX) values.}
   \item{d.density}{
