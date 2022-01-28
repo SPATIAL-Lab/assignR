@@ -174,6 +174,7 @@ plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
     message("index values exceeding length of x will not be plotted")
     index = index[index <= n]
   }
+  np = length(index)
   
   if(!is.numeric(bin)){
     stop("bin must be numeric")
@@ -206,12 +207,13 @@ plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
     }
     
     plot(d.dens[[index[1]]], xlim = c(0, d.xmax), ylim = c(0, d.ymax),
-         main = "", ylab = "Probability density", xlab = "Distance (m)")
+         main = "", ylab = "Probability density", xlab = "Distance (m)",
+         col = index[1])
     for(i in index[-1]){
-      lines(d.dens[[i]], col = i+1, )
+      lines(d.dens[[i]], col = i)
     }
-    legend("topright", legend = names(x), lty = 1, col = seq_len(n), 
-           inset = 0.01)    
+    legend("topright", legend = unique(names(x)[index]), lty = 1, 
+           col = unique(index), inset = 0.01)    
   }
 
   if(pty %in% c("both", "bear")){
@@ -238,18 +240,18 @@ plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
     bins = seq(-180, 179.9, by = bin)
     vals = numeric(length(bins))
     
-    if(n > 3){
+    if(np > 3){
       mfr = 2
-      if(n == 5){
+      if(np == 5){
         mfc = 3
       }else{
         mfc = 2
       }
     } else{
       mfr = 1
-      mfc = n
+      mfc = np
     }
-    par(mfrow = c(mfr, mfc), mar = c(1,1,3,1))
+    par(mfrow = c(mfr, mfc), mar = c(1,1,2,1))
     
     for(i in index){
       b = b.dens[[i]]$x
@@ -267,22 +269,24 @@ plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
       
       b.max = max(vals)
       xy = arc(-180, 180, b.max)
-      plot(xy, type = "l", col = "dark grey", axes = FALSE,
+      plot(xy, type = "l", col = "dark grey", axes = FALSE, 
+           ylim = c(-b.max, 1.05 * b.max),
            xlab = "", ylab = "", asp = 1, main = names(x)[i])
-      text(0.71 * b.max, 0.71 * b.max, signif(b.max, 2), 
-           col = "dark grey", pos = 4, offset = 2)
+      text(0, b.max * 1.05, paste0("max=", signif(b.max, 2)), 
+           col = "dark grey", pos = 4, offset = 1)
       lines(arc(-180, 180, b.max/2), col = "dark grey")
       for(j in c(-180, -90, 0, 90)){
         lines(wedge(j, j, b.max * 1.05), col = "dark grey")
       }
       for(j in seq_along(bins)){
         xy = wedge(bins[j], bins[j] + bin, vals[j])
-        c = col2rgb(i)
+        c = col2rgb(index[i])
         polygon(xy, col = rgb(c[1], c[2], c[3],
                               alpha = 200, maxColorValue = 255))
       }
     }
   }
 
+  par(opar)
   return()
 }
