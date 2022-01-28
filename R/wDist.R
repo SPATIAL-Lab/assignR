@@ -1,4 +1,4 @@
-wDist = function(pdR, sites){
+wDist = function(pdR, sites, maxpts = 1e5){
   
   if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
@@ -22,6 +22,13 @@ wDist = function(pdR, sites){
     stop("sites should be a SpatialPoints object")
   }
   
+  if(!is.numeric(maxpts)){
+    stop("maxpts must be numeric")
+  }
+  if(!(round(maxpts) == maxpts) | maxpts < 1){
+    stop("maxpts must be a positive integer")
+  }
+  
   #make space
   wd = list() 
   
@@ -31,8 +38,13 @@ wDist = function(pdR, sites){
   
   for(i in seq_along(sites)){
     pdSP = rasterToPoints(pdR[[i]], spatial = TRUE)
+    if(length(pdSP) > maxpts){
+      index = sample(seq(length(pdSP)), maxpts)
+      pdSP = pdSP[index,]
+      pdSP@data[,1] = pdSP@data[,1] / sum(pdSP@data[,1])
+    }
     
-    #for safety, using projected data works on most platforms
+    #for safety; using projected data works on most platforms
     pdSP = spTransform(pdSP, "+proj=longlat +ellps=WGS84")
     sites = spTransform(sites, "+proj=longlat +ellps=WGS84")
     
@@ -280,7 +292,7 @@ plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
       }
       for(j in seq_along(bins)){
         xy = wedge(bins[j], bins[j] + bin, vals[j])
-        c = col2rgb(index[i])
+        c = col2rgb(i)
         polygon(xy, col = rgb(c[1], c[2], c[3],
                               alpha = 200, maxColorValue = 255))
       }

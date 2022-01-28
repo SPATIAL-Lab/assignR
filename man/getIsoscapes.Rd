@@ -29,10 +29,10 @@ Accepted \code{isoType} values are:
 \item{"GlobalPrecipGS"}{Global growing-season precipitation H and O isotope values}
 \item{"GlobalPrecipMA"}{Global mean-annual precipitation H and O isotope values}
 \item{"GlobalPrecipMO"}{Global monthly precipitation H and O isotope values}
-\item{"GlobalPrecipMA"}{Global mean-annual and monthly precipitation H and O isotope values}
+\item{"GlobalPrecipALL"}{Global mean-annual and monthly precipitation H and O isotope values}
 \item{"USPrecipMA"}{High-resolution contiguous USA mean-annual precipitation H and O isotope values}
 \item{"USPrecipMO"}{High-resolution contiguous USA monthly precipitation H and O isotope values}
-\item{"USPrecipMA"}{High-resolution contiguous USA mean-annual and monthly precipitation H and O isotope values}
+\item{"USPrecipALL"}{High-resolution contiguous USA mean-annual and monthly precipitation H and O isotope values}
 \item{"USSurf"}{High-resolution contiguous USA surface water H and O isotope values}
 \item{"USTap"}{High-resolution contiguous USA surface water H and O isotope values}
 \item{"USSr"}{High-resolution contiguous USA Sr isotope ratios}
