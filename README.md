@@ -52,6 +52,12 @@ library(assignR)
 
 *oddsRatio* - Calculate ratio of odds for two locations or areas (points or polygons)
 
+*wDist* - Summarize distance and direction of movement
+
+*c.wDist* - Combine wDist statistics for multiple samples
+
+*plot.wDist* - Plot results from wDist
+
 *QA* - Quality analysis of geographic assignment
 
 *plot.QA* - Plot results of one or more quality analyses from QA function

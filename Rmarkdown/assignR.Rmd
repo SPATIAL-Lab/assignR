@@ -1,8 +1,12 @@
 ---
 title: "assignR Examples"
 author: "Gabe Bowen, Chao Ma"
-date: "January 26, 2022"
-output: html_document
+params:
+  date:
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -38,7 +42,7 @@ plot(naMap)
 ```
 
 *****
-Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution global growing season isoscapes are included in the package as `d2h_world.rda` and `d18o_world.rda`. 
+Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution isoscapes of several different types can be downloaded using the `getIsoscapes` function (refer to the help page for details). 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
 data("d2h_lrNA")
@@ -99,7 +103,7 @@ Ll_d$sources$H_cal
 For a real application you would want to explore the database to find measurements that are appropriate to your study system (same or similar taxon, geographic region, measurement approach, etc.) or collect and import known-origin data that are specific to your system.
 
 *****
-# Single-isoscape Calibration and Probability of Origin Estimates 
+# Single-isoscape Analysis 
 
 We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. `calRaster` fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a calibrated, sample-type specific isoscape.
 
@@ -242,7 +246,7 @@ oddsRatio(Ll_prob, pp12)
 
 The odds of the first point being the location of origin are pretty high for each sample, and much higher than for the second point.
 
-## Distance and Direction of Movement
+## Distance and Direction
 
 A common goal in movement research is to characterize the distance or direction of movement for individuals. The `wDist` tool and it's helper methods are designed to leverage the information in the posterior probability surfaces for this purpose. 
 
@@ -314,7 +318,7 @@ qtlRaster(Ll_up, threshold = 0.1)
 ```
 
 *****
-# Quality analysis and method comparison
+# Quality Analysis
 
 How good are the geographic assignments? What area or probability threshold should be used? Is it better to use isoscape *A* or *B* for my analysis? These questions can be answered through split-sample validation using `QA`.
 
