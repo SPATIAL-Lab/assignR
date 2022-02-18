@@ -1,8 +1,7 @@
 ---
-title: "assignR Examples"
+title: "assignR Examples - Dev Release"
 author: "Gabe Bowen, Chao Ma"
-params:
-  date:
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
 output: 
   html_document:
     toc: true
@@ -320,7 +319,9 @@ qtlRaster(Ll_up, threshold = 0.1)
 *****
 # Quality Analysis
 
-How good are the geographic assignments? What area or probability threshold should be used? Is it better to use isoscape *A* or *B* for my analysis? These questions can be answered through split-sample validation using `QA`.
+How good are the geographic assignments? What area or probability threshold should be used? Is it better to use isoscape *A* or *B* for my analysis? The `QA` function is designed to help answer these questions. 
+
+`QA` uses known-origin data to test the quality of isotope-based assignments and returns a set of metrics from this test. The default method conducts a split-sample test, iteratively splitting the dataset and using part to calibrate the isoscape(s) and the rest to evaluate assignment quality. The option `recal = FALSE` allows `QA` to be run without the `calRaster` calibration step. This provides a less complete assessment of methodological error but allows evaluation of assignments to tissue isoscapes made outside of the `QA` function, for example those calibrated using a different known-origin dataset or made through spatial modeling of tissue data, directly. 
 
 We will run quality assessment on the Loggerhead shrike known-origin dataset and precipitation isoscape. These analyses take some time to run, depending on the number of stations and iterations used. 
 

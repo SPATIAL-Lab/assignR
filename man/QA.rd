@@ -7,12 +7,13 @@ Quality assessment of geographic assignments
 }
 
 \description{
-How well does a given isoscape and known origin data set constrain the geographic origin of samples? Uses iterative re-sampling of the known origin data set to evaluate sample assignments and reports a suite of quality metrics.
+How well does a given isoscape and/or known origin data set constrain the geographic origin of samples? Uses iterative re-sampling of known origin data to evaluate sample assignments and reports a suite of quality metrics.
 }
 
 \usage{
 QA(known, isoscape, bySite = TRUE, valiStation = 1, valiTime = 50, 
-  by = 2, prior = NULL, mask = NULL, setSeed = TRUE, name = NULL)
+  recal = TRUE, by = 2, prior = NULL, mask = NULL, setSeed = TRUE, 
+  name = NULL)
 }
 
 \arguments{
@@ -24,8 +25,9 @@ subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue
   \item{bySite}{logical. Resample known by site (TRUE) or by sample (FALSE)?}
   \item{valiStation}{numeric. How many sites or samples from known are withheld for validation? Must be two or more smaller than the length of \code{known}.
 }
-  \item{valiTime}{numeric. How many times do you want to randomly draw validation samples and run the validation? Must be an integer equal to or greater than one. 
+  \item{valiTime}{numeric. How many times do you want to randomly draw validation samples and run the validation? Must be an integer greater than one.
 }
+  \item{recal}{logical. Recalibrate the isoscape(s) using the known-origin data? If FALSE, \code{isoscape} should be a calibrated product appropriate to the samples, and a single iteration is run for each sample in \code{known}; parameters \code{bySite}, \code{valiStation}, and \code{valiTime} are ignored.}
   \item{by}{integer. Threshold increment to use in evaluating assignment performance. Must be between 1 and 25.}
   \item{prior}{raster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{isoscape}.
 }

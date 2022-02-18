@@ -1,7 +1,6 @@
-QA = function(known, isoscape, bySite = TRUE, 
-              valiStation = 1, valiTime = 50, by = 2, 
-              prior = NULL, mask = NULL, setSeed = TRUE, 
-              name = NULL){
+QA = function(known, isoscape, bySite = TRUE, valiStation = 1, 
+              valiTime = 50, recal = TRUE, by = 2, prior = NULL, 
+              mask = NULL, setSeed = TRUE, name = NULL){
 
   #space to handle messages and warnings
   mstack = wstack = character(0)
@@ -123,6 +122,21 @@ QA = function(known, isoscape, bySite = TRUE,
     stop("invalid object provided for known")
   }
 
+  #check recal
+  if(class(recal) != "logical"){
+    stop("recal must be logical")
+  }
+  if(!recal){
+    valiTime = nrow(known)
+    valiStation = 1
+    bySite = FALSE
+  }
+  
+  #check valiTime
+  if(valiTime < 2){
+    stop("valiTime must be an integer greater than 1")
+  }
+
   #check valiStation
   if(bySite){
     if(valiStation > (length(unique(known$Site_ID)) - 3)){
@@ -134,11 +148,6 @@ QA = function(known, isoscape, bySite = TRUE,
       stop("for bySite = FALSE valiStation must be 3 or more smaller 
         than the number of samples in known")
     }
-  }
-  
-  #check valiTime
-  if(valiTime < 2){
-    stop("valiTime must be an integer greater than 1")
   }
   
   #check by
@@ -157,7 +166,6 @@ QA = function(known, isoscape, bySite = TRUE,
   if(!is.logical(setSeed)){
     stop("setSeed must be logical")
   }
-  
   if(setSeed){
     set.seed(100)
   }
@@ -169,11 +177,15 @@ QA = function(known, isoscape, bySite = TRUE,
     rowLength = nrow(known)
     ids = seq_len(rowLength)
   }
-  val_stations = sort(sample(ids, valiStation, replace = FALSE))
-  for (i in seq_len(valiTime)[-1]){
-    val_stations = rbind(val_stations, 
-                          sort(sample(ids, valiStation, 
-                                      replace = FALSE)))
+  if(recal){
+    val_stations = sort(sample(ids, valiStation, replace = FALSE))
+    for (i in seq_len(valiTime)[-1]){
+      val_stations = rbind(val_stations, 
+                           sort(sample(ids, valiStation, 
+                                       replace = FALSE)))
+    }
+  } else{
+    val_stations = matrix(ids, nrow = rowLength)
   }
 
   xx = seq(1, 101, by)
@@ -197,28 +209,32 @@ QA = function(known, isoscape, bySite = TRUE,
       m = known[-val_stations[i,],]
     }
     
-    if(ni > 1){
-      rescales = list()
-      for(j in 1:ni){
-        m_sub = m
-        m_sub@data = m_sub@data[,(j * 2 - 1):(j * 2)]
-        class(m_sub) = "QAData"
-        rescales[[j]] = withCallingHandlers(
+    if(recal){
+      if(ni > 1){
+        rescales = list()
+        for(j in 1:ni){
+          m_sub = m
+          m_sub@data = m_sub@data[,(j * 2 - 1):(j * 2)]
+          class(m_sub) = "QAData"
+          rescales[[j]] = withCallingHandlers(
+            message = addm,
+            warning = addw,
+            calRaster(m_sub, isoscape[[j]], mask, genplot = FALSE, 
+                      verboseLM = FALSE)[[1]]
+          )
+        }
+        rescale = isoStack(rescales)
+      } else{
+        class(m) = "QAData"
+        rescale = withCallingHandlers(
           message = addm,
           warning = addw,
-          calRaster(m_sub, isoscape[[j]], mask, genplot = FALSE, 
-                    verboseLM = FALSE)[[1]]
+          calRaster(m, isoscape, mask, genplot = FALSE, 
+                    verboseLM = FALSE)
         )
-      }
-      rescale = isoStack(rescales)
+      } 
     } else{
-      class(m) = "QAData"
-      rescale = withCallingHandlers(
-        message = addm,
-        warning = addw,
-        calRaster(m, isoscape, mask, genplot = FALSE, 
-                            verboseLM = FALSE)
-      )
+      rescale = isoscape
     }
 
     pd = withCallingHandlers(
