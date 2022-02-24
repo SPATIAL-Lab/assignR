@@ -15,6 +15,9 @@ oddsRatio = function(pdR, inputP){
     
     n = length(inputP)
     extrVals = extract(pdR, inputP)
+    if(any(is.na(extrVals))){
+      stop("one or more points have probability NA")
+    }
     result2 = data.frame(ratioToMax = extrVals/maxValue(pdR), ratioToMin = extrVals/minValue(pdR))
     if(n == 1){
       result = result2

@@ -70,7 +70,7 @@ Load H isotope data for North American Loggerhead Shrike from the package databa
 Ll_d = subOrigData(taxon = "Lanius ludovicianus", mask = naMap)
 ```
 
-By default, the `subOrigData` function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards [Magozzi et al., 2021](https://doi.org/10.1111/2041-210X.13556). The calibrations used are documented in the function's return object.
+By default, the `subOrigData` function transforms all data to a common reference scale (defined by the standard materials and assigned, calibrated values for those; by default VSMOW-SLAP) using data from co-analysis of different laboratory standards (see [Magozzi et al., 2021](https://doi.org/10.1111/2041-210X.13556)). The calibrations used are documented in the function's return object.
 
 ```{r birdChains}
 Ll_d$chains
@@ -215,7 +215,7 @@ plot(s1, col = c("red"), add = TRUE)
 plot(s2, col = c("blue"), add = TRUE)
 ```
 
-Get the odds ratio for the two regions. The result reports the odds ratio for the regions (first relative to second) for each of the 5 unknown samples plus the ratio of the areas of the regions. If the isotope values (& prior) were completely uninformative the odds ratios would equal the ratio of areas.
+Now we can get the odds ratio for the two regions. The result reports the odds ratio for the regions (first relative to second) for each of the 5 unknown samples plus the ratio of the areas of the regions. If the isotope values (& prior) were completely uninformative the odds ratios would equal the ratio of areas.
 
 ```{r oddsRatio1}
 s12 = rbind(s1, s2)
