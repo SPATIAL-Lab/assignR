@@ -1,6 +1,6 @@
 # assignR news
 
-## assignR 2.1.1.9002
+## assignR 2.2.0
 * Add wDist function and c and plot methods for summarizing weighted distance and bearing distributions using sample collection locations and posterior probability maps
 * QA option to run without iterative recalibration of isoscape
 * Bug fixes
