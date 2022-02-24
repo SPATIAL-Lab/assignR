@@ -1,0 +1,22 @@
+---
+title: "assignR Examples - Dev Release"
+author: "Gabe Bowen, Chao Ma"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+# Setup and Introduction
+
+This vignette demonstrates the latest features from the development version, which is installed via GitHub.
+
+```{r install, eval=FALSE}
+library(devtools)
+install_github("SPATIAL-Lab/assignR@*release")
+```

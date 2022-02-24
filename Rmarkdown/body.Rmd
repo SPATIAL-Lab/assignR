@@ -1,25 +1,3 @@
----
-title: "assignR Examples - Dev Release"
-author: "Gabe Bowen, Chao Ma"
-date: "`r format(Sys.Date(), '%B %d, %Y')`"
-output: 
-  html_document:
-    toc: true
-    toc_float: true
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-```
-
-# Setup and Introduction
-
-This vignette demonstrates the latest features from the development version, which is installed via GitHub.
-
-```{r install, eval=FALSE}
-library(devtools)
-install_github("SPATIAL-Lab/assignR@*release")
-```
 
 We will introduce the basic functionality of **assignR** using data bundled with the package. We'll review how to access data for known-origin biological samples and environmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate a quality analysis tool useful in study design, method comparison, and uncertainty analysis.
 
@@ -269,7 +247,7 @@ c(wd)[c(1,2,4,6,8,10,12,14,16)] #only showing select columns for formatting!
 plot(wd)
 ```
 
-Comparing these statistics and plots with the data shows how the `wDist` metrics nicely summarize the direction and distance of movement. Both individuals almost certainly moved south from their location of origin to the collection location. Individual a's migration may have been a little bit longer than b's, and in a more southwesterly direction, patterns that are dominated more by the difference in collection locations than the probability surfaces for location of origin. Also notice the multi-modal distance distribution for individual b...these can be common in `wDist` summaries so it's a good ideal to look at the distributions themselves before choosing and interpreting summary statistics.
+Comparing these statistics and plots with the data shows how the `wDist` metrics nicely summarize the direction and distance of movement. Both individuals almost certainly moved south from their location of origin to the collection location. Individual a's migration may have been a little bit shorter than b's, and in a more southwesterly direction, patterns that are dominated more by the difference in collection locations than the probability surfaces for location of origin. Also notice the multi-modal distance distribution for individual a...these can be common in `wDist` summaries so it's a good ideal to look at the distributions themselves before choosing and interpreting summary statistics.
 
 ## Assignment
 
