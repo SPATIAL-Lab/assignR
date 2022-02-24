@@ -10,7 +10,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
   ostds = stds$ostds
 
   #For data sent from subOrigData
-  if(class(samples) == "SOD"){
+  if(inherits(samples, "SOD")){
     class(samples) = "data.frame"
     #Identify values based on marker
     if(marker == "d2H"){
@@ -66,7 +66,7 @@ refTrans = function(samples, marker = "d2H", ref_scale = "VSMOW_H",
       return(trans_out)
     }
   #User-provided data
-  } else if(class(samples) == "data.frame"){
+  } else if(inherits(samples, "data.frame")){
     if(!(marker %in% c("d2H", "d18O"))){
       stop("marker must be d2H or d18O")
     }
@@ -256,7 +256,7 @@ std_vals = function(scale, sds){
 }
 
 cal_shift = function(vals, ssv1, ssv2, niter){
-  if(class(ssv1) != "ssv" | class(ssv2) != "ssv"){
+  if(!inherits(ssv1, "ssv") | !inherits(ssv2, "ssv")){
     stop("RM values must be provided as class ssv")
   }
   

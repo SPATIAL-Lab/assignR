@@ -19,11 +19,11 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   }
 
   #check isoscape and set ni number of isotopes
-  if(class(isoscape)[1] == "isoStack"){
+  if(inherits(isoscape, "isoStack")){
     ni = length(isoscape)
     
     for(i in isoscape){
-      if(class(i)[1] != "RasterStack" & class(i)[1] != "RasterBrick"){
+      if(!inherits(i, c("RasterStack", "RasterBrick"))){
         stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
       } 
@@ -31,19 +31,18 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
         stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
       }
-      if(class(i)[1] == "RasterStack"){
+      if(inherits(i, "RasterStack")){
         crs(i[[1]]) = crs(i[[2]]) = crs(i)
       }
     }
   } else{
     ni = 1
     
-    if(class(isoscape)[1] == "rescale"){
+    if(inherits(isoscape, "rescale")){
       isoscape = isoscape$isoscape.rescale
     }
     
-    if(class(isoscape)[1] == "RasterStack" | 
-        class(isoscape)[1] == "RasterBrick") {
+    if(inherits(isoscape, c("RasterStack", "RasterBrick"))) {
       if(is.na(crs(isoscape))) {
         stop("isoscape must have valid coordinate reference system")
       }
@@ -51,7 +50,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
         stop("Input isoscape should be RasterStack or RasterBrick with two layers 
          (mean and standard deviation)")
       }
-      if(class(isoscape)[1] == "RasterStack"){
+      if(inherits(isoscape, "RasterStack")){
         crs(isoscape[[1]]) = crs(isoscape[[2]]) = crs(isoscape)
       }
     } else {
@@ -62,7 +61,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   #check known for multi-isotope
   if(ni > 1){
     #two options for ni>1, list of SODs, check and unpack each to spdf
-    if(class(known)[1] == "list"){
+    if(inherits(known, "list")){
       if(length(known) != ni){
         stop("length of known must equal length of isoStack")
       }
@@ -99,7 +98,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     } 
     #if ni == 1
   } else{
-    if(class(known)[1] == "subOrigData"){
+    if(inherits(known, "subOrigData")){
       known = withCallingHandlers(
         message = addm,
         warning = addw,
@@ -108,7 +107,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     }
   }
   #SOD or SOD list will now be converted to this
-  if(class(known)[1] == "SpatialPointsDataFrame"){
+  if(inherits(known, "SpatialPointsDataFrame")){
     known = withCallingHandlers(
       message = addm,
       warning = addw,
@@ -123,7 +122,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   }
 
   #check recal
-  if(class(recal) != "logical"){
+  if(!inherits(recal, "logical")){
     stop("recal must be logical")
   }
   if(!recal){
@@ -157,7 +156,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   
   #check name
   if(!is.null(name)){
-    if(class(name)[1] != "character"){
+    if(!inherits(name, "character")){
       stop("name must be a character string")
     }
   }

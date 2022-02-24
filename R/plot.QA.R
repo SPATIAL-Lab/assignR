@@ -2,12 +2,12 @@ plot.QA = function(x, ..., outDir = NULL){
 
   a = list(x, ...)
 
-  if(class(a[[1]])[1] != "QA"){
+  if(!inherits(a[[1]], "QA")){
     stop("x must be one or more QA objects")
   }
   
   if(!is.null(outDir)){
-    if(class(outDir)[1] != "character"){
+    if(!inherits(outDir, "character")){
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){
@@ -19,7 +19,7 @@ plot.QA = function(x, ..., outDir = NULL){
   n = 0
   bys = integer()
   for(i in seq_len(length(a))){
-    if(class(a[[i]])[1] == "QA"){
+    if(inherits(a[[i]], "QA")){
       n = n + 1
       if(is.null(a[[i]]$by)){
         stop("plot now requires QA objects with the by element (use assignR v.1.2.1 or greater)")
