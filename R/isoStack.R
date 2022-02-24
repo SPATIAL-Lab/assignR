@@ -6,16 +6,16 @@ isoStack = function(..., clean = TRUE){
     r = unlist(r, recursive = FALSE)
   }
   
-  if(class(r) != "list" | length(r) < 2){
+  if((!inherits(r, "list")) | length(r) < 2){
     stop("... must be a list containing multiple isoscapes")
   }
   n = length(r)
   
   for(i in 1:n){
-    if(class(r[[i]])[1] == "rescale"){
+    if(inherits(r[[i]], "rescale")){
       r[[i]] = r[[i]]$isoscape.rescale
     }
-    if(class(r[[i]])[1] != "RasterBrick" & class(r[[i]])[1] != "RasterStack"){
+    if(!inherits(r[[i]], c("RasterBrick", "RasterStack"))){
       stop("each object in ... must be a RasterBrick or RasterStack")
     }
     if(nlayers(r[[i]]) != 2){
@@ -85,7 +85,7 @@ isoStack = function(..., clean = TRUE){
 
 plot.isoStack = function(x, ...){
   
-  if(class(x) != "isoStack"){
+  if(!inherits(x, "isoStack")){
     stop("plot.isoStack needs isoStack object")
   }
   
@@ -94,7 +94,7 @@ plot.isoStack = function(x, ...){
   }
   
   for(i in x){
-    if(class(i)[1] != "RasterBrick" & class(i)[1] != "RasterStack"){
+    if(!inherits(i, c("RasterBrick", "RasterStack"))){
       stop("each object in r must be a RasterBrick or RasterStack")
     }
     if(nlayers(i) != 2){

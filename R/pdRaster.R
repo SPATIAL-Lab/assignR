@@ -6,11 +6,11 @@ pdRaster = function(r, unknown, prior = NULL, mask = NULL,
 pdRaster.default = function(r, unknown, prior = NULL, mask = NULL, 
                            genplot = TRUE, outDir = NULL) {
 
-  if(class(r)[1] == "rescale"){
+  if(inherits(r, "rescale")){
     r = r$isoscape.rescale
   }
   
-  if(class(r)[1] == "RasterStack" | class(r)[1] == "RasterBrick"){
+  if(inherits(r, c("RasterStack", "RasterBrick"))){
     if(is.na(proj4string(r))) {
       stop("r must have valid coordinate reference system")
     }
@@ -79,7 +79,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   ni = length(r)
   
   for(i in r){
-    if(class(i)[1] == "RasterStack" | class(i)[1] == "RasterBrick"){
+    if(inherits(i, c("RasterStack", "RasterBrick"))){
       if(is.na(proj4string(i))) {
         stop("r must have valid coordinate reference system")
       }
@@ -190,11 +190,11 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
 
 check_unknown = function(unknown, n){
   
-  if(class(unknown)[1] == "refTrans"){
+  if(inherits(unknown, "refTrans")){
     unknown = process_refTrans(unknown)
   }
   
-  if(class(unknown)[1] == "list"){
+  if(inherits(unknown, "list")){
     if(length(unknown) < n){
       stop("number of refTrans objects provided is less than number of isoscapes")
     }
@@ -227,7 +227,7 @@ check_unknown = function(unknown, n){
     }
   }
   
-  if (class(unknown)[1] != "data.frame") {
+  if (!inherits(unknown, "data.frame")) {
     stop("unknown should be a data.frame, see help page of pdRaster function")
   }
   
@@ -249,7 +249,7 @@ check_unknown = function(unknown, n){
 check_prior = function(prior, r){
   
   if(!is.null(prior)){
-    if(class(prior)[1] != "RasterLayer"){
+    if(!inherits(prior, "RasterLayer")){
       stop("prior should be a raster with one layer")
     } 
     if(proj4string(prior) != proj4string(r[[1]])) {
@@ -264,7 +264,7 @@ check_prior = function(prior, r){
 
 check_options = function(genplot, outDir){
 
-  if(class(genplot)[1] != "logical"){
+  if(!inherits(genplot, "logical")){
     stop("genplot should be logical (TRUE or FALSE)")
   }
   
@@ -284,8 +284,7 @@ check_options = function(genplot, outDir){
 check_mask = function(mask, r){
 
   if (!is.null(mask)) {
-    if(class(mask)[1] == "SpatialPolygonsDataFrame" || 
-       class(mask)[1] == "SpatialPolygons"){
+    if(inherits(mask, "SpatialPolygons")){
       if (is.na(proj4string(mask))){
         stop("mask must have coord. ref.")
       } 
@@ -331,7 +330,7 @@ write_out = function(outDir, genplot, n, result, data){
 }
 
 process_refTrans = function(unknown){
-  if(class(unknown) == "refTrans"){
+  if(inherits(unknown, "refTrans")){
     if(ncol(unknown$data) == 3){
       un = data.frame("ID" = seq(1:nrow(unknown$data)), unknown$data[,1])
       names(un)[2] = names(unknown$data)[1]

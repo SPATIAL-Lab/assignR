@@ -64,6 +64,6 @@ library(assignR)
 
 <!-- badges: start -->
   [![Build status](https://github.com/SPATIAL-Lab/assignR/actions/workflows/r.yml/badge.svg)](https://github.com/SPATIAL-Lab/assignR/actions)
-  [![codecov](https://codecov.io/gh/SPATIAL-Lab/assignR/branch/master/graph/badge.svg)](https://codecov.io/gh/SPATIAL-Lab/assignR) 
+  [![codecov](https://codecov.io/gh/SPATIAL-Lab/assignR/branch/master/graph/badge.svg)](https://app.codecov.io/gh/SPATIAL-Lab/assignR) 
   <!-- badges: end -->
 

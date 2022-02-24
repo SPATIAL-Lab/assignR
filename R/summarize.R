@@ -1,6 +1,6 @@
 jointP = function(pdR){
   
-  if(class(pdR)[1] != "RasterStack" & class(pdR)[1] != "RasterBrick"){
+  if(!inherits(pdR, c("RasterStack", "RasterBrick"))){
     stop("input probability density map (pdR) should be RasterStack or 
          RasterBrick")
   }
@@ -25,7 +25,7 @@ jointP = function(pdR){
 
 unionP = function(pdR){
   
-  if(class(pdR)[1] != "RasterStack" & class(pdR)[1] != "RasterBrick"){
+  if(!inherits(pdR, c("RasterStack", "RasterBrick"))){
     stop("input probability density map (pdR) should be RasterStack or 
          RasterBrick")
   }

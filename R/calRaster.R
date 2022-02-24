@@ -3,7 +3,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
                       outDir = NULL, verboseLM = TRUE){
 
   #check that isoscape is valid and has defined CRS
-  if(class(isoscape)[1] == "RasterStack" | class(isoscape)[1] == "RasterBrick") {
+  if(inherits(isoscape, c("RasterStack", "RasterBrick"))) {
     if(is.na(proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
@@ -16,11 +16,11 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   }
 
   #check that known is valid and has defined, correct CRS
-  if(!(class(known)[1] %in% c("subOrigData", "QAData", 
-                              "SpatialPointsDataFrame"))) {
+  if(!(inherits(known, c("subOrigData", "QAData", 
+                              "SpatialPointsDataFrame")))) {
     stop("known must be a subOrigData or SpatialPointsDataFrame object")
   }
-  if(class(known)[1] == "subOrigData"){
+  if(inherits(known, "subOrigData")){
     if(is.null(known$data) || is.null(known$marker)){
       stop("missing information in subOrigData known")
     }
@@ -47,7 +47,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
       stop("known must include a data frame containing the measured 
            isotope values (col 1) and 1 sd uncertainty (col 2)")
     }
-    if(class(known) == "QAData"){
+    if(inherits(known, "QAData")){
       class(known) = "SpatialPointsDataFrame"
     } else{
       message("user-provided known; assuming measured isotope value and 1 sd
@@ -79,8 +79,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check that mask is valid and has defined, correct CRS
   if(!is.null(mask)) {
-    if(class(mask)[1] == "SpatialPolygonsDataFrame" || 
-       class(mask)[1] == "SpatialPolygons"){
+    if(inherits(mask, c("SpatialPolygonsDataFrame", "SpatialPolygons"))){
       if(is.na(proj4string(mask))) {
         stop("mask must have valid coordinate reference system")
       }
@@ -97,11 +96,11 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   if(!interpMethod %in% c(1,2)){
     stop("interpMethod should be 1 or 2")
   }
-  if(class(genplot)[1] != "logical") {
+  if(!inherits(genplot, "logical")) {
     stop("genplot should be logical (T or F)")
   }
   if(!is.null(outDir)){
-    if(class(outDir)[1] != "character"){
+    if(!inherits(outDir, "character")){
       stop("outDir should be a character string")
     }
     if(!dir.exists(outDir)){

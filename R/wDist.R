@@ -1,14 +1,13 @@
 wDist = function(pdR, sites, maxpts = 1e5){
   
-  if(class(pdR) != "RasterLayer" & class(pdR) != "RasterStack" & class(pdR) != "RasterBrick"){
+  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick"))){
     stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
   }
   if(is.na(proj4string(pdR))){
     stop("pdR must have coord. ref.")
   }
   
-  if(class(sites)[1] == "SpatialPoints" || 
-     class(sites)[1] == "SpatialPointsDataFrame"){
+  if(inherits(sites, "SpatialPoints")){
     if(length(sites) != nlayers(pdR)){
       stop("sites and pdR have different lenghts; wDist requires one site per pdR layer")
     }
@@ -123,13 +122,13 @@ c.wDist = function(...){
   
   a = list(...)
   
-  if(class(a[[1]])[1] != "wDist"){
+  if(!inherits(a[[1]], "wDist")){
     stop("... must be one or more wDist objects")
   }
   
   n = 0
   for(i in seq_len(length(a))){
-    if(class(a[[i]])[1] == "wDist"){
+    if(inherits(a[[i]], "wDist")){
       n = n + 1
     } else{
       stop("this method only accepts wDist objects as arguments")
@@ -161,7 +160,7 @@ c.wDist = function(...){
 
 plot.wDist = function(x, ..., bin = 20, pty = "both", index = c(1:5)){
   
-  if(class(x) != "wDist"){
+  if(!inherits(x, "wDist")){
     stop("x must be a wDist object")
   }
   
