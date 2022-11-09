@@ -36,9 +36,11 @@ jobs:
         with:
           pandoc-version: '2.7.3'
       - run: echo "# Test" | pandoc -t html
-#      - name: Windows setup
-#        if: runner.os == 'Windows'
-#        run: nuget install CurlThin.Native -Version 0.0.8
+      - name: Mac setup
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install gdal
       - name: Linux setup
         if: runner.os == 'Linux'
         run: |
