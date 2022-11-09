@@ -75,7 +75,7 @@ test_that("calRaster works",{
                                           ignore.NA = FALSE)))
   expect_message(suppressWarnings(calRaster(known = d_diffProj, 
                                             isoscape = d2h_lrNA)))
-  expect_warning(calRaster(known = d, isoscape = d2h_lrNA, mask = mask_diffProj))
+  expect_message(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, mask = mask_diffProj)))
   expect_warning(calRaster(known = d, isoscape = d2h_lrNA_na))
 })
 
@@ -157,3 +157,4 @@ test_that("qtlRaster works",{
   expect_error(qtlRaster(asn, threshold = 0.1, genplot = "A"))
   expect_error(qtlRaster(asn, threshold = 0.1, outDir = 1))
 })
+
