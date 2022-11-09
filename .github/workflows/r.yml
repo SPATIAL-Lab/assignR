@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Set up R ${{ matrix.config.r }}
-        uses: r-lib/actions/setup-r@master
+        uses: r-lib/actions/setup-r@main
         with:
           r-version: ${{ matrix.config.r }}
       - name: Set up pandoc
