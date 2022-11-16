@@ -23,6 +23,7 @@ importFrom(raster, crs, "crs<-", crop, plot, values, getValues, setValues, minVa
             maxValue, extract, stack, ncell, nlayers, writeRaster, cellStats, 
            overlay, projectRaster, compareRaster, res, extent, compareCRS,
            raster, resample, mask, intersect, rasterToPoints)
+importFrom(terra, rast)
 importFrom(grDevices, dev.off, pdf, png, col2rgb, rgb)
 importFrom(graphics, abline, boxplot, legend, lines, par, text, title, polygon)
 importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var,
