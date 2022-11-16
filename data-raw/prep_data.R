@@ -2,11 +2,11 @@ options(stringsAsFactors = FALSE)
 library(openxlsx)
 library(sp)
 library(devtools)
-library(raster)
+library(terra)
 library(assignR)
 
 #WGS84 projection
-p = CRS("+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs")
+p = CRS("+proj=longlat +ellps=WGS84 +no_defs")
 
 #----
 
@@ -198,12 +198,12 @@ stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
 #Prepare MI strontium isoscape
 sr = getIsoscapes("USSr")
 sr = sr$sr_weath
-srun = setValues(sr, getValues(sr) * 0.01)
-sr = brick(sr, srun)
+srun = setValues(sr, values(sr) * 0.01)
+sr = c(sr, srun)
 states.proj = spTransform(states, crs(sr))
 mi = states.proj[states.proj$STATE_NAME == "Michigan",]
-sr_MI = mask(sr, mi)
-sr_MI = crop(sr_MI, mi)
+sr_MI = mask(sr, vect(mi))
+sr_MI = crop(sr_MI, vect(mi))
 names(sr_MI) = c("weathered.mean", "weathered.sd")
 sr_MI = aggregate(sr_MI, 10)
 
