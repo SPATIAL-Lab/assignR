@@ -2,17 +2,30 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
                       NA.value = NA, ignore.NA = TRUE, genplot = TRUE, 
                       outDir = NULL, verboseLM = TRUE){
 
+  
   #check that isoscape is valid and has defined CRS
+  ##legacy raster
   if(inherits(isoscape, c("RasterStack", "RasterBrick"))) {
+    warning("raster objects are depreciated, transition to package terra")
     if(is.na(proj4string(isoscape))) {
       stop("isoscape must have valid coordinate reference system")
     }
     if(nlayers(isoscape) != 2) {
-      stop("isoscape should be RasterStack or RasterBrick with two layers 
+      stop("isoscape should be a SpatRaster with two layers 
+         (mean and standard deviation)")
+    }
+    isoscape = rast(isoscape)
+    ##legacy raster
+  } else if(inherits(isoscape, "SpatRaster")){
+    if(is.na(crs(isoscape))){
+      stop("isoscape must have valid coordinate reference system")
+    }
+    if(nlyr(isoscape) != 2) {
+      stop("isoscape should be a SpatRaster with two layers 
          (mean and standard deviation)")
     }
   } else {
-    stop("isoscape should be a RasterStack or RasterBrick")
+    stop("isoscape should be a SpatRaster")
   }
 
   #check that known is valid and has defined, correct CRS
@@ -72,7 +85,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != proj4string(isoscape)){
+  if(proj4string(known) != crs(isoscape, proj = TRUE)){
     known = spTransform(known, crs(isoscape))
     message("known was reprojected")
   } 
@@ -83,7 +96,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
       if(is.na(proj4string(mask))) {
         stop("mask must have valid coordinate reference system")
       }
-      if(proj4string(mask) != proj4string(isoscape)){
+      if(proj4string(mask) != crs(isoscape, proj = TRUE)){
         mask = spTransform(mask, crs(isoscape))
         message("mask was reprojected")
       }
@@ -117,7 +130,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check and set isoscape NA value if necessary
   if(!is.na(NA.value)) {
-    tempVals = getValues(isoscape)
+    tempVals = values(isoscape)
     tempVals[tempVals == NA.value] = NA
     isoscape = setValues(isoscape, tempVals)
   }
@@ -135,14 +148,13 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #populate the independent variable values
   if (interpMethod == 1) {
-    isoscape.iso = extract(isoscape, known,
-                                    method = "simple")
+    isoscape.iso = extract(isoscape, vect(known), method = "simple")[,2:3]
   } else {
-    isoscape.iso = extract(isoscape, known,
-                                    method = "bilinear")
+    isoscape.iso = extract(isoscape, vect(known), method = "bilinear")[,2:3]
   }
   #protect against negative values from interpolation
-  isoscape.iso[,2] = pmax(isoscape.iso[,2], cellStats(isoscape[[2]], min))
+  isoscape.iso[,2] = pmax(isoscape.iso[,2], 
+                          global(isoscape, min, na.rm = TRUE)[2, 1])
 
   #warn if some known sites have NA isoscape values
   if (any(is.na(isoscape.iso[, 1]))) {
@@ -231,10 +243,10 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   
   #combine uncertainties of isoscape and rescaling function
   #rescaling variance is frac of model variance uncorrelated w/ isoscape error
-  sd = sqrt(isoscape[[2]]^2 + var(lmResult$residuals) * (1-ti.corr))
+  rescale.sd = sqrt(isoscape[[2]]^2 + var(lmResult$residuals) * (1-ti.corr))
   
   #stack the output rasters and apply names
-  isoscape.rescale = stack(isoscape.rescale, sd)
+  isoscape.rescale = c(isoscape.rescale, rescale.sd)
   names(isoscape.rescale) = c("mean", "sd")
 
   #crop output if required

@@ -52,7 +52,7 @@ test_that("calRaster works",{
                       genplot = FALSE)), "rescale")
   expect_output(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
                                  outDir = tempdir())))
-  expect_equal(nlayers(r$isoscape.rescale), 2)
+  expect_equal(nlyr(r$isoscape.rescale), 2)
   expect_error(calRaster(known = d$data$d2H, isoscape = d2h_lrNA))
   expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
                                           outDir = 2)))
