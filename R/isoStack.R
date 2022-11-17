@@ -2,7 +2,7 @@ isoStack = function(..., clean = TRUE){
 
   r = list(...)
   
-  if(class(r[[1]])[1] == "list"){
+  if(inherits(r[[1]], "list")){
     r = unlist(r, recursive = FALSE)
   }
   
@@ -15,66 +15,64 @@ isoStack = function(..., clean = TRUE){
     if(inherits(r[[i]], "rescale")){
       r[[i]] = r[[i]]$isoscape.rescale
     }
-    if(!inherits(r[[i]], c("RasterBrick", "RasterStack"))){
-      stop("each object in ... must be a RasterBrick or RasterStack")
+    if(!inherits(r[[i]], c("RasterBrick", "RasterStack", "SpatRaster"))){
+      stop("each object in ... must be a SpatRaster")
     }
-    if(nlayers(r[[i]]) != 2){
+    if(inherits(r[[i]], c("RasterBrick", "RasterStack"))){
+      r[[i]] = rast(r[[i]])
+      warning("raster objects are depreciated, transition to package terra")
+    }
+    if(nlyr(r[[i]]) != 2){
       stop("each isoscape must include two layers: mean and 1 sd")
     }
-    if(is.na(proj4string(r[[i]]))) {
+    if(is.na(crs(r[[i]]))) {
       stop("each isoscape must have valid coordinate reference system")
     }
   }
-  
-  if(compareRaster(r, rowcol = FALSE, res = TRUE, stopiffalse = FALSE)){
-    #mask
-    r = maskIso(r, n)
-    
-    #assign class
-    class(r) = "isoStack"
-    
-    return(r)
-  }
-  
-  if(clean == FALSE){
-    stop("isoscape properties differ, clean set to FALSE")
-  }
-  
-  #Get target proj
-  c = crs(proj4string(r[[1]]))    
 
-  if(!compareRaster(r, extent = FALSE, rowcol = FALSE, rotation = FALSE,
-                    stopiffalse = FALSE)){
-    for(i in 2:n){
-      if(!compareCRS(r[[i]], c)){
-        r[[i]] = projectRaster(r[[i]], crs = c)
+  #projections
+  for(i in 1:n){
+    if(crs(r[[i]]) != crs(r[[1]])){
+      if(clean){
+        r[[i]] = project(r[[i]], crs(r[[1]]))
+      } else{
+        stop("isoscape projections differ, clean set to FALSE")
       }
     }
-  }
+  }  
   
-  #Get other target properties
-  res.max = res(r[[1]])
+  #check other properties
+  res.flag = FALSE
+  ext.flag = FALSE
+  res.max = r[[1]]@ptr$res
+  ext.min = ext(r[[1]])
   for(i in 2:n){
-    res.max = pmin(res.max, res(r[[i]]))
+    if(!identical(r[[i]]@ptr$res, r[[1]]@ptr$res)) res.flag = TRUE
+    if(!identical(ext(r[[i]]), ext(r[[1]]))) ext.flag = TRUE
+    
+    res.max = pmin(res.max, r[[i]]@ptr$res)
+    ext.min = intersect(ext.min, ext(r[[i]]))
   }
   
-  e = extent(r[[1]])
-  for(i in 2:n){
-    e = intersect(e, extent(r[[i]]))
-  }
-  
-  #Make raster target
-  r.targ = raster(ext = e, crs = c, resolution = res.max)
-
-  for(i in 1:n){
-    if(!compareCRS(r[[i]], r.targ)){
-      r[[i]] = projectRaster(r[[i]], r.targ)
-    } else if(!compareRaster(r[[i]], r.targ, rowcol = FALSE, crs = FALSE,
-                             res = TRUE, stopiffalse = FALSE)){
-      r[[i]] = resample(r[[i]], r.targ)
+  #fix other properties
+  if(res.flag | ext.flag){
+    if(clean){
+      #Make raster target
+      r.targ = rast(ext = ext.min, resolution = res.max,
+                    crs = crs(r[[1]]))
+      
+      for(i in 1:n){
+        if(!compareGeom(r[[i]], r.targ, rowcol = FALSE, crs = FALSE,
+                                 res = TRUE, stopOnError = FALSE)){
+          r[[i]] = resample(r[[i]], r.targ)
+        }
+      }
+    } else{
+      stop("isoscape properties differ, clean set to FALSE")
     }
   }
 
+  #common mask
   r = maskIso(r, n)
   
   #assign class
@@ -94,10 +92,10 @@ plot.isoStack = function(x, ...){
   }
   
   for(i in x){
-    if(!inherits(i, c("RasterBrick", "RasterStack"))){
-      stop("each object in r must be a RasterBrick or RasterStack")
+    if(!inherits(i, c("RasterBrick", "RasterStack", "SpatRaster"))){
+      stop("each object in r must be a SpatRaster")
     }
-    if(nlayers(i) != 2){
+    if(nlyr(i) != 2){
       stop("each isoscape must include two layers: mean and 1 sd")
     }
   }
