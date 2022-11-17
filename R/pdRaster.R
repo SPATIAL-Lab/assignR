@@ -10,16 +10,28 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     r = r$isoscape.rescale
   }
   
-  if(inherits(r, c("RasterStack", "RasterBrick"))){
+  ##legacy raster
+  if(inherits(r, c("RasterStack", "RasterBrick"))) {
+    warning("raster objects are depreciated, transition to package terra")
     if(is.na(proj4string(r))) {
       stop("r must have valid coordinate reference system")
     }
     if(nlayers(r) != 2) {
-      stop("r should contain RasterStack or RasterBrick with two layers 
+      stop("r should be a SpatRaster with two layers 
+         (mean and standard deviation)")
+    }
+    isoscape = rast(isoscape)
+    ##legacy raster
+  } else if(inherits(r, "SpatRaster")){
+    if(is.na(crs(r))){
+      stop("r must have valid coordinate reference system")
+    }
+    if(nlyr(r) != 2) {
+      stop("r should be a SpatRaster with two layers 
          (mean and standard deviation)")
     }
   } else{
-    stop("r should contain RasterStack or RasterBrick with two layers 
+    stop("r should be a SpatRaster with two layers 
          (mean and standard deviation)")
   }
   
@@ -36,14 +48,14 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     rescaled.mean = r[[1]]
     rescaled.sd = r[[2]]
   } else{
-    rescaled.mean = crop(r[[1]], mask)
-    rescaled.mean = mask(rescaled.mean, mask)
-    rescaled.sd = crop(r[[2]], mask)
-    rescaled.sd = mask(rescaled.sd, mask)
+    rescaled.mean = crop(r[[1]], vect(mask))
+    rescaled.mean = mask(rescaled.mean, vect(mask))
+    rescaled.sd = crop(r[[2]], vect(mask))
+    rescaled.sd = mask(rescaled.sd, vect(mask))
   }
   
-  errorV = getValues(rescaled.sd)
-  meanV = getValues(rescaled.mean)
+  errorV = values(rescaled.sd)
+  meanV = values(rescaled.mean)
   result = NULL
   temp = list()
   
@@ -52,14 +64,14 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     indv.id = indv.data[1,1]
     assign = dnorm(indv.data[1,2], mean = meanV, sd = errorV)
     if(!is.null(prior)){
-      assign = assign * getValues(prior)
+      assign = assign * values(prior)
     }
     assign.norm = assign / sum(assign, na.rm = TRUE)
     assign.norm = setValues(rescaled.mean, assign.norm)
     if (i == 1){
       result = assign.norm
     } else {
-      result = stack(result, assign.norm)
+      result = c(result, assign.norm)
     }
     if(!is.null(outDir)){
       filename = paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
@@ -79,16 +91,16 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   ni = length(r)
   
   for(i in r){
-    if(inherits(i, c("RasterStack", "RasterBrick"))){
-      if(is.na(proj4string(i))) {
+    if(inherits(i, "SpatRaster")){
+      if(is.na(crs(i))) {
         stop("r must have valid coordinate reference system")
       }
-      if(nlayers(i) != 2) {
-        stop("r should contain RasterStacks or RasterBricks with two layers 
+      if(nlyr(i) != 2) {
+        stop("r should contain SpatRasters with two layers 
          (mean and standard deviation)")
       }
     } else{
-      stop("r should contain RasterStacks or RasterBricks with two layers 
+      stop("r should contain SpatRasters with two layers 
          (mean and standard deviation)")
     }
   }
@@ -106,32 +118,32 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     rescaled.mean = r[[1]][[1]]
     rescaled.sd = r[[1]][[2]]
   } else{
-    rescaled.mean = crop(r[[1]][[1]], mask)
-    rescaled.mean = mask(rescaled.mean, mask)
-    rescaled.sd = crop(r[[1]][[2]], mask)
-    rescaled.sd = mask(rescaled.sd, mask)
+    rescaled.mean = crop(r[[1]][[1]], vect(mask))
+    rescaled.mean = mask(rescaled.mean, vect(mask))
+    rescaled.sd = crop(r[[1]][[2]], vect(mask))
+    rescaled.sd = mask(rescaled.sd, vect(mask))
   }
   
-  meanV = getValues(rescaled.mean)
-  errorV = getValues(rescaled.sd)
+  meanV = values(rescaled.mean)
+  errorV = values(rescaled.sd)
   
   for(i in 2:ni){
     if(is.null(mask)){
       rescaled.mean = r[[i]][[1]]
       rescaled.sd = r[[i]][[2]]
     } else{
-      rescaled.mean = crop(r[[i]][[1]], mask)
-      rescaled.mean = mask(rescaled.mean, mask)
-      rescaled.sd = crop(r[[i]][[2]], mask)
-      rescaled.sd = mask(rescaled.sd, mask)
+      rescaled.mean = crop(r[[i]][[1]], vect(mask))
+      rescaled.mean = mask(rescaled.mean, vect(mask))
+      rescaled.sd = crop(r[[i]][[2]], vect(mask))
+      rescaled.sd = mask(rescaled.sd, vect(mask))
     }
-    meanV = cbind(meanV, getValues(rescaled.mean))
-    errorV = cbind(errorV, getValues(rescaled.sd))
+    meanV = cbind(meanV, values(rescaled.mean))
+    errorV = cbind(errorV, values(rescaled.sd))
   }
 
   result = NULL
   temp = list()
-  assign = as.numeric(rep(NA, length(rescaled.mean)))
+  assign = as.numeric(rep(NA, nrow(meanV)))
   cells = seq_along(meanV[,1])
   cellmask = apply(cbind(meanV, errorV), 1, anyNA)
   cells = cells[!cellmask]
@@ -167,14 +179,14 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     }
 
     if(!is.null(prior)){
-      assign = assign * getValues(prior)
+      assign = assign * values(prior)
     }
     assign.norm = assign / sum(assign[!is.na(assign)])
     assign.norm = setValues(rescaled.mean, assign.norm)
     if (i == 1){
       result = assign.norm
     } else {
-      result = stack(result, assign.norm)
+      result = c(result, assign.norm)
     }
     if(!is.null(outDir)){
       filename = paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
@@ -249,14 +261,14 @@ check_unknown = function(unknown, n){
 check_prior = function(prior, r){
   
   if(!is.null(prior)){
-    if(!inherits(prior, "RasterLayer")){
-      stop("prior should be a raster with one layer")
+    if(!inherits(prior, "SpatRaster")){
+      stop("prior should be a SpatRaster with one layer")
     } 
-    if(proj4string(prior) != proj4string(r[[1]])) {
-      prior = projectRaster(prior, crs = crs(r[[1]]))
+    if(crs(prior) != crs(r[[1]])) {
+      prior = project(prior, crs(r[[1]]))
       message("prior was reprojected")
     }
-    compareRaster(r[[1]], prior)
+    compareGeom(r[[1]], prior)
   }
   
   return(prior)
@@ -288,7 +300,7 @@ check_mask = function(mask, r){
       if (is.na(proj4string(mask))){
         stop("mask must have coord. ref.")
       } 
-      if(proj4string(mask) != proj4string(r[[1]])) {
+      if(proj4string(mask) != crs(r[[1]], proj = TRUE)) {
         mask = spTransform(mask, crs(r[[1]]))
         message("mask was reprojected")
       }
@@ -317,7 +329,8 @@ write_out = function(outDir, genplot, n, result, data){
       print(pp)
     } else {
       for (i in seq_len(n)){
-        print(spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
+        print(spplot(result[[i]], scales = list(draw = TRUE), 
+                     main=paste("Probability Density Surface for", data[i,1])))
       }
     }
   }

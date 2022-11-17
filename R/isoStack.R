@@ -31,7 +31,7 @@ isoStack = function(..., clean = TRUE){
   }
 
   #projections
-  for(i in 1:n){
+  for(i in 2:n){
     if(crs(r[[i]]) != crs(r[[1]])){
       if(clean){
         r[[i]] = project(r[[i]], crs(r[[1]]))

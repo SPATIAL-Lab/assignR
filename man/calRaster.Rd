@@ -57,8 +57,9 @@ Returns an object of class \dQuote{rescale}.
 }
 
 \examples{
-# load North America boundary and global isoscape
 library(terra)
+
+# load North America boundary and global isoscape
 data("naMap")
 d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 
@@ -66,5 +67,5 @@ d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 d = subOrigData(group = "Modern human", mask = naMap, niter = 100)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
+r = calRaster(d, d2h_lrNA, naMap)
 }
