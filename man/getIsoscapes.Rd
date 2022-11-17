@@ -7,7 +7,7 @@ Download and unpack isoscapes from the web
 }
 
 \description{
-This function retrieves gridded isotope maps from waterisotopes.org, unpacks the zip archives, and bundles the map layers as a RasterStack.
+This function retrieves gridded isotope maps from waterisotopes.org, unpacks the zip archives, and bundles the map layers as a SpatRaster.
 }
 
 \usage{
@@ -41,7 +41,7 @@ Accepted \code{isoType} values are:
 }
 
 \value{
-RasterStack containing the requested isoscape layers.
+SpatRaster containing the requested isoscape layers.
 }
 
 \references{

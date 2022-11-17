@@ -20,7 +20,7 @@ calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA,
 subOrigData or SpatialPointsDataFrame. Known-origin tissue isotope data from the subOrigData function or provided by user. User-provided data must be formatted as a subOrigData object (see \code{\link[assignR]{subOrigData}} or a SpatialPointsDataFrame in which the first data field contains the measured tissue isotope value and the second the 1 standard deviation uncertainty on that value.
 }
   \item{isoscape}{
-raster. Isoscape raster with two layers. The first one is the mean and the second is one standard deviation.
+SpatRaster. Isoscape raster with two layers. The first one is the mean and the second is one standard deviation.
 }
   \item{mask}{
 SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
@@ -47,7 +47,7 @@ logical. Print out the linear regression results.
 
 \value{
 Returns an object of class \dQuote{rescale}.
-\item{isoscape.rescale}{RasterBrick. \code{isoscape} rescaled using a linear regression model between values of \code{known} and \code{isoscape}. The first layer is the mean prediction and the second the standard deviation.}
+\item{isoscape.rescale}{SpatRaster. \code{isoscape} rescaled using a linear regression model between values of \code{known} and \code{isoscape}. The first layer is the mean prediction and the second the standard deviation.}
 \item{lm.data}{data.frame. Known origin data and extracted \code{isoscape} values used for linear regression modeling.}
 \item{lm.model}{list. Linear regression model.}
 }
@@ -58,8 +58,9 @@ Returns an object of class \dQuote{rescale}.
 
 \examples{
 # load North America boundary and global isoscape
+library(terra)
 data("naMap")
-data("d2h_lrNA")
+d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
 d = subOrigData(group = "Modern human", mask = naMap, niter = 100)

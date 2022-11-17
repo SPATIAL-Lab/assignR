@@ -194,7 +194,10 @@ knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples,
                  sources = knownOrig_sources)
 
 stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
-  
+
+#Write it all to /data/
+use_data(knownOrig, stds, overwrite = TRUE)
+
 #Prepare MI strontium isoscape
 sr = getIsoscapes("USSr")
 sr = sr$sr_weath
@@ -206,6 +209,7 @@ sr_MI = mask(sr, vect(mi))
 sr_MI = crop(sr_MI, vect(mi))
 names(sr_MI) = c("weathered.mean", "weathered.sd")
 sr_MI = aggregate(sr_MI, 10)
+writeRaster(sr_MI, "data/sr_MI.tif")
 
-#Write it all to /data/
-use_data(knownOrig, stds, sr_MI, overwrite = TRUE)
+#Prepare lrNA H isoscape
+writeRaster(d2h_lrNA, "data/d2h_lrNA.tif")

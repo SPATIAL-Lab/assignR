@@ -36,12 +36,12 @@ mask_diffProj = suppressWarnings(spTransform(naMap, "+init=epsg:28992"))
 mask_noCRS = naMap
 crs(mask_noCRS) = NA
 
-tempVals = getValues(d2h_lrNA)
+tempVals = values(d2h_lrNA)
 tempVals[is.nan(tempVals)] = 9999
 d2h_lrNA_with9999 = setValues(d2h_lrNA, tempVals)
 
 s1 = states[states$STATE_ABBR == "UT",]
-d2h_lrNA_na = mask(d2h_lrNA, s1)
+d2h_lrNA_na = mask(d2h_lrNA, vect(s1))
 
 r = suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA_with9999, NA.value = 9999, 
                interpMethod = 1, genplot = FALSE, mask = naMap))
@@ -60,7 +60,8 @@ test_that("calRaster works",{
                                           interpMethod = 3)))
   expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
                                           genplot = 2)))
-  expect_error(calRaster(known = d, isoscape = d2h_lrNA_noCRS))
+  expect_error(suppressWarnings(calRaster(known = d, 
+                                          isoscape = d2h_lrNA_noCRS)))
   expect_error(calRaster(known = d, isoscape = d2h_lrNA$mean))
   expect_error(calRaster(known = d_usr_bad, isoscape = d2h_lrNA))
   expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
