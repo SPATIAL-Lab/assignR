@@ -88,15 +88,15 @@ asn = suppressWarnings(pdRaster(r, unknown = un, mask = naMap))
 j = jointP(asn)
 
 test_that("jointP works",{
-  expect_equal(cellStats(j, sum), 1)
-  expect_is(j, "RasterLayer")
+  expect_equal(global(j, sum, na.rm = TRUE)[1, 1], 1)
+  expect_is(j, "SpatRaster")
   expect_error(jointP(d))
 })
 
 u = unionP(asn)
 
 test_that("unionP works",{
-  expect_is(u, "RasterLayer")
+  expect_is(u, "SpatRaster")
   expect_error(unionP(d2H))  
 })
 
