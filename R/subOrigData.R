@@ -1,6 +1,6 @@
-subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL, 
-                        age_code = NULL, mask = NULL, ref_scale = "VSMOW_H",
-                       niter = 5000) {
+subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL,
+                       age_code = NULL, mask = NULL, ref_scale = "VSMOW_H",
+                       niter = 5000, genplot = TRUE) {
   
   #load data in funtion environ
   data("knownOrig", envir = environment())
@@ -118,12 +118,19 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
     class(return_obj) = "subOrigData"
   }
   
-  if(is.null(mask)){
-    plot(wrld_simpl, axes = TRUE)
-    plot(result_data, add = TRUE, col = "red", cex = 0.5)
-  } else{
-    plot(mask, axes = TRUE)
-    plot(result_data, add = TRUE, col = "red")
+  if(!inherits(genplot, "logical")) {
+    message("genplot should be logical (T or F), using default = T")
+    genplot = TRUE
+  }
+  
+  if(genplot){
+    if(is.null(mask)){
+      plot(wrld_simpl, axes = TRUE)
+      plot(result_data, add = TRUE, col = "red", cex = 0.5)
+    } else{
+      plot(mask, axes = TRUE)
+      plot(result_data, add = TRUE, col = "red")
+    }
   }
   
   return(return_obj)

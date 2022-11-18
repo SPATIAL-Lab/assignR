@@ -57,10 +57,10 @@ data("naMap")
 d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(group = "Modern human", mask = naMap)
+d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(d, d2h_lrNA, naMap)
+r = calRaster(d, d2h_lrNA, naMap, genplot = FALSE)
 
 # sample to assign
 id = "smile"
@@ -68,5 +68,5 @@ d2H = -80
 un = data.frame(id, d2H)
 
 # posterior probability surface
-asn = pdRaster(r, un, mask = naMap)
+pp = pdRaster(r, un, mask = naMap)
 }

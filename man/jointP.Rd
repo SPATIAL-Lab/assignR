@@ -32,10 +32,10 @@ data("naMap")
 d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(group = "Modern human", mask = naMap)
+d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(d, d2h_lrNA, naMap)
+r = calRaster(d, d2h_lrNA, naMap, genplot = FALSE)
 
 # four unknown-origin examples
 id = c("A", "B", "C", "D")
@@ -43,7 +43,7 @@ d2H = c(-110, -90, -105, -102)
 un = data.frame(id, d2H)
 
 # posterior probabilities
-pp = pdRaster(r, un, mask = naMap)
+pp = pdRaster(r, un, mask = naMap, genplot = FALSE)
 
 # joint probability for individuals of common origin
 jointP(pp)
