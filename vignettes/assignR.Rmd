@@ -20,7 +20,7 @@ Let's load **assignR** and two other packages we'll need.
 
 ```{r load, message=FALSE, warning=FALSE, results="hide"}
 library(assignR)
-library(raster)
+library(terra)
 library(sp)
 ```
 
@@ -36,7 +36,7 @@ plot(naMap)
 Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution isoscapes of several different types can be downloaded using the `getIsoscapes` function (refer to the help page for details). 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
-data("d2h_lrNA")
+d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 plot(d2h_lrNA)
 ```
 
@@ -134,7 +134,7 @@ Ll_prob = pdRaster(d2h_Ll, unknown = Ll_un)
 Cell values in these maps are small because each cell's value represents the probability that this one cell, out of all of them on the map, is the actual origin of the sample. Together, all cell values on the map sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.
 
 ```{r sums}
-cellStats(Ll_prob[[1]], 'sum')
+global(Ll_prob[[1]], 'sum', na.rm = TRUE)
 ```
 
 Check out the help page for `pdRaster` for additional options, including the use of informative prior probabilities.

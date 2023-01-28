@@ -131,6 +131,12 @@ GIconfig = list(
                "CaribSr_Riv.tif"),
     onames = c("sr_rock", "sr_weath", "sr_riv"),
     eType = 1
+  ),
+  "GlobalSr" = list(
+    dpath.post = "GlobalSr.zip",
+    lnames = c("GlobalSr.tif", "GlobalSr_se.tif"),
+    onames = c("sr_bio", "sr_bio_se"),
+    eType = 2
   )
 )
 
@@ -209,7 +215,12 @@ sr_MI = mask(sr, vect(mi))
 sr_MI = crop(sr_MI, vect(mi))
 names(sr_MI) = c("weathered.mean", "weathered.sd")
 sr_MI = aggregate(sr_MI, 10)
-writeRaster(sr_MI, "data/sr_MI.tif")
+writeRaster(sr_MI, "data/sr_MI.tif", overwrite = TRUE)
 
 #Prepare lrNA H isoscape
-writeRaster(d2h_lrNA, "data/d2h_lrNA.tif")
+pcp = getIsoscapes()
+pcp = c(pcp$d2h, pcp$d2h.se)
+pcp = mask(pcp, vect(naMap))
+pcp = crop(pcp, vect(naMap))
+d2h_lrNA = aggregate(pcp, 48, na.rm = TRUE)
+writeRaster(d2h_lrNA, "data/d2h_lrNA.tif", overwrite = TRUE)

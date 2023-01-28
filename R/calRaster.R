@@ -91,19 +91,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   } 
 
   #check that mask is valid and has defined, correct CRS
-  if(!is.null(mask)) {
-    if(inherits(mask, c("SpatialPolygonsDataFrame", "SpatialPolygons"))){
-      if(is.na(proj4string(mask))) {
-        stop("mask must have valid coordinate reference system")
-      }
-      if(proj4string(mask) != crs(isoscape, proj = TRUE)){
-        mask = spTransform(mask, crs(isoscape))
-        message("mask was reprojected")
-      }
-    } else {
-      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
-    }
-  }
+  mask = check_mask(mask, isoscape)
 
   #check that other inputs are valid
   if(!interpMethod %in% c(1,2)){
@@ -125,7 +113,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   #extract with mask
   if(!is.null(mask)){
     known = known[mask,]
-    isoscape = crop(isoscape, mask)
+    isoscape = crop(isoscape, vect(mask))
   }
 
   #check and set isoscape NA value if necessary

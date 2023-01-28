@@ -37,6 +37,7 @@ Accepted \code{isoType} values are:
 \item{"USTap"}{High-resolution contiguous USA surface water H and O isotope values}
 \item{"USSr"}{High-resolution contiguous USA Sr isotope ratios}
 \item{"CaribSr"}{High-resolution Sr isotope ratios for the circum-Caribbean region}
+\item{"GlobalSr"}{High-resolution bioavailable Sr isotope ratios for the global land surface}
 }
 }
 
