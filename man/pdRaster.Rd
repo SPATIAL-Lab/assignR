@@ -50,16 +50,18 @@ SpatRaster including a probability density surface for each individual in \code{
 }
 
 \examples{
+library(terra)
+
 # load North America boundary and global isoscape
 library(terra)
 data("naMap")
 d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(group = "Modern human", mask = naMap, niter = 100)
+d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
+r = calRaster(d, d2h_lrNA, naMap, genplot = FALSE)
 
 # sample to assign
 id = "smile"
@@ -67,5 +69,5 @@ d2H = -80
 un = data.frame(id, d2H)
 
 # posterior probability surface
-asn = pdRaster(r, unknown = un, mask = naMap)
+pp = pdRaster(r, un, mask = naMap)
 }

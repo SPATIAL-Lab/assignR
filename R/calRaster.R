@@ -98,7 +98,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     stop("interpMethod should be 1 or 2")
   }
   if(!inherits(genplot, "logical")) {
-    stop("genplot should be logical (T or F)")
+    message("genplot should be logical (T or F), using default = T")
+    genplot = TRUE
   }
   if(!is.null(outDir)){
     if(!inherits(outDir, "character")){

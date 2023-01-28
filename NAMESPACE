@@ -24,7 +24,7 @@ importFrom(raster, crs, "crs<-", crop, plot, values, getValues, setValues, minVa
            overlay, projectRaster, compareRaster, res, extent, compareCRS,
            raster, resample, mask, intersect, rasterToPoints)
 importFrom(terra, rast, extract, values, setValues, nlyr, crop, mask, global,
-           vect)
+           vect, writeRaster, compareGeom, project, lapp)
 importFrom(grDevices, dev.off, pdf, png, col2rgb, rgb)
 importFrom(graphics, abline, boxplot, legend, lines, par, text, title, polygon)
 importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var,

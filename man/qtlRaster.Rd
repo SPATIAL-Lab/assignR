@@ -16,7 +16,7 @@ qtlRaster(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL)
 
 \arguments{
   \item{pdR}{
-  RasterLayer, RasterStack, or RasterBrick. Probability density maps for individual samples, e.g., as output by \code{pdRaster}.
+  SpatRaster. Probability density maps for individual samples, e.g., as output by \code{pdRaster}.
   }
   \item{threshold}{
   numeric from 0 to 1. Quantile to be selected. 
@@ -33,31 +33,33 @@ qtlRaster(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL)
 }
 
 \value{
-RasterStack or RasterLayer including a binary assignment surface for each individual in \code{pdR}. If \code{outDir} is not NULL, writes individual rasters in GeoTIFF format and a single PDF file with images for each raster to the designated directory.
+SpatRaster including a binary assignment surface for each individual in \code{pdR}. If \code{outDir} is not NULL, writes individual rasters in GeoTIFF format and a single PDF file with images for each raster to the designated directory.
 }
 
 \examples{
+library(terra)
+
 # load North America boundary and global isoscape
 data("naMap")
-data("d2h_lrNA")
+d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(group = "Modern human", mask = naMap, niter = 100)
+d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
+r = calRaster(d, d2h_lrNA, naMap, genplot = FALSE)
 
 # four unknown-origin examples
 id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
 un = data.frame(id, d2H)
 
-# posterior probability surface
-asn = pdRaster(r, unknown=un, mask=naMap)
+# posterior probabilities
+pp = pdRaster(r, un, mask = naMap, genplot = FALSE)
 
 # assign to most probable 10 percent of area
-\dontrun{qtlRaster(asn, threshold = 0.1)}
+\dontrun{qtlRaster(pp, threshold = 0.1)}
 
 # assign to most probable 10 percent of proabability distribution
-qtlRaster(asn, threshold = 0.1, thresholdType = "prob")
+qtlRaster(pp, threshold = 0.1, thresholdType = "prob")
 }

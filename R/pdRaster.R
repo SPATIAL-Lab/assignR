@@ -14,7 +14,7 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
   if(inherits(r, c("RasterStack", "RasterBrick"))) {
     warning("raster objects are depreciated, transition to package terra")
     if(is.na(proj4string(r))) {
-      stop("isoscape must have valid coordinate reference system")
+      stop("r must have valid coordinate reference system")
     }
     if(nlayers(r) != 2) {
       stop("isoscape should be a SpatRaster with two layers 
@@ -24,14 +24,16 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     ##legacy raster
   } else if(inherits(r, "SpatRaster")){
     if(is.na(crs(r))){
-      stop("isoscape must have valid coordinate reference system")
+      stop("r must have valid coordinate reference system")
     }
     if(nlyr(r) != 2) {
-      stop("isoscape should be a SpatRaster with two layers 
+      stop("r should be a SpatRaster with two layers 
          (mean and standard deviation)")
     }
-  } else {
-    stop("isoscape should be a SpatRaster")
+  } else{
+    stop("r should be a SpatRaster with two layers 
+         (mean and standard deviation)")
+    }
   }
   
   data = check_unknown(unknown, 1)
@@ -136,7 +138,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
   
   meanV = values(rescaled.mean, mat = FALSE)
   errorV = values(rescaled.sd, mat = FALSE)
-  
+
   for(i in 2:ni){
     if(is.null(mask)){
       rescaled.mean = r[[i]][[1]]
@@ -153,7 +155,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
 
   result = NULL
   temp = list()
-  assign = as.numeric(rep(NA, length(rescaled.mean)))
+  assign = as.numeric(rep(NA, nrow(meanV)))
   cells = seq_along(meanV[,1])
   cellmask = apply(cbind(meanV, errorV), 1, anyNA)
   cells = cells[!cellmask]
@@ -353,7 +355,8 @@ write_out = function(outDir, genplot, n, result, data){
       print(pp)
     } else {
       for (i in seq_len(n)){
-        print(spplot(result[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
+        print(spplot(result[[i]], scales = list(draw = TRUE), 
+                     main=paste("Probability Density Surface for", data[i,1])))
       }
     }
   }
