@@ -350,13 +350,12 @@ write_out = function(outDir, genplot, n, result, data){
   
   if (genplot == TRUE){
     if (n == 1){
-      pp = spplot(result)
+      pp = plot(result)
       print(pp)
     } else {
-      for (i in seq_len(n)){
-        print(spplot(result[[i]], scales = list(draw = TRUE), 
-                     main=paste("Probability Density Surface for", data[i,1])))
-      }
+      pp = plot(result, main=paste("Probability Density Surface for", 
+                                   data[, 1]))
+      print(pp)
     }
   }
   
