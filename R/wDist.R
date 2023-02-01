@@ -40,6 +40,10 @@ wDist = function(pdR, sites, maxpts = 1e5){
     Position(function(x) x >= y, w)
   }
   
+  #for safety; using projected data works on most platforms
+  pdR = project(pdR, "+proj=longlat +ellps=WGS84")
+  sites = project(sites, "+proj=longlat +ellps=WGS84")
+  
   for(i in seq_along(sites)){
     pdSP = as.points(pdR[[i]])
     if(length(pdSP) > maxpts){
@@ -48,15 +52,12 @@ wDist = function(pdR, sites, maxpts = 1e5){
       values(pdSP) = values(pdSP) / sum(values(pdSP))
     }
     
-    #for safety; using projected data works on most platforms
-    pdSP = project(pdSP, "+proj=longlat +ellps=WGS84")
-    sites = project(sites, "+proj=longlat +ellps=WGS84")
-    
-    d = distance(pdSP, sites[i,])
+    d = distance(pdSP, sites[i,])[,1]
     ####gotta find an equivalent for terra
-    b = bearing(pdSP, sites[i,])
+    b = bearing(geom(pdSP)[,c("x", "y")], 
+                geom(sites[i])[,c("x", "y")])
     ####
-    w = values(pdSP)
+    w = values(pdSP)[,1]
     d.dens = density(d, weights = w)
     b.dens = density(b, weights = w)    
     

@@ -157,18 +157,18 @@ In this case, we do not have any known-origin tissue samples to work with. Howev
 Let's look at the Sr isoscape and compare it with our butterfly H isoscape.
 
 ```{r srIso, fig.width=5, fig.asp=0.8, out.width='45%'}
-data("sr_MI")
+sr_MI = rast(system.file("data/sr_MI.tif", package = "assignR"))
 plot(sr_MI$weathered.mean)
-proj4string(sr_MI)
-proj4string(d2h_Dp$isoscape.rescale)
+crs(sr_MI)
+crs(d2h_Dp$isoscape.rescale)
 ```
 
 Notice that the we have two different spatial data objects, one for Sr and one for d2H, and that they have different extents and projections. In order to conduct a multi-isotope analysis, we'll first combine these into a single object using the `isoStack` function. In addition to combining the objects, this function resolves differences in their projection, resolution, and extent. It's always a good idea to check that the properties of the isoStack components are consistent with your expectations.
 
 ```{r isoStack}
 Dp_multi = isoStack(d2h_Dp, sr_MI)
-lapply(Dp_multi, proj4string)
-lapply(Dp_multi, bbox)
+lapply(Dp_multi, crs)
+lapply(Dp_multi, ext)
 ```
 
 *****
@@ -243,7 +243,7 @@ A common goal in movement research is to characterize the distance or direction 
 
 The analyses conducted in **assignR** cannot determine a single unique location of origin for a given sample, but the do give the probability that each location on the map is the location of origin. If we know the collection location for a sample, we can calculate the distance and direction between each possible location of origin and the collection site, and weighting these by their posterior probability generate a distribution (and statistics for that distribution) describing the distance and direction of travel.
 
-Let's do a weighted distance analysis for our first two unknown origin loggerhead shrike samples. Since these are pretend samples, we'll pretend that the two point locations we defined above for the `oddsRatio` analysis are the locations at which these samples were collected. Here are those locations plotted with the corresponding posterior probability maps. Then we'll use the functions `c` and `plot` to view the summary statistics and distributions returned by `wDist`.
+Let's do a weighted distance analysis for our first two unknown origin loggerhead shrike samples. Since these are pretend samples, we'll pretend that the two point locations we defined above for the `oddsRatio` analysis are the locations at which these samples were collected. Here are those locations plotted with the corresponding posterior probability maps.
 
 ```{r wDist1, fig.width=5, fig.asp=0.8, out.width='45%'}
 # View the data

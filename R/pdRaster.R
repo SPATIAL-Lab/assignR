@@ -33,7 +33,6 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
   } else{
     stop("r should be a SpatRaster with two layers 
          (mean and standard deviation)")
-    }
   }
   
   data = check_unknown(unknown, 1)
@@ -150,7 +149,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
       rescaled.sd = mask(rescaled.sd, vect(mask))
     }
     meanV = cbind(meanV, values(rescaled.mean, mat = FALSE))
-    errorV = cbind(errorV, getValues(rescaled.sd, mat = FALSE))
+    errorV = cbind(errorV, values(rescaled.sd, mat = FALSE))
   }
 
   result = NULL
