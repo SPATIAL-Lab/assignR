@@ -53,9 +53,8 @@ SpatRaster including a probability density surface for each individual in \code{
 library(terra)
 
 # load North America boundary and global isoscape
-library(terra)
 data("naMap")
-d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
+d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
 d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)

@@ -27,7 +27,7 @@ d_usr_bad = d$data
 d_usr_good = d_usr_bad
 d_usr_good@data = data.frame(d$data$d2H, d$data$d2H.sd)
 d_noCRS = d
-crs(d_noCRS$data) = NA
+proj4string(d_noCRS$data) = CRS("")
 
 d2h_lrNA_noCRS = d2h_lrNA
 crs(d2h_lrNA_noCRS) = NA
@@ -35,7 +35,7 @@ crs(d2h_lrNA_noCRS) = NA
 mask_diffProj = suppressWarnings(spTransform(naMap, "+init=epsg:28992"))
 
 mask_noCRS = naMap
-crs(mask_noCRS) = NA
+proj4string(mask_noCRS) = CRS("")
 
 tempVals = values(d2h_lrNA)
 tempVals[is.nan(tempVals)] = 9999
@@ -85,7 +85,7 @@ test_that("calRaster works",{
 id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
 un = data.frame(id,d2H)
-asn = suppressWarnings(pdRaster(r, unknown = un, mask = naMap))
+asn = suppressWarnings(pdRaster(r, unknown = un, mask = naMap, genplot = FALSE))
 
 j = jointP(asn)
 
@@ -120,9 +120,9 @@ s12_diffProj = suppressWarnings(spTransform(s12, CRS("+init=epsg:28992")))
 pp12_diffProj = suppressWarnings(spTransform(pp12, CRS("+init=epsg:28992")))
 
 pp12_noCRS = pp12
-crs(pp12_noCRS) = NA
+proj4string(pp12_noCRS) = CRS("")
 s12_noCRS = s12
-crs(s12_noCRS) = NA
+proj4string(s12_noCRS) = CRS("")
 
 pp121 = SpatialPoints(coords = rbind(pp1, pp2, pp3 = pp1), 
                       proj4string=CRS("+proj=longlat +datum=WGS84 +ellps=WGS84"))

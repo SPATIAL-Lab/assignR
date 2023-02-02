@@ -64,9 +64,10 @@ oddsRatio = function(pdR, inputP){
       stop("No values in P1 and/or P2")
     }
     
-    result1 = (extrVals[1, -1]/(1-extrVals[1, -1]))/
+    result1 = (extrVals[1, -1]/(1-extrVals[1, -1])) /
       (extrVals[2, -1]/(1-extrVals[2, -1]))
-    result2 = ncell(crop(pdR, vect(inputP[1,])))/ncell(crop(pdR, vect(inputP[2,])))
+    result2 = length(cells(crop(pdR, vect(inputP[1,])))) / 
+      length(cells(crop(pdR, vect(inputP[2,]))))
     result = list(oddsRatio = result1, polygonCellRatio = result2)
     names(result) = c("P1/P2 odds ratio", "Ratio of numbers of cells in two polygons")
   }

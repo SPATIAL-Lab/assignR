@@ -13,16 +13,11 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
   ##legacy raster
   if(inherits(r, c("RasterStack", "RasterBrick"))) {
     warning("raster objects are depreciated, transition to package terra")
-    if(is.na(proj4string(r))) {
-      stop("r must have valid coordinate reference system")
-    }
-    if(nlayers(r) != 2) {
-      stop("isoscape should be a SpatRaster with two layers 
-         (mean and standard deviation)")
-    }
     r = rast(r)
     ##legacy raster
-  } else if(inherits(r, "SpatRaster")){
+  } 
+  
+  if(inherits(r, "SpatRaster")){
     if(is.na(crs(r))){
       stop("r must have valid coordinate reference system")
     }
@@ -94,16 +89,11 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     ##legacy raster
     if(inherits(r[[i]], c("RasterStack", "RasterBrick"))) {
       warning("raster objects are depreciated, transition to package terra")
-      if(is.na(proj4string(i))) {
-        stop("isoscape must have valid coordinate reference system")
-      }
-      if(nlayers(r[[i]]) != 2) {
-        stop("isoscape should be a SpatRaster with two layers 
-         (mean and standard deviation)")
-      }
-      i = rast(r[[i]])
+      r[[i]] = rast(r[[i]])
       ##legacy raster
-    } else if(inherits(r[[i]], "SpatRaster")){
+    }
+    
+    if(inherits(r[[i]], "SpatRaster")){
       if(is.na(crs(r[[i]]))){
         stop("isoscape must have valid coordinate reference system")
       }
@@ -275,19 +265,16 @@ check_prior = function(prior, r){
     #legacy raster
     if(inherits(prior, "RasterLayer")){
       warning("raster objects are depreciated, transition to package terra")
-      if(proj4string(prior) != proj4string(r[[1]])) {
-        prior = projectRaster(prior, crs = crs(r[[1]]))
-        message("prior was reprojected")
-      }
-      compareRaster(r[[1]], prior)
       prior = rast(prior)
       #legacy raster
-    } else if(inherits(prior, "SpatRaster")){
+    } 
+    
+    if(inherits(prior, "SpatRaster")){
       if(is.na(crs(prior))){
         stop("isoscape must have valid coordinate reference system")
       }
       if(crs(prior) != crs(r[[1]])) {
-        prior = projectRaster(prior, crs = crs(r[[1]]))
+        prior = project(prior, crs = crs(r[[1]]))
         message("prior was reprojected")
       }
       compareGeom(prior, r)

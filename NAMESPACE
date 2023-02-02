@@ -16,13 +16,13 @@ S3method(plot,QA)
 S3method(plot,isoStack)
 S3method(plot,wDist)
 S3method(c,wDist)
-import(rgdal)
-import(maptools)
 importFrom(sp, proj4string, spTransform, spplot, plot, identicalCRS, merge)
 importFrom(terra, rast, extract, values, setValues, nlyr, crop, mask, global,
-           vect, writeRaster, compareGeom, project, lapp, ext, intersect)
+           vect, writeRaster, compareGeom, project, lapp, ext, intersect,
+           crs, "crs<-", cells, resample, as.points, distance, geom)
 importFrom(grDevices, dev.off, pdf, png, col2rgb, rgb)
-importFrom(graphics, abline, boxplot, legend, lines, par, text, title, polygon)
+importFrom(graphics, abline, boxplot, legend, lines, par, text, title, 
+           polygon)
 importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var,
            density, weighted.mean)
 importFrom(utils, data, download.file, setTxtProgressBar, txtProgressBar, 

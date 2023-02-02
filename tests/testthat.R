@@ -1,9 +1,9 @@
 library(testthat)
 library(assignR)
-library(raster)
 library(terra)
+library(sp)
 
-d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
-sr_MI = rast(system.file("data/sr_MI.tif", package = "assignR"))
+d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
+sr_MI = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
 
 test_check("assignR")

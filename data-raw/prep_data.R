@@ -214,9 +214,8 @@ mi = states.proj[states.proj$STATE_NAME == "Michigan",]
 sr_MI = mask(sr, vect(mi))
 sr_MI = crop(sr_MI, vect(mi))
 names(sr_MI) = c("weathered.mean", "weathered.sd")
-<<<<<<< HEAD
 sr_MI = aggregate(sr_MI, 10)
-writeRaster(sr_MI, "data/sr_MI.tif", overwrite = TRUE)
+writeRaster(sr_MI, "inst/extdata/sr_MI.tif", overwrite = TRUE)
 
 #Prepare lrNA H isoscape
 pcp = getIsoscapes()
@@ -224,10 +223,4 @@ pcp = c(pcp$d2h, pcp$d2h.se)
 pcp = mask(pcp, vect(naMap))
 pcp = crop(pcp, vect(naMap))
 d2h_lrNA = aggregate(pcp, 48, na.rm = TRUE)
-=======
-sr_MI = aggregate(sr_MI, 10, na.rm = TRUE)
-writeRaster(sr_MI, "data/sr_MI.tif", overwrite = TRUE)
-
-#Prepare lrNA H isoscape
->>>>>>> 34b6e4a233da59e23963944c14ab69d674ffc11c
-writeRaster(d2h_lrNA, "data/d2h_lrNA.tif", overwrite = TRUE)
+writeRaster(d2h_lrNA, "inst/extdata/d2h_lrNA.tif", overwrite = TRUE)

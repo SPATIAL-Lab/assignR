@@ -45,18 +45,10 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     
     if(inherits(isoscape, c("RasterStack", "RasterBrick"))) {
       warning("raster objects are depreciated, transition to package terra")
-      if(is.na(crs(isoscape))) {
-        stop("isoscape must have valid coordinate reference system")
-      }
-      if(nlayers(isoscape) != 2){
-        stop("Input isoscape should be SpatRaster with two layers 
-         (mean and standard deviation)")
-      }
-      if(inherits(isoscape, "RasterStack")){
-        crs(isoscape[[1]]) = crs(isoscape[[2]]) = crs(isoscape)
-      }
       isoscape = rast(isoscape)
-    } else if(inherits(isoscape, "SpatRaster")){
+    } 
+    
+    if(inherits(isoscape, "SpatRaster")){
       if(is.na(crs(isoscape))) {
         stop("isoscape must have valid coordinate reference system")
       }
@@ -260,7 +252,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
 
     # pd value for each validation sample or site
     pd_temp = double(nlyr(pd))
-    for(j in seq(pd_temp)){
+    for(j in seq_along(pd_temp)){
       pd_temp[j] = extract(pd[[j]], v[j], factors = FALSE)[,2]
     }
     if(bySite){
@@ -317,7 +309,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
                                 thresholdType = "area", 
                                genplot = FALSE)
       rv_temp = double(nlyr(qtl))
-      for(k in seq(rv_temp)){
+      for(k in seq_along(rv_temp)){
         rv_temp[k] = extract(qtl[[k]], v[k], factors = FALSE)[, 2]
       }
       if(bySite){

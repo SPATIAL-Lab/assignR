@@ -7,16 +7,11 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   ##legacy raster
   if(inherits(isoscape, c("RasterStack", "RasterBrick"))) {
     warning("raster objects are depreciated, transition to package terra")
-    if(is.na(proj4string(isoscape))) {
-      stop("isoscape must have valid coordinate reference system")
-    }
-    if(nlayers(isoscape) != 2) {
-      stop("isoscape should be a SpatRaster with two layers 
-         (mean and standard deviation)")
-    }
     isoscape = rast(isoscape)
     ##legacy raster
-  } else if(inherits(isoscape, "SpatRaster")){
+  } 
+  
+  if(inherits(isoscape, "SpatRaster")){
     if(is.na(crs(isoscape))){
       stop("isoscape must have valid coordinate reference system")
     }

@@ -49,7 +49,7 @@ wDist = function(pdR, sites, maxpts = 1e5){
     if(length(pdSP) > maxpts){
       index = sample(seq(length(pdSP)), maxpts)
       pdSP = pdSP[index,]
-      values(pdSP) = values(pdSP) / sum(values(pdSP))
+      pdSP = setValues(pdSP, values(pdSP) / sum(values(pdSP)))
     }
     
     d = distance(pdSP, sites[i,])[,1]

@@ -36,7 +36,7 @@ plot(naMap)
 Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution isoscapes of several different types can be downloaded using the `getIsoscapes` function (refer to the help page for details). 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
-d2h_lrNA = rast(system.file("data/d2h_lrNA.tif", package = "assignR"))
+d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
 plot(d2h_lrNA)
 ```
 
@@ -157,7 +157,7 @@ In this case, we do not have any known-origin tissue samples to work with. Howev
 Let's look at the Sr isoscape and compare it with our butterfly H isoscape.
 
 ```{r srIso, fig.width=5, fig.asp=0.8, out.width='45%'}
-sr_MI = rast(system.file("data/sr_MI.tif", package = "assignR"))
+sr_MI = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
 plot(sr_MI$weathered.mean)
 crs(sr_MI)
 crs(d2h_Dp$isoscape.rescale)
