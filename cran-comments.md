@@ -1,11 +1,11 @@
-v2.2.1 removes problematic data from package datasets.
+v2.2.2 fixes error handling for file download attempts on missing resource.
 
 # Test environments
-* local Windows 10 x64, i386; R 4.1.3
+* local Windows 11 x64; R 4.2.3
 * Ubuntu 20.04.4 (on GitHub Actions); R 4.2.1
 * Mac OS 11.6.6 (on GitHub Actions); R 4.2.1
-* Windows x64, i386 (on GitHub Actions); R 3.6.3
-* Windows x64 (on GitHub Actions); devel
+* Windows x64 (on win-builder); R 4.1.3
+* Windows x64 (on win-builder); r84023
 
 # R CMD check results
 No ERRORs, WARNINGs, or NOTEs

@@ -1,11 +1,11 @@
 citHeader("To cite assignR in publications use:")
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title = "assignR: An R package for isotope-based geographic assignment",
-  author = personList(as.person("Chao Ma"),
-                   as.person("Hannah B. Vander Zanden"),
-                   as.person("Michael B. Wunder"),
-                   as.person("Gabriel J. Bowen")),
+  author = c(person(c("Ma", "Chao")),
+                   person(c("Vander Zanden", "Hannah B.")),
+                   person(c("Wunder", "Michael B.")),
+                   person(c("Bowen", "Gabriel J."))),
   journal = "Methods in Ecology and Evolution",
   year = "2020",
   doi = "10.1111/2041-210X.13426",
