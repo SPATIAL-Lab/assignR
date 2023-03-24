@@ -1,6 +1,6 @@
 # assignR news
 
-## assignR 2.2.1.9000
+## assignR 2.2.2
 * Updated error handling in getIsoscapes
 
 ## assignR 2.2.1
