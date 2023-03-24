@@ -28,15 +28,12 @@ Plot the output from \code{\link{isoStack}}.
 }
 
 \examples{
-library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
-sr_MI = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
+# load two isoscapes
+data("d2h_lrNA")
+data("sr_MI")
 
 #stack them
-h_s = isoStack(d2h_lrNA, sr_MI)
+h_s = isoStack(list(d2h_lrNA, sr_MI))
 
 #plot isoStack
 plot(h_s)

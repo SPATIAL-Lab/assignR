@@ -7,7 +7,7 @@ Download and unpack isoscapes from the web
 }
 
 \description{
-This function retrieves gridded isotope maps from waterisotopes.org, unpacks the zip archives, and bundles the map layers as a SpatRaster.
+This function retrieves gridded isotope maps from waterisotopes.org, unpacks the zip archives, and bundles the map layers as a RasterStack.
 }
 
 \usage{
@@ -37,12 +37,11 @@ Accepted \code{isoType} values are:
 \item{"USTap"}{High-resolution contiguous USA surface water H and O isotope values}
 \item{"USSr"}{High-resolution contiguous USA Sr isotope ratios}
 \item{"CaribSr"}{High-resolution Sr isotope ratios for the circum-Caribbean region}
-\item{"GlobalSr"}{High-resolution bioavailable Sr isotope ratios for the global land surface}
 }
 }
 
 \value{
-SpatRaster containing the requested isoscape layers.
+RasterStack containing the requested isoscape layers.
 }
 
 \references{

@@ -16,7 +16,7 @@ isoStack(..., clean = TRUE)
 
 \arguments{
   \item{...}{
-  Two or more SpatRaster isoscapes, each with two layers, or \code{rescale} objects as produced by \code{\link{calRaster}}. For objects other than \code{rescale}, the first layer in each should contain the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
+  Two or more RasterStack or RasterBrick isoscapes, each with two layers, or \code{rescale} objects as produced by \code{\link{calRaster}}. For objects other than \code{rescale}, the first layer in each should contain the tissue-specific isoscape and the second the isoscape prediction uncertainty (1 standard deviation).
   }
   \item{clean}{
   logical. Reconcile differences in raster properties within \code{...}?
@@ -34,13 +34,13 @@ Returns an object of class \dQuote{isoStack}, a list containing the isoscapes ob
 }
 
 \examples{
-library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
-sr_MI = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
+# load two isoscapes
+data("d2h_lrNA")
+data("sr_MI")
 
 #stack them
-h_s = isoStack(d2h_lrNA, sr_MI)
+h_s = isoStack(list(d2h_lrNA, sr_MI))
+
+#plot isoStack
+plot(h_s)
 }

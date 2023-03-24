@@ -63,7 +63,7 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
     }
     rs = list()
     for(i in 1:length(lnames)){
-      rs[[i]] = rast(lnames[i])
+      rs[[i]] = raster(lnames[i])
     }  
     names(rs) = onames
     return(rs)
@@ -83,13 +83,13 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
   switch(giconfig$eType,
          { #1
            if(length(rs) > 1){
-             out = rast(rs)
+             out = stack(rs)
            } else{
              out = rs
            }
          },
          { #2
-           out = rast(rs)
+           out = stack(rs)
          })
   
   message(paste0("Refer to ", tempdir(), "\\metadata.txt for 

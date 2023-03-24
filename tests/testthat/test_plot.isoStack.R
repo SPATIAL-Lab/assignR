@@ -1,6 +1,6 @@
-d2h_crop = crop(d2h_lrNA, ext(-100, -60, 25, 45))
-d2h_proj = project(d2h_lrNA, "+proj=longlat +ellps=clrk66 
-                   +datum=NAD27 +no_defs")
+d2h_crop = crop(d2h_lrNA, extent(matrix(c(-100, -60, 25, 45), nrow = 2)))
+d2h_proj = projectRaster(d2h_lrNA, crs = crs("+proj=longlat +ellps=clrk66 
+                                            +datum=NAD27 +no_defs"))
 s = suppressWarnings(isoStack(d2h_lrNA, d2h_crop))
 
 test_that("isoStack can stack isoscapes and plot can plot them",{

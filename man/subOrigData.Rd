@@ -12,7 +12,7 @@ This function subsets the known-origin isotope dataset included in this package 
 
 \usage{
 subOrigData(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL, 
-  age_code = NULL, mask = NULL, ref_scale = "VSMOW_H", niter = 5000, genplot = TRUE)
+  age_code = NULL, mask = NULL, ref_scale = "VSMOW_H", niter = 5000)
 }
 
 \arguments{
@@ -38,9 +38,6 @@ SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from
 character string. Text identifier for reference scale to which all isotope values will be transformed. See \code{\link[assignR]{stds}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported scale.}
   \item{niter}{
 integer. Number of random samples used to propagate uncertainty in calibration hierarchy transformations.
-}
-\item{genplot}{
-logical. Plot results in R.
 }
 }
 
@@ -72,18 +69,18 @@ d1 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla",
 summary(d1)
 
 # extract d2H data for insects and passerine birds without transformation
-d2 = subOrigData(group = c("Insect","Passerine"), ref_scale = NULL, genplot = FALSE)
+d2 = subOrigData(group = c("Insect","Passerine"), ref_scale = NULL)
 summary(d2)
 
 # extract d18O data for all humans, transformed to the VSMOW/SLAP O reference scale
 d3 = subOrigData(marker = "d18O", 
   group = c("Modern human", "Indigenous human"), ref_scale = "VSMOW_O", 
-  niter = 100, genplot = FALSE)
+  niter = 100)
 summary(d3)
 
 # extract d2H data for humans using taxon, transformed to the VSMOW/SLAP H reference scale
 d4 = subOrigData(marker = "d2H", taxon = "Homo sapiens", ref_scale = 
-  "VSMOW_H", niter = 100, genplot = FALSE)
+  "VSMOW_H", niter = 100)
 summary(d4)
 
 ## WITH mask
@@ -91,5 +88,5 @@ summary(d4)
 \dontrun{d5 = subOrigData(taxon = "Turdus philomelos", mask = naMap)}
 # this works OK
 d6 = subOrigData(taxon = c("Danaus plexippus", "Setophaga ruticilla", 
-  "Turdus migratorius"), mask = naMap, genplot = FALSE)
+  "Turdus migratorius"), mask = naMap)
 }

@@ -1,12 +1,9 @@
 r1 = aggregate(sr_MI, 5)
-r2 = project(d2h_lrNA, r1)
+r2 = projectRaster(d2h_lrNA, r1)
 r3 = isoStack(r1, r2)
-dpts.vect = spatSample(c(r1, r2), 20, na.rm = TRUE, as.points = TRUE)
-dpts.geom = crds(dpts.vect)
-dpts = SpatialPointsDataFrame(dpts.geom, data = values(dpts.vect),
-                              proj4string = CRS(crs(dpts.vect, proj = TRUE)))
+dpts = sampleRandom(stack(r1, r2), 20, sp = TRUE)
 dpts$weathered.mean = dpts$weathered.mean + rnorm(20, 0, 0.0005)
-dpts$d2h = dpts$d2h + rnorm(20, 0, 8)
+dpts$mean = dpts$mean + rnorm(20, 0, 8)
 dpts$Site_ID = letters[1:20]
 d1 = dpts[,1:2]
 d2 = dpts
@@ -28,6 +25,8 @@ test_that("QA and plot.QA work",{
   expect_is(qa2, "QA")
   expect_silent(plot(qa1, qa2))
   expect_silent(plot(qa3))
-  expect_silent(plot(qa1, qa2))
-  expect_silent(plot(qa1, outDir = tempdir()))
+  expect_error(plot.QA(d1))
+  expect_error(plot.QA(qa1, outDir = 2))
+  expect_silent(plot.QA(qa1, qa2))
+  expect_silent(plot.QA(qa1, outDir = tempdir()))
 })

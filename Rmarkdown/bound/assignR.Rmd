@@ -28,7 +28,7 @@ Let's load **assignR** and two other packages we'll need.
 
 ```{r load, message=FALSE, warning=FALSE, results="hide"}
 library(assignR)
-library(terra)
+library(raster)
 library(sp)
 ```
 
@@ -44,7 +44,7 @@ plot(naMap)
 Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution isoscapes of several different types can be downloaded using the `getIsoscapes` function (refer to the help page for details). 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
+data("d2h_lrNA")
 plot(d2h_lrNA)
 ```
 
@@ -106,7 +106,7 @@ For a real application you would want to explore the database to find measuremen
 
 We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. `calRaster` fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a calibrated, sample-type specific isoscape.
 
-```{r calRaster, fig.width=5, fig.asp=0.8, out.width='90%'}
+```{r calRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
 d2h_Ll = calRaster(known = Ll_d, isoscape = d2h_lrNA, mask = naMap)
 ```
 
@@ -135,14 +135,14 @@ Notice that both the d2H values and the uncertainties have been updated to refle
 *****
 Now we will produce posterior probability density maps for the unknown samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://doi.org/10.1007/978-90-481-3354-3_12)
 
-```{r pdRaster, fig.width=5, fig.asp=0.8, out.width='95%'}
-Ll_prob = pdRaster(d2h_Ll, Ll_un)
+```{r pdRaster, fig.width=5, fig.asp=0.8, out.width='45%'}
+Ll_prob = pdRaster(d2h_Ll, unknown = Ll_un)
 ```
 
 Cell values in these maps are small because each cell's value represents the probability that this one cell, out of all of them on the map, is the actual origin of the sample. Together, all cell values on the map sum to '1', reflecting the assumption that the sample originated *somewhere* in the study area. Let's check this for sample 'a'.
 
 ```{r sums}
-global(Ll_prob[[1]], 'sum', na.rm = TRUE)
+cellStats(Ll_prob[[1]], 'sum')
 ```
 
 Check out the help page for `pdRaster` for additional options, including the use of informative prior probabilities.
@@ -165,18 +165,18 @@ In this case, we do not have any known-origin tissue samples to work with. Howev
 Let's look at the Sr isoscape and compare it with our butterfly H isoscape.
 
 ```{r srIso, fig.width=5, fig.asp=0.8, out.width='45%'}
-sr_MI = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
+data("sr_MI")
 plot(sr_MI$weathered.mean)
-crs(sr_MI)
-crs(d2h_Dp$isoscape.rescale)
+proj4string(sr_MI)
+proj4string(d2h_Dp$isoscape.rescale)
 ```
 
 Notice that the we have two different spatial data objects, one for Sr and one for d2H, and that they have different extents and projections. In order to conduct a multi-isotope analysis, we'll first combine these into a single object using the `isoStack` function. In addition to combining the objects, this function resolves differences in their projection, resolution, and extent. It's always a good idea to check that the properties of the isoStack components are consistent with your expectations.
 
 ```{r isoStack}
 Dp_multi = isoStack(d2h_Dp, sr_MI)
-lapply(Dp_multi, crs)
-lapply(Dp_multi, ext)
+lapply(Dp_multi, proj4string)
+lapply(Dp_multi, bbox)
 ```
 
 *****
@@ -189,7 +189,7 @@ Dp_unk = data.frame("ID" = c("A", "B"), "d2H" = c(-86, -96), "Sr" = c(0.7089, 0.
 *****
 We are ready to make our probability maps. First let's see how our posterior probabilities would look if we only used the hydrogen isotope data.
 
-```{r Dp_Honly, fig.width=5, fig.asp=1.6, out.width='90%'}
+```{r Dp_Honly, fig.width=5, fig.asp=0.8, out.width='45%'}
 Dp_pd_Honly = pdRaster(Dp_multi[[1]], Dp_unk[,-3])
 ```
 
@@ -198,7 +198,7 @@ We see pretty clear distinctions between the two samples, driven by a strong SW-
 *****
 What if we add the Sr information to the analysis? The syntax for running `pdRaster` is the same, but now we provide our isoStack object in place of the single isoscape. The function will use the spatial covariance of the isoscape values to approximate the error covariance for the two (or more) markers and return posterior probabilities based on the multivariate normal probability density function evaluated at each grid cell.
 
-```{r Dp_multi, fig.width=5, fig.asp=1.6, out.width='90%'}
+```{r Dp_multi, fig.width=5, fig.asp=0.8, out.width='45%'}
 Dp_pd_multi = pdRaster(Dp_multi, Dp_unk)
 ```
 
@@ -251,7 +251,7 @@ A common goal in movement research is to characterize the distance or direction 
 
 The analyses conducted in **assignR** cannot determine a single unique location of origin for a given sample, but the do give the probability that each location on the map is the location of origin. If we know the collection location for a sample, we can calculate the distance and direction between each possible location of origin and the collection site, and weighting these by their posterior probability generate a distribution (and statistics for that distribution) describing the distance and direction of travel.
 
-Let's do a weighted distance analysis for our first two unknown origin loggerhead shrike samples. Since these are pretend samples, we'll pretend that the two point locations we defined above for the `oddsRatio` analysis are the locations at which these samples were collected. Here are those locations plotted with the corresponding posterior probability maps.
+Let's do a weighted distance analysis for our first two unknown origin loggerhead shrike samples. Since these are pretend samples, we'll pretend that the two point locations we defined above for the `oddsRatio` analysis are the locations at which these samples were collected. Here are those locations plotted with the corresponding posterior probability maps. Then we'll use the functions `c` and `plot` to view the summary statistics and distributions returned by `wDist`.
 
 ```{r wDist1, fig.width=5, fig.asp=0.8, out.width='45%'}
 # View the data
@@ -346,7 +346,7 @@ How would using a different isoscape or different known origin dataset affect th
 Let's modify our isoscape to add some random noise.
 
 ```{r modraster, fig.width=5, fig.asp=0.8}
-dv = values(d2h_lrNA[[1]])
+dv = getValues(d2h_lrNA[[1]])
 dv = dv + rnorm(length(dv), 0, 15)
 d2h_fuzzy = setValues(d2h_lrNA[[1]], dv)
 plot(d2h_fuzzy)
@@ -356,7 +356,7 @@ plot(d2h_fuzzy)
 We'll combine the fuzzy isoscape with the uncertainty layer from the original isoscape, then rerun `QA` using the new version. Obviously this is not something you'd do in real work, but as an example it allows us to ask the question "how would the quality of my assignments change if my isoscape predictions were of reduced quality?". 
 
 ```{r QA2, warning=FALSE, results='hide'}
-d2h_fuzzy = c(d2h_fuzzy, d2h_lrNA[[2]])
+d2h_fuzzy = brick(d2h_fuzzy, d2h_lrNA[[2]])
 qa2 = QA(Ll_d, d2h_fuzzy, valiStation = 8, valiTime = 4, by = 5, mask = naMap, name = "fuzzy")
 ```
 

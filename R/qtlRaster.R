@@ -1,12 +1,7 @@
-qtlRaster = function(pdR, threshold, thresholdType = "area", 
-                     genplot = TRUE, outDir = NULL){
-  
-  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick", "SpatRaster"))){
-    stop("input probability density map (pdR) should be a SpatRaster")
-  }
-  if(!inherits(pdR, "SpatRaster")){
-    warning("raster objects are depreciated, transition to package terra")
-    pdR = rast(pdR)
+qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL){
+  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick"))){
+    stop("input probability density map (pdR) should be one of the following 
+         classes: RasterLayer, RasterStack or RasterBrick")
   }
   if(!inherits(threshold, "numeric")){
     stop("threshold must be a number between 0 and 1 ")
@@ -21,9 +16,8 @@ qtlRaster = function(pdR, threshold, thresholdType = "area",
     stop("thresholdType must be 'area' or 'prob'. See help page for 
          further information")
   }
-  if(!inherits(genplot, "logical")) {
-    message("genplot should be logical (T or F), using default = T")
-    genplot = TRUE
+  if(!inherits(genplot, "logical")){
+    stop("genplot must be logical (T/F)")
   }
   if(!is.null(outDir)){
     if(!inherits(outDir, "character")){
@@ -36,7 +30,7 @@ qtlRaster = function(pdR, threshold, thresholdType = "area",
   }
   
   result = pdR
-  n = nlyr(result)  
+  n = nlayers(result)  
   if(thresholdType == "prob"){
     for(i in seq_len(n)){
       if(threshold == 0){
@@ -44,7 +38,7 @@ qtlRaster = function(pdR, threshold, thresholdType = "area",
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values = na.omit(values(pdR[[i]]))
+        pdR.values = na.omit(getValues(pdR[[i]]))
         pdR.values = sort(pdR.values)
         k = length(pdR.values)
         left = 1
@@ -77,7 +71,7 @@ qtlRaster = function(pdR, threshold, thresholdType = "area",
       } else if(threshold == 1){
         cut = 0
       } else{
-        pdR.values = na.omit(values(pdR[[i]]))
+        pdR.values = na.omit(getValues(pdR[[i]]))
         k = length(pdR.values)
         cut = sort(pdR.values)[round((1-threshold)*k)]
       }

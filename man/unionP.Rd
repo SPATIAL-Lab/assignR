@@ -16,34 +16,32 @@ unionP(pdR)
 
 \arguments{
   \item{pdR}{
-SpatRaster of probability density maps, e.g., as produced by \code{pdRaster}.
+RasterStack or RasterBrick of probability density maps, e.g., as produced by \code{pdRaster}.
 }
 }
 
 \value{
-SpatRaster.
+RasterLayer.
 }
 
 \examples{
-library(terra)
-
-# load North America boundary and global isoscape
+# load North America boundary and isoscape
 data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
+data("d2h_lrNA")
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
+d = subOrigData(group = "Modern human", mask = naMap, niter = 100)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(d, d2h_lrNA, naMap, genplot = FALSE)
+r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
 
 # four unknown-origin examples
 id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
-un = data.frame(id, d2H)
+un = data.frame(id,d2H)
 
 # posterior probabilities
-pp = pdRaster(r, un, mask = naMap, genplot = FALSE)
+pp = pdRaster(r, unknown = un, mask = naMap)
 
 # probability that one or more individuals are from a given location
 unionP(pp)

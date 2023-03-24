@@ -20,7 +20,7 @@ QA(known, isoscape, bySite = TRUE, valiStation = 1, valiTime = 50,
   \item{known}{
 subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue isotope data from the \code{subOrigData} function or provided by user. User-provided data must be formatted as subOrigData objects (see \code{\link{subOrigData}}) or a SpatialPointsDataFrame (see Details).
 }
-  \item{isoscape}{SpatRaster with two layers or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
+  \item{isoscape}{RasterStack or RasterBrick with two layers or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
 }
   \item{bySite}{logical. Resample known by site (TRUE) or by sample (FALSE)?}
   \item{valiStation}{numeric. How many sites or samples from known are withheld for validation? Must be two or more smaller than the length of \code{known}.
@@ -75,11 +75,10 @@ Vander Zanden, H. B. et al. (2014) Contrasting assignment of migratory organisms
 }
 
 \examples{
-library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
+# load data
+data("naMap") # North America 
+data("d2h_lrNA") # precipitation hydrogen isoscape for North America
+data("knownOrig") # hydrogen isotopes of known-origin samples
 
 # extract some known-origin data
 d1 = subOrigData(taxon = "Buteo lagopus")

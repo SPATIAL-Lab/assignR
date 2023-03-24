@@ -16,16 +16,16 @@ pdRaster(r, unknown, prior = NULL, mask = NULL, genplot = TRUE, outDir = NULL)
 
 \arguments{
 \item{r}{
-SpatRaster with two layers, \code{rescale} object (see \code{\link{calRaster}}), or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the substrate-specific isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
+RasterStack or RasterBrick with two layers, \code{rescale} object (see \code{\link{calRaster}}), or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the substrate-specific isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
 }
 \item{unknown}{
 data.frame, \code{\link{refTrans}} object, or list of two or more \code{\link{refTrans}} objects. For user-created data.frame, first column should contain unique sample IDs, and subsequent columns should contain sample isotope values for one or more isotopes to be used in assignment.
 }
 \item{prior}{
-SpatRaster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{r}.
+raster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{r}.
 }
 \item{mask}{
-SpatialPolygons or SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this is not provided, a default of mask of the extent of \code{r} is used.
+SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this is not provided, a default of mask of the extent of \code{r} is used.
 }
 \item{genplot}{
 logical. Plot results in R.
@@ -40,7 +40,7 @@ If more than one isotope marker is to be used for multivariate assignment, \code
 }
 
 \value{
-SpatRaster including a probability density surface for each individual in \code{unknown}. If \code{outDir} is not NULL, writes individual rasters in GeoTIFF format and a single PDF file with images for each probability density raster to the designated directory.
+RasterStack or RasterLayer including a probability density surface for each individual in \code{unknown}. If \code{outDir} is not NULL, writes individual rasters in GeoTIFF format and a single PDF file with images for each probability density raster to the designated directory.
 }
 
 \seealso{
@@ -50,17 +50,15 @@ SpatRaster including a probability density surface for each individual in \code{
 }
 
 \examples{
-library(terra)
-
 # load North America boundary and global isoscape
 data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
+data("d2h_lrNA")
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
+d = subOrigData(group = "Modern human", mask = naMap)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(d, d2h_lrNA, naMap, genplot = FALSE)
+r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
 
 # sample to assign
 id = "smile"
@@ -68,5 +66,5 @@ d2H = -80
 un = data.frame(id, d2H)
 
 # posterior probability surface
-pp = pdRaster(r, un, mask = naMap)
+asn = pdRaster(r, unknown = un, mask = naMap)
 }
