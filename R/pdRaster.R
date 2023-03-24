@@ -10,16 +10,23 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     r = r$isoscape.rescale
   }
   
-  if(inherits(r, c("RasterStack", "RasterBrick"))){
-    if(is.na(proj4string(r))) {
+  ##legacy raster
+  if(inherits(r, c("RasterStack", "RasterBrick"))) {
+    warning("raster objects are depreciated, transition to package terra")
+    r = rast(r)
+    ##legacy raster
+  } 
+  
+  if(inherits(r, "SpatRaster")){
+    if(is.na(crs(r))){
       stop("r must have valid coordinate reference system")
     }
-    if(nlayers(r) != 2) {
-      stop("r should contain RasterStack or RasterBrick with two layers 
+    if(nlyr(r) != 2) {
+      stop("r should be a SpatRaster with two layers 
          (mean and standard deviation)")
     }
   } else{
-    stop("r should contain RasterStack or RasterBrick with two layers 
+    stop("r should be a SpatRaster with two layers 
          (mean and standard deviation)")
   }
   
@@ -36,14 +43,14 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     rescaled.mean = r[[1]]
     rescaled.sd = r[[2]]
   } else{
-    rescaled.mean = crop(r[[1]], mask)
-    rescaled.mean = mask(rescaled.mean, mask)
-    rescaled.sd = crop(r[[2]], mask)
-    rescaled.sd = mask(rescaled.sd, mask)
+    rescaled.mean = crop(r[[1]], vect(mask))
+    rescaled.mean = mask(rescaled.mean, vect(mask))
+    rescaled.sd = crop(r[[2]], vect(mask))
+    rescaled.sd = mask(rescaled.sd, vect(mask))
   }
   
-  errorV = getValues(rescaled.sd)
-  meanV = getValues(rescaled.mean)
+  errorV = values(rescaled.sd, mat = FALSE)
+  meanV = values(rescaled.mean, mat = FALSE)
   result = NULL
   temp = list()
   
@@ -52,14 +59,14 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     indv.id = indv.data[1,1]
     assign = dnorm(indv.data[1,2], mean = meanV, sd = errorV)
     if(!is.null(prior)){
-      assign = assign * getValues(prior)
+      assign = assign * values(prior, mat = FALSE)
     }
     assign.norm = assign / sum(assign, na.rm = TRUE)
     assign.norm = setValues(rescaled.mean, assign.norm)
     if (i == 1){
       result = assign.norm
     } else {
-      result = stack(result, assign.norm)
+      result = c(result, assign.norm)
     }
     if(!is.null(outDir)){
       filename = paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
@@ -78,18 +85,24 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
 
   ni = length(r)
   
-  for(i in r){
-    if(inherits(i, c("RasterStack", "RasterBrick"))){
-      if(is.na(proj4string(i))) {
-        stop("r must have valid coordinate reference system")
+  for(i in seq(ni)){
+    ##legacy raster
+    if(inherits(r[[i]], c("RasterStack", "RasterBrick"))) {
+      warning("raster objects are depreciated, transition to package terra")
+      r[[i]] = rast(r[[i]])
+      ##legacy raster
+    }
+    
+    if(inherits(r[[i]], "SpatRaster")){
+      if(is.na(crs(r[[i]]))){
+        stop("isoscape must have valid coordinate reference system")
       }
-      if(nlayers(i) != 2) {
-        stop("r should contain RasterStacks or RasterBricks with two layers 
+      if(nlyr(r[[i]]) != 2) {
+        stop("isoscape should be a SpatRaster with two layers 
          (mean and standard deviation)")
       }
-    } else{
-      stop("r should contain RasterStacks or RasterBricks with two layers 
-         (mean and standard deviation)")
+    } else {
+      stop("isoscape layers should be a SpatRaster")
     }
   }
   
@@ -106,32 +119,32 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     rescaled.mean = r[[1]][[1]]
     rescaled.sd = r[[1]][[2]]
   } else{
-    rescaled.mean = crop(r[[1]][[1]], mask)
-    rescaled.mean = mask(rescaled.mean, mask)
-    rescaled.sd = crop(r[[1]][[2]], mask)
-    rescaled.sd = mask(rescaled.sd, mask)
+    rescaled.mean = crop(r[[1]][[1]], vect(mask))
+    rescaled.mean = mask(rescaled.mean, vect(mask))
+    rescaled.sd = crop(r[[1]][[2]], vect(mask))
+    rescaled.sd = mask(rescaled.sd, vect(mask))
   }
   
-  meanV = getValues(rescaled.mean)
-  errorV = getValues(rescaled.sd)
-  
+  meanV = values(rescaled.mean, mat = FALSE)
+  errorV = values(rescaled.sd, mat = FALSE)
+
   for(i in 2:ni){
     if(is.null(mask)){
       rescaled.mean = r[[i]][[1]]
       rescaled.sd = r[[i]][[2]]
     } else{
-      rescaled.mean = crop(r[[i]][[1]], mask)
-      rescaled.mean = mask(rescaled.mean, mask)
-      rescaled.sd = crop(r[[i]][[2]], mask)
-      rescaled.sd = mask(rescaled.sd, mask)
+      rescaled.mean = crop(r[[i]][[1]], vect(mask))
+      rescaled.mean = mask(rescaled.mean, vect(mask))
+      rescaled.sd = crop(r[[i]][[2]], vect(mask))
+      rescaled.sd = mask(rescaled.sd, vect(mask))
     }
-    meanV = cbind(meanV, getValues(rescaled.mean))
-    errorV = cbind(errorV, getValues(rescaled.sd))
+    meanV = cbind(meanV, values(rescaled.mean, mat = FALSE))
+    errorV = cbind(errorV, values(rescaled.sd, mat = FALSE))
   }
 
   result = NULL
   temp = list()
-  assign = as.numeric(rep(NA, length(rescaled.mean)))
+  assign = as.numeric(rep(NA, nrow(meanV)))
   cells = seq_along(meanV[,1])
   cellmask = apply(cbind(meanV, errorV), 1, anyNA)
   cells = cells[!cellmask]
@@ -167,14 +180,14 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     }
 
     if(!is.null(prior)){
-      assign = assign * getValues(prior)
+      assign = assign * values(prior, mat = FALSE)
     }
     assign.norm = assign / sum(assign[!is.na(assign)])
     assign.norm = setValues(rescaled.mean, assign.norm)
     if (i == 1){
       result = assign.norm
     } else {
-      result = stack(result, assign.norm)
+      result = c(result, assign.norm)
     }
     if(!is.null(outDir)){
       filename = paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
@@ -249,14 +262,25 @@ check_unknown = function(unknown, n){
 check_prior = function(prior, r){
   
   if(!is.null(prior)){
-    if(!inherits(prior, "RasterLayer")){
-      stop("prior should be a raster with one layer")
+    #legacy raster
+    if(inherits(prior, "RasterLayer")){
+      warning("raster objects are depreciated, transition to package terra")
+      prior = rast(prior)
+      #legacy raster
     } 
-    if(proj4string(prior) != proj4string(r[[1]])) {
-      prior = projectRaster(prior, crs = crs(r[[1]]))
-      message("prior was reprojected")
+    
+    if(inherits(prior, "SpatRaster")){
+      if(is.na(crs(prior))){
+        stop("isoscape must have valid coordinate reference system")
+      }
+      if(crs(prior) != crs(r[[1]])) {
+        prior = project(prior, crs = crs(r[[1]]))
+        message("prior was reprojected")
+      }
+      compareGeom(prior, r)
+    } else{
+      stop("prior should be a SpatRaster")
     }
-    compareRaster(r[[1]], prior)
   }
   
   return(prior)
@@ -286,10 +310,10 @@ check_mask = function(mask, r){
   if (!is.null(mask)) {
     if(inherits(mask, "SpatialPolygons")){
       if (is.na(proj4string(mask))){
-        stop("mask must have coord. ref.")
+        stop("mask must have valid coordinate reference system")
       } 
-      if(proj4string(mask) != proj4string(r[[1]])) {
-        mask = spTransform(mask, crs(r[[1]]))
+      if(proj4string(mask) != crs(r, proj = TRUE)){
+        mask = spTransform(mask, crs(r))
         message("mask was reprojected")
       }
     } else {
@@ -313,12 +337,12 @@ write_out = function(outDir, genplot, n, result, data){
   
   if (genplot == TRUE){
     if (n == 1){
-      pp = spplot(result)
+      pp = plot(result)
       print(pp)
     } else {
-      for (i in seq_len(n)){
-        print(spplot(result@layers[[i]], scales = list(draw = TRUE), main=paste("Probability Density Surface for", data[i,1])))
-      }
+      pp = plot(result, main=paste("Probability Density Surface for", 
+                                   data[, 1]))
+      print(pp)
     }
   }
   

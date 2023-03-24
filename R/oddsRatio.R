@@ -1,29 +1,38 @@
 oddsRatio = function(pdR, inputP){
   
-  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick"))){
-    stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
+  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick", "SpatRaster"))){
+    stop("input probability density map (pdR) should be a SpatRaster")
+  }
+  if(!inherits(pdR, "SpatRaster")){
+    warning("raster objects are depreciated, transition to package terra")
+    pdR = rast(pdR)
   }
 
   if(inherits(inputP, "SpatialPoints")){
     if(is.na(proj4string(inputP))){
       stop("inputP must have coord. ref.")
     }
-    if(proj4string(inputP) != proj4string(pdR)){
+    if(proj4string(inputP) != crs(pdR, proj = TRUE)){
       inputP = spTransform(inputP, crs(pdR))
       message("inputP was reprojected")
     }
     
     n = length(inputP)
-    extrVals = extract(pdR, inputP)
+    extrVals = extract(pdR, vect(inputP))[,-1]
     if(any(is.na(extrVals))){
       stop("one or more points have probability NA")
     }
-    result2 = data.frame(ratioToMax = extrVals/maxValue(pdR), ratioToMin = extrVals/minValue(pdR))
+    gmax = matrix(rep(global(pdR, "max", na.rm = TRUE)[,1], n), 
+                  nrow = n, byrow = TRUE)
+    gmin = matrix(rep(global(pdR, "min", na.rm = TRUE)[,1], n), 
+                  nrow = n, byrow = TRUE)
+    result2 = data.frame(ratioToMax = extrVals/gmax, 
+                         ratioToMin = extrVals/gmin)
     if(n == 1){
       result = result2
     }
     else if(n == 2){
-      if(inherits(pdR, c("RasterStack", "RasterBrick"))){
+      if(nlyr(pdR) > 1){
         result1 = (extrVals[1,]/(1-extrVals[1,])) / 
           (extrVals[2,]/(1-extrVals[2,]))
       } else {
@@ -45,27 +54,20 @@ oddsRatio = function(pdR, inputP){
     if(is.na(proj4string(inputP))){
       stop("inputP must have coord. ref.")
     }
-    if(proj4string(inputP) != proj4string(pdR)){
+    if(proj4string(inputP) != crs(pdR, proj = TRUE)){
       inputP = spTransform(inputP, crs(pdR))
       message("inputP was reprojected")
     }
     
-    extrVals = extract(pdR, inputP)
-    if(nlayers(pdR) > 1){
-      extrVals.p1 = colSums(extrVals[[1]], na.rm = TRUE)
-      extrVals.p2 = colSums(extrVals[[2]], na.rm = TRUE)
-      if(any(extrVals.p1 == 0) | any(extrVals.p2 == 0)){
-        stop("No values in P1 and/or P2")
-      }
-    } else {
-      extrVals.p1 = sum(extrVals[[1]], na.rm = TRUE)
-      extrVals.p2 = sum(extrVals[[2]], na.rm = TRUE)
-      if(extrVals.p1 == 0 | extrVals.p2 == 0){
-        stop("No values in P1 and/or P2")
-      }
+    extrVals = extract(pdR, vect(inputP), "sum", na.rm = TRUE)
+    if(any(extrVals[, -1] == 0)){
+      stop("No values in P1 and/or P2")
     }
-    result1 = (extrVals.p1/(1-extrVals.p1))/(extrVals.p2/(1-extrVals.p2))
-    result2 = ncell(crop(pdR, inputP[1,]))/ncell(crop(pdR, inputP[2,]))
+    
+    result1 = (extrVals[1, -1]/(1-extrVals[1, -1])) /
+      (extrVals[2, -1]/(1-extrVals[2, -1]))
+    result2 = length(cells(crop(pdR, vect(inputP[1,])))) / 
+      length(cells(crop(pdR, vect(inputP[2,]))))
     result = list(oddsRatio = result1, polygonCellRatio = result2)
     names(result) = c("P1/P2 odds ratio", "Ratio of numbers of cells in two polygons")
   }

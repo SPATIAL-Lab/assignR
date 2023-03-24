@@ -1,4 +1,4 @@
-\name{d2h_lrNA}
+\name{d2h_lrNA.tif}
 
 \alias{d2h_lrNA}
 
@@ -10,9 +10,6 @@ data: low resolution North American growing season H isoscape
 
 \description{
 Interpolated growing season precipitation H isoscape from waterisotopes.org
-}
-
-\usage{data("d2h_lrNA")
 }
 
 \format{
@@ -28,9 +25,9 @@ IAEA/WMO (2018) Global Network of Isotopes in Precipitation. The GNIP Database. 
 }
 
 \examples{
-library(raster)
+library(terra)
 
-data("d2h_lrNA")
+d2h_lrNA = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
 plot(d2h_lrNA)
 }
 

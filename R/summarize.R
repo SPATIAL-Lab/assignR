@@ -1,11 +1,14 @@
 jointP = function(pdR){
   
-  if(!inherits(pdR, c("RasterStack", "RasterBrick"))){
-    stop("input probability density map (pdR) should be RasterStack or 
-         RasterBrick")
+  if(!inherits(pdR, c("RasterStack", "RasterBrick", "SpatRaster"))){
+    stop("input probability density map (pdR) should be a SpatRaster")
+  }
+  if(!inherits(pdR, "SpatRaster")){
+    warning("raster objects are depreciated, transition to package terra")
+    pdR = rast(pdR)
   }
   
-  n = nlayers(pdR)
+  n = nlyr(pdR)
   result = pdR[[1]] * pdR[[2]]
   if(n > 2){
     for(i in seq_len(n)[-1:-2]){
@@ -13,7 +16,7 @@ jointP = function(pdR){
     }
   }
   
-  result = result / cellStats(result,sum)
+  result = result / global(result, sum, na.rm = TRUE)[1, 1]
   names(result) = "Joint_Probability"
   p = options("scipen")
   on.exit(options(scipen = p))
@@ -25,15 +28,18 @@ jointP = function(pdR){
 
 unionP = function(pdR){
   
-  if(!inherits(pdR, c("RasterStack", "RasterBrick"))){
-    stop("input probability density map (pdR) should be RasterStack or 
-         RasterBrick")
+  if(!inherits(pdR, c("RasterStack", "RasterBrick", "SpatRaster"))){
+    stop("input probability density map (pdR) should be a SpatRaster")
+  }
+  if(!inherits(pdR, "SpatRaster")){
+    warning("raster objects are depreciated, transition to package terra")
+    pdR = rast(pdR)
   }
   
   result = (1 - pdR[[1]])
-  n = nlayers(pdR)
+  n = nlyr(pdR)
   for(i in seq_len(n)[-1]){
-    result = overlay(result, pdR[[i]], fun = function(x,y){return(x*(1-y))})
+    result = lapp(c(result, pdR[[i]]), fun = function(x, y){return(x*(1-y))})
   }
   
   plot(1-result)

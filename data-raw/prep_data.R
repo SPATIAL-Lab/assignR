@@ -2,11 +2,11 @@ options(stringsAsFactors = FALSE)
 library(openxlsx)
 library(sp)
 library(devtools)
-library(raster)
+library(terra)
 library(assignR)
 
 #WGS84 projection
-p = CRS("+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs")
+p = CRS("+proj=longlat +ellps=WGS84 +no_defs")
 
 #----
 
@@ -131,6 +131,12 @@ GIconfig = list(
                "CaribSr_Riv.tif"),
     onames = c("sr_rock", "sr_weath", "sr_riv"),
     eType = 1
+  ),
+  "GlobalSr" = list(
+    dpath.post = "GlobalSr.zip",
+    lnames = c("GlobalSr.tif", "GlobalSr_se.tif"),
+    onames = c("sr_bio", "sr_bio_se"),
+    eType = 2
   )
 )
 
@@ -194,18 +200,27 @@ knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples,
                  sources = knownOrig_sources)
 
 stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
-  
+
+#Write it all to /data/
+use_data(knownOrig, stds, overwrite = TRUE)
+
 #Prepare MI strontium isoscape
 sr = getIsoscapes("USSr")
 sr = sr$sr_weath
-srun = setValues(sr, getValues(sr) * 0.01)
-sr = brick(sr, srun)
+srun = setValues(sr, values(sr) * 0.01)
+sr = c(sr, srun)
 states.proj = spTransform(states, crs(sr))
 mi = states.proj[states.proj$STATE_NAME == "Michigan",]
-sr_MI = mask(sr, mi)
-sr_MI = crop(sr_MI, mi)
+sr_MI = mask(sr, vect(mi))
+sr_MI = crop(sr_MI, vect(mi))
 names(sr_MI) = c("weathered.mean", "weathered.sd")
 sr_MI = aggregate(sr_MI, 10)
+writeRaster(sr_MI, "inst/extdata/sr_MI.tif", overwrite = TRUE)
 
-#Write it all to /data/
-use_data(knownOrig, stds, sr_MI, overwrite = TRUE)
+#Prepare lrNA H isoscape
+pcp = getIsoscapes()
+pcp = c(pcp$d2h, pcp$d2h.se)
+pcp = mask(pcp, vect(naMap))
+pcp = crop(pcp, vect(naMap))
+d2h_lrNA = aggregate(pcp, 48, na.rm = TRUE)
+writeRaster(d2h_lrNA, "inst/extdata/d2h_lrNA.tif", overwrite = TRUE)
