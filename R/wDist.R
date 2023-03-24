@@ -1,22 +1,27 @@
 wDist = function(pdR, sites, maxpts = 1e5){
   
-  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick"))){
-    stop("input probability density map (pdR) should be one of the following class: RasterLayer, RasterStack or RasterBrick")
+  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick", "SpatRaster"))){
+    stop("input probability density map (pdR) should be a SpatRaster")
   }
-  if(is.na(proj4string(pdR))){
+  if(!inherits(pdR, "SpatRaster")){
+    warning("raster objects are depreciated, transition to package terra")
+    pdR = rast(pdR)
+  }
+  if(is.na(crs(pdR))){
     stop("pdR must have coord. ref.")
   }
   
   if(inherits(sites, "SpatialPoints")){
-    if(length(sites) != nlayers(pdR)){
+    if(length(sites) != nlyr(pdR)){
       stop("sites and pdR have different lenghts; wDist requires one site per pdR layer")
     }
     if(is.na(proj4string(sites))){
       stop("sites must have coord. ref.")
     }
-    if(proj4string(sites) != proj4string(pdR)){
+    if(proj4string(sites) != crs(pdR, proj = TRUE)){
       sites = spTransform(sites, crs(pdR))
     }
+    sites = vect(sites)
   } else{
     stop("sites should be a SpatialPoints object")
   }
@@ -35,21 +40,24 @@ wDist = function(pdR, sites, maxpts = 1e5){
     Position(function(x) x >= y, w)
   }
   
+  #for safety; using projected data works on most platforms
+  pdR = project(pdR, "+proj=longlat +ellps=WGS84")
+  sites = project(sites, "+proj=longlat +ellps=WGS84")
+  
   for(i in seq_along(sites)){
-    pdSP = rasterToPoints(pdR[[i]], spatial = TRUE)
+    pdSP = as.points(pdR[[i]])
     if(length(pdSP) > maxpts){
       index = sample(seq(length(pdSP)), maxpts)
       pdSP = pdSP[index,]
-      pdSP@data[,1] = pdSP@data[,1] / sum(pdSP@data[,1])
+      pdSP = setValues(pdSP, values(pdSP) / sum(values(pdSP)))
     }
     
-    #for safety; using projected data works on most platforms
-    pdSP = spTransform(pdSP, "+proj=longlat +ellps=WGS84")
-    sites = spTransform(sites, "+proj=longlat +ellps=WGS84")
-    
-    d = distGeo(pdSP, sites[i,])
-    b = bearing(pdSP, sites[i,])
-    w = pdSP@data[,1]
+    d = distance(pdSP, sites[i,])[,1]
+    ####gotta find an equivalent for terra
+    b = bearing(geom(pdSP)[,c("x", "y")], 
+                geom(sites[i])[,c("x", "y")])
+    ####
+    w = values(pdSP)[,1]
     d.dens = density(d, weights = w)
     b.dens = density(b, weights = w)    
     

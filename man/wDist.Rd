@@ -16,7 +16,7 @@ wDist(pdR, sites, maxpts = 1e5)
 
 \arguments{
   \item{pdR}{
-  RasterStack or RasterBrick of n probability density maps, e.g., as produced by \code{pdRaster}.
+  SpatRaster of n probability density maps, e.g., as produced by \code{pdRaster}.
   }
   \item{sites}{
   SpatialPoints* object containing the collection locations for the n samples represented in \code{pdR}.
@@ -29,7 +29,7 @@ wDist(pdR, sites, maxpts = 1e5)
 \details{
 \code{pdR} and \code{sites} must be of equal length and corresponding order. Names in the output object are taken from the names of the layers in \code{pdR}.
 
-Distances and bearings are calculated on the WGS84 geoid using functions from the \pkg{geosphere} package. These calculations can take a long time for large rasters. If \code{maxpts} is less than the number of grid cells in each \code{pdR} layer, calculations are caried out for \code{maxpts} randomly selected cells.
+Distances and bearings are calculated on the WGS84 geoid using functions from the \pkg{terra} and \pkg{geosphere} package. These calculations can take a long time for large rasters. If \code{maxpts} is less than the number of grid cells in each \code{pdR} layer, calculations are caried out for \code{maxpts} randomly selected cells.
 
 Bearing values correspond to the initial bearing from source to collection location, and are reported on a scale of -180 to +180 degrees. The statistical metrics are rectified so that values for distributions spanning due south are reported correctly. Both weighted bearing and distance distributions are often multimodal, and it is recommended to review the distribution densities to assess the representativeness of the statistics (e.g., using \code{\link{plot.wDist}}). 
 }
@@ -48,24 +48,25 @@ density. Weighted kernel density for the bearing between source and collection l
 
 \examples{
 library(sp)
+library(terra)
 
 # load North America boundary and global isoscape
 data("naMap")
-data("d2h_lrNA")
+d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
-d = subOrigData(group = "Modern human", mask = naMap, niter = 100)
+d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
 
 # rescale from environmental isoscape to tissue isoscape
-r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap)
+r = calRaster(d, d2h_lrNA, naMap, genplot = FALSE)
 
 # four unknown-origin examples
 id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
-un = data.frame(id,d2H)
+un = data.frame(id, d2H)
 
 # posterior probabilities
-pp = pdRaster(r, unknown = un, mask = naMap)
+pp = pdRaster(r, un, mask = naMap, genplot = FALSE)
 
 # random collection locations
 sites = d$data[sample(seq(length(d$data)), 4),]

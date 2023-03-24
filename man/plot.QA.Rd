@@ -37,10 +37,11 @@ Vander Zanden, H. B. et al. (2014) Contrasting assignment of migratory organisms
 }
 
 \examples{
-# load data
-data("naMap") # North America 
-data("d2h_lrNA") # precipitation hydrogen isoscape of North America
-data("knownOrig") # isotopes of known-origin samples
+library(terra)
+
+# load North America boundary and global isoscape
+data("naMap")
+d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
 
 # extract some known-origin data
 d1 = subOrigData(taxon = "Buteo lagopus")

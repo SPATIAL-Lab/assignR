@@ -1,4 +1,5 @@
-d = suppressWarnings(subOrigData(taxon = "Homo sapiens", dataset = 10, mask = naMap))
+d = suppressWarnings(subOrigData(taxon = "Homo sapiens", dataset = 10, mask = naMap,
+                                 genplot = FALSE))
 
 test_that("suOrigData works",{
   expect_equal(class(d), "subOrigData")
@@ -7,15 +8,15 @@ test_that("suOrigData works",{
   expect_error(subOrigData(taxon = "Turdus philomelos", marker = "d14C"))
   expect_warning(subOrigData(taxon = "Serin serin", 
                              age_code = c("juvenile", "newborn"),
-                             ref_scale = NULL))
+                             ref_scale = NULL, genplot = FALSE))
   expect_warning(subOrigData(taxon = c("Serin serin", "Vanellus malabaricus"),
-                             ref_scale = NULL))
+                             ref_scale = NULL, genplot = FALSE))
   expect_warning(subOrigData(group = c("Indigenous human", "Badgers"),
-                             ref_scale = NULL))
+                             ref_scale = NULL, genplot = FALSE))
   expect_warning(subOrigData(dataset = c(8, "Ma 2020"),
-                             ref_scale = NULL))
+                             ref_scale = NULL, genplot = FALSE))
   expect_warning(subOrigData(dataset = c(8, 100),
-                             ref_scale = NULL))
+                             ref_scale = NULL, genplot = FALSE))
 })
 
 d_hasNA = d
@@ -26,7 +27,7 @@ d_usr_bad = d$data
 d_usr_good = d_usr_bad
 d_usr_good@data = data.frame(d$data$d2H, d$data$d2H.sd)
 d_noCRS = d
-crs(d_noCRS$data) = NA
+proj4string(d_noCRS$data) = CRS("")
 
 d2h_lrNA_noCRS = d2h_lrNA
 crs(d2h_lrNA_noCRS) = NA
@@ -34,14 +35,14 @@ crs(d2h_lrNA_noCRS) = NA
 mask_diffProj = suppressWarnings(spTransform(naMap, "+init=epsg:28992"))
 
 mask_noCRS = naMap
-crs(mask_noCRS) = NA
+proj4string(mask_noCRS) = CRS("")
 
-tempVals = getValues(d2h_lrNA)
+tempVals = values(d2h_lrNA)
 tempVals[is.nan(tempVals)] = 9999
 d2h_lrNA_with9999 = setValues(d2h_lrNA, tempVals)
 
 s1 = states[states$STATE_ABBR == "UT",]
-d2h_lrNA_na = mask(d2h_lrNA, s1)
+d2h_lrNA_na = mask(d2h_lrNA, vect(s1))
 
 r = suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA_with9999, NA.value = 9999, 
                interpMethod = 1, genplot = FALSE, mask = naMap))
@@ -51,16 +52,17 @@ test_that("calRaster works",{
   expect_is(suppressWarnings(calRaster(known = d_usr_good, isoscape = d2h_lrNA,
                       genplot = FALSE)), "rescale")
   expect_output(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
-                                 outDir = tempdir())))
-  expect_equal(nlayers(r$isoscape.rescale), 2)
+                                 genplot = FALSE, outDir = tempdir())))
+  expect_equal(nlyr(r$isoscape.rescale), 2)
   expect_error(calRaster(known = d$data$d2H, isoscape = d2h_lrNA))
   expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
                                           outDir = 2)))
   expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
                                           interpMethod = 3)))
-  expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
+  expect_message(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
                                           genplot = 2)))
-  expect_error(calRaster(known = d, isoscape = d2h_lrNA_noCRS))
+  expect_error(suppressWarnings(calRaster(known = d, 
+                                          isoscape = d2h_lrNA_noCRS)))
   expect_error(calRaster(known = d, isoscape = d2h_lrNA$mean))
   expect_error(calRaster(known = d_usr_bad, isoscape = d2h_lrNA))
   expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
@@ -74,28 +76,29 @@ test_that("calRaster works",{
   expect_error(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA_na, 
                                           ignore.NA = FALSE)))
   expect_message(suppressWarnings(calRaster(known = d_diffProj, 
-                                            isoscape = d2h_lrNA)))
-  expect_message(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, mask = mask_diffProj)))
-  expect_warning(calRaster(known = d, isoscape = d2h_lrNA_na))
+                                            isoscape = d2h_lrNA, genplot = FALSE)))
+  expect_message(suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA, 
+                                            mask = mask_diffProj, genplot = FALSE)))
+  expect_warning(calRaster(known = d, isoscape = d2h_lrNA_na, genplot = FALSE))
 })
 
 id = c("A", "B", "C", "D")
 d2H = c(-110, -90, -105, -102)
 un = data.frame(id,d2H)
-asn = suppressWarnings(pdRaster(r, unknown = un, mask = naMap))
+asn = suppressWarnings(pdRaster(r, unknown = un, mask = naMap, genplot = FALSE))
 
 j = jointP(asn)
 
 test_that("jointP works",{
-  expect_equal(cellStats(j, sum), 1)
-  expect_is(j, "RasterLayer")
+  expect_equal(global(j, sum, na.rm = TRUE)[1, 1], 1)
+  expect_is(j, "SpatRaster")
   expect_error(jointP(d))
 })
 
 u = unionP(asn)
 
 test_that("unionP works",{
-  expect_is(u, "RasterLayer")
+  expect_is(u, "SpatRaster")
   expect_error(unionP(d2H))  
 })
 
@@ -107,7 +110,7 @@ o1 = suppressWarnings(oddsRatio(asn, s12))
 pp1 = c(-112,40)
 pp2 = c(-105,33)
 pp12 = SpatialPoints(coords = rbind(pp1,pp2), 
-                     proj4string=CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+                     proj4string=CRS("+proj=longlat +datum=WGS84 +ellps=WGS84"))
 o2 = suppressWarnings(oddsRatio(asn, pp12))
 o3 = suppressWarnings(oddsRatio(asn, pp12[1]))
 o4 = suppressWarnings(oddsRatio(asn$A, pp12))
@@ -117,12 +120,12 @@ s12_diffProj = suppressWarnings(spTransform(s12, CRS("+init=epsg:28992")))
 pp12_diffProj = suppressWarnings(spTransform(pp12, CRS("+init=epsg:28992")))
 
 pp12_noCRS = pp12
-crs(pp12_noCRS) = NA
+proj4string(pp12_noCRS) = CRS("")
 s12_noCRS = s12
-crs(s12_noCRS) = NA
+proj4string(s12_noCRS) = CRS("")
 
 pp121 = SpatialPoints(coords = rbind(pp1, pp2, pp3 = pp1), 
-                      proj4string=CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+                      proj4string=CRS("+proj=longlat +datum=WGS84 +ellps=WGS84"))
 
 test_that("oddsRatio works",{
   expect_is(o1, "list")
@@ -147,14 +150,14 @@ q2 = qtlRaster(asn, threshold = 0.1, thresholdType = "prob", genplot = FALSE)
 q3 = qtlRaster(asn, threshold = 0, genplot = FALSE)
 
 test_that("qtlRaster works",{
-  expect_is(q1, "RasterStack")
-  expect_equal(nlayers(q1), 4)
-  expect_equal(nlayers(q2), 4)
-  expect_equal(nlayers(q3), 4)
+  expect_is(q1, "SpatRaster")
+  expect_equal(nlyr(q1), 4)
+  expect_equal(nlyr(q2), 4)
+  expect_equal(nlyr(q3), 4)
   expect_error(qtlRaster(asn, threshold = "a"))
   expect_error(qtlRaster(asn, threshold = 10))
-  expect_error(qtlRaster(asn, threshold = "a"), thresholdType = "probability")
-  expect_error(qtlRaster(asn, threshold = 0.1, genplot = "A"))
+  expect_error(qtlRaster(asn, thresholdType = "probability"))
+  expect_message(qtlRaster(asn, threshold = 0.1, genplot = "A"))
   expect_error(qtlRaster(asn, threshold = 0.1, outDir = 1))
 })
 

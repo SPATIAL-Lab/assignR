@@ -22,17 +22,18 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   if(inherits(isoscape, "isoStack")){
     ni = length(isoscape)
     
-    for(i in isoscape){
-      if(!inherits(i, c("RasterStack", "RasterBrick"))){
-        stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
-         (mean and standard deviation)")
+    for(i in 1:ni){
+      if(inherits(isoscape[[i]], c("RasterStack", "RasterBrick"))){
+        warning("raster objects are depreciated, transition to package terra")
+        if(inherits(i, "RasterStack")){
+          crs(isoscape[[i]][[1]]) = crs(isoscape[[i]][[2]]) = 
+            crs(isoscape[[i]])
+        }
+        isoscape[[i]] = rast(isoscape[[i]])
       } 
-      if(nlayers(i) != 2) {
-        stop("Input isoscapes should be RasterStack or RasterBrick with two layers 
+      if(nlyr(isoscape[[i]]) != 2) {
+        stop("Input isoscapes should be SpatRaster with two layers 
          (mean and standard deviation)")
-      }
-      if(inherits(i, "RasterStack")){
-        crs(i[[1]]) = crs(i[[2]]) = crs(i)
       }
     }
   } else{
@@ -43,18 +44,20 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     }
     
     if(inherits(isoscape, c("RasterStack", "RasterBrick"))) {
+      warning("raster objects are depreciated, transition to package terra")
+      isoscape = rast(isoscape)
+    } 
+    
+    if(inherits(isoscape, "SpatRaster")){
       if(is.na(crs(isoscape))) {
         stop("isoscape must have valid coordinate reference system")
       }
-      if(nlayers(isoscape) != 2){
-        stop("Input isoscape should be RasterStack or RasterBrick with two layers 
+      if(nlyr(isoscape) != 2){
+        stop("Input isoscape should be SpatRaster with two layers 
          (mean and standard deviation)")
       }
-      if(inherits(isoscape, "RasterStack")){
-        crs(isoscape[[1]]) = crs(isoscape[[2]]) = crs(isoscape)
-      }
     } else {
-      stop("isoscape should be a RasterStack or RasterBrick")
+      stop("isoscape should be a SpatRaster")
     }
   }
   
@@ -244,11 +247,13 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
                             v@data[,seq(1, ni*2-1, by=2)]), 
                prior = prior, genplot = FALSE)
     )
+    
+    v = vect(v)
 
     # pd value for each validation sample or site
-    pd_temp = double(nlayers(pd))
-    for(j in seq_len(nlayers(pd))){
-      pd_temp[j] = extract(pd[[j]], v[j,])
+    pd_temp = double(nlyr(pd))
+    for(j in seq_along(pd_temp)){
+      pd_temp[j] = extract(pd[[j]], v[j], factors = FALSE)[,2]
     }
     if(bySite){
       for(j in seq(valiStation)){
@@ -267,10 +272,11 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       qtl = qtlRaster(pd, threshold = (xx[j]-1)/100, 
                                 thresholdType = "prob", 
                                genplot = FALSE)
-      rv_temp = double(nlayers(qtl))
-      pre_temp = double(nlayers(qtl))
-      for(k in seq_len(nlayers(qtl))){
-        rv_temp[k] = extract(qtl[[k]], v[k,])
+      rv_temp = double(nlyr(qtl))
+      pre_temp = double(nlyr(qtl))
+      for(k in seq_len(nlyr(qtl))){
+        rv_temp[k] = extract(qtl[[k]], v[k], 
+                             factors = FALSE)[, 2]
         pre_temp[k] = sum(na.omit(qtl[[k]][]))/Tarea
       }
       if(bySite){
@@ -302,9 +308,9 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       qtl = qtlRaster(pd, threshold = (xx[j]-1)/100, 
                                 thresholdType = "area", 
                                genplot = FALSE)
-      rv_temp = double(nlayers(qtl))
-      for(k in seq_len(nlayers(qtl))){
-        rv_temp[k] = extract(qtl[[k]], v[k,])
+      rv_temp = double(nlyr(qtl))
+      for(k in seq_along(rv_temp)){
+        rv_temp[k] = extract(qtl[[k]], v[k], factors = FALSE)[, 2]
       }
       if(bySite){
         rv_sm = double(valiStation)
@@ -339,7 +345,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   cat("\n")
   message(mstack)
   
-  random_prob_density=1/length(na.omit(getValues(isoscape[[1]])))
+  random_prob_density=1/length(cells(isoscape[[1]]))
 
   result = list(name, val_stations, pd_v, prption_byArea, 
                 prption_byProb, precision, random_prob_density, by)
@@ -381,7 +387,7 @@ check_SOD = function(known, isoscape, bySite){
   if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != proj4string(isoscape)){
+  if(proj4string(known) != crs(isoscape, proj = TRUE)){
     known = spTransform(known, crs(isoscape))
     message("known was reprojected")
   } 
@@ -444,7 +450,7 @@ check_SPDF = function(known, isoscape, bySite, ni){
   if(is.na(proj4string(known))) {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != proj4string(isoscape)){
+  if(proj4string(known) != crs(isoscape, proj = TRUE)){
     known = spTransform(known, crs(isoscape))
     message("known was reprojected")
   } 
