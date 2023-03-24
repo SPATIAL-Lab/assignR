@@ -21,29 +21,34 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
     setwd(wd)
   })
   
-  dlf = function(fp, fn, ot, wd){
+  dlf = function(fp, fn){
     dfs = tryCatch({
       download.file(fp, fn)
     },
+    warning = function(cond){
+      return(cond)
+    },
     error = function(cond){
-      options(timeout = ot)
-      setwd(wd)
-      stop(cond)
+      return(cond)
     })
     return(dfs)
   }
   
-  pdlf = function(dfs, wd, ot, isoType){
-    if(dfs != 0){
-      setwd(wd)
-      options(timeout = ot)
-      stop("Non-zero download exit status")
-    }
+  pdlf = function(dfs, wd, ot){
+    setwd(wd)
+    options(timeout = ot)
+    message(paste("Download failed with status/message: \n", dfs))
   }
-  
+
   if(!file.exists(giconfig$dpath.post)){
-    dfs = dlf(paste0(dpath.pre, giconfig$dpath.post), giconfig$dpath.post, ot, wd)
-    pdlf(dfs, wd, ot, isoType)
+    dfs = dlf(paste0(dpath.pre, giconfig$dpath.post), giconfig$dpath.post)
+    if(!is.numeric(dfs)){
+      pdlf(dfs, wd, ot)
+      return(NULL)
+    }else if(dfs != 0){
+      pdlf(dfs, wd, ot)
+      return(NULL)
+    }
   }
   
   procRest = function(fn, lnames, onames){
