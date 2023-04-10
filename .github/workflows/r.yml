@@ -40,7 +40,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew update
-          brew install gdal
+          brew install --overwrite gdal
       - name: Linux setup
         if: runner.os == 'Linux'
         run: |
