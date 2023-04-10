@@ -39,6 +39,7 @@ jobs:
       - name: Mac setup
         if: runner.os == 'macOS'
         run: |
+          find /usr/local/bin -type l -ilname '*/Library/Frameworks/Python.framework/*' -delete
           brew update
           brew install --overwrite gdal
       - name: Linux setup

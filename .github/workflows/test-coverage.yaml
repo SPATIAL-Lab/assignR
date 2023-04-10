@@ -36,9 +36,9 @@ jobs:
 
       - name: Install gdal
         run: |
+          find /usr/local/bin -type l -ilname '*/Library/Frameworks/Python.framework/*' -delete
           brew update
-          brew install --overwrite gdal
-
+          brew install gdal
       - name: Install dependencies
         run: |
           install.packages(c("remotes"))
