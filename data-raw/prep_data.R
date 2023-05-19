@@ -1,17 +1,10 @@
 options(stringsAsFactors = FALSE)
 library(openxlsx)
-library(sp)
 library(devtools)
 library(terra)
 library(assignR)
 
-#WGS84 projection
-p = CRS("+proj=longlat +ellps=WGS84 +no_defs")
-
 #----
-
-#World outline map
-load("data-raw/wrld_simpl.rda")
 
 #Download configuration data
 map_ln = c("d2h_MA.tif", "d2h_se_MA.tif", 
@@ -141,7 +134,7 @@ GIconfig = list(
 )
 
 #Save internal
-use_data(wrld_simpl, GIconfig, internal = TRUE, overwrite = TRUE)
+use_data(GIconfig, internal = TRUE, overwrite = TRUE)
 
 #adjacency matrix for H
 ham = read.xlsx("data-raw/ham.xlsx", rowNames = TRUE)
@@ -187,22 +180,18 @@ all(ss %in% ostds$Calibration)
 all(knownOrig_samples$Site_ID %in% sites$Site_ID)
 all(knownOrig_samples$Dataset_ID %in% knownOrig_sources$Dataset_ID)
 
-#Convert to SPDF
-knownOrig_sites = SpatialPointsDataFrame(sites[,2:3], 
-                                         data = sites[,c(1,4:ncol(sites))],
-                                         proj4string = p)
+#Convert to SpatVector
+knownOrig_sites = vect(sites, geom = c("Longitude", "Latitude"), crs = "WGS84")
 
-#update to include WKT representation; requires rgdal >=1.5-17
-knownOrig_sites = rebuild_CRS(knownOrig_sites)
-
-#Group data objects
-knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples, 
-                 sources = knownOrig_sources)
+#Write knownOrig parts
+writeVector(knownOrig_sites, "inst/extdata/knownOrig_sites.shp")
+write.csv(knownOrig_samples, "inst/extdata/knownOrig_samples.csv", row.names = FALSE)
+write.csv(knownOrig_sources, "inst/extdata/knownOrig_sources.csv", row.names = FALSE)
 
 stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
 
 #Write it all to /data/
-use_data(knownOrig, stds, overwrite = TRUE)
+use_data(stds, overwrite = TRUE)
 
 #Prepare MI strontium isoscape
 sr = getIsoscapes("USSr")

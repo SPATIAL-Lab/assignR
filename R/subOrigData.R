@@ -3,8 +3,6 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
                        niter = 5000, genplot = TRUE) {
   
   #load data in funtion environ
-  data("knownOrig", envir = environment())
-  knownOrig = knownOrig
   knownOrig_samples = knownOrig$samples
   knownOrig_sites = knownOrig$sites
   knownOrig_sources = knownOrig$sources
@@ -55,15 +53,18 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
 
   if(!is.null(mask)) {
     if(inherits(mask, "SpatialPolygons")){
-      if(is.na(proj4string(mask))){
+      mask = vect(mask)
+    } else if(inherits(mask, "SpatVector")){
+      if(is.na(crs(mask))){
         stop("mask must have coordinate reference system")
-      } else if(!identicalCRS(knownOrig_sites, mask)) {
-        mask = spTransform(mask, proj4string(knownOrig_sites))
+      } else if(!identical(crs(knownOrig_sites), crs(mask))) {
+        mask = project(mask, crs(knownOrig_sites))
         message("mask was reprojected")
       }
       result_sites = knownOrig_sites[mask,]
-    } else {
-      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
+    }  
+    else {
+      stop("mask should be SpatVector")
     }
 
     if(length(result_sites) > 0) {
@@ -101,7 +102,11 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
     trans_out = refTrans(result, marker, ref_scale, niter)
     result_data = merge(result_sites, trans_out$data, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
-    row.names(result_data) = result_data$Sample_ID
+    
+    ##Is this needed? Doesn't work on SpatVect
+    #row.names(result_data) = result_data$Sample_ID
+    ##
+    
     return_obj = list("data" = result_data, "sources" =
                         result_sources, "chains" = trans_out$chains,
                       "marker" = marker)
@@ -112,7 +117,11 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
   } else{
     result_data = merge(result_sites, result, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
-    row.names(result_data) = result_data$Sample_ID
+    
+    ##
+    #row.names(result_data) = result_data$Sample_ID
+    ##
+    
     return_obj = list("data" = result_data, "sources" = result_sources,
                       "chains" = NULL, "marker" = marker)
     class(return_obj) = "subOrigData"
