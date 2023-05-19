@@ -25,7 +25,7 @@ data.frame, \code{\link{refTrans}} object, or list of two or more \code{\link{re
 SpatRaster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{r}.
 }
 \item{mask}{
-SpatialPolygons or SpatialPolygonsDataFrame. This mask will constrain the assignment area. If this is not provided, a default of mask of the extent of \code{r} is used.
+SpatVector. This polygon mask will constrain the assignment area. If this is not provided, a default of mask of the extent of \code{r} is used.
 }
 \item{genplot}{
 logical. Plot results in R.
@@ -50,12 +50,6 @@ SpatRaster including a probability density surface for each individual in \code{
 }
 
 \examples{
-library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
-
 # load hydrogen isotope data for human hair in North America
 d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
 

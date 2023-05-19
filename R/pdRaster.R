@@ -43,10 +43,10 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     rescaled.mean = r[[1]]
     rescaled.sd = r[[2]]
   } else{
-    rescaled.mean = crop(r[[1]], vect(mask))
-    rescaled.mean = mask(rescaled.mean, vect(mask))
-    rescaled.sd = crop(r[[2]], vect(mask))
-    rescaled.sd = mask(rescaled.sd, vect(mask))
+    rescaled.mean = crop(r[[1]], mask)
+    rescaled.mean = mask(rescaled.mean, mask)
+    rescaled.sd = crop(r[[2]], mask)
+    rescaled.sd = mask(rescaled.sd, mask)
   }
   
   errorV = values(rescaled.sd, mat = FALSE)
@@ -119,10 +119,10 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     rescaled.mean = r[[1]][[1]]
     rescaled.sd = r[[1]][[2]]
   } else{
-    rescaled.mean = crop(r[[1]][[1]], vect(mask))
-    rescaled.mean = mask(rescaled.mean, vect(mask))
-    rescaled.sd = crop(r[[1]][[2]], vect(mask))
-    rescaled.sd = mask(rescaled.sd, vect(mask))
+    rescaled.mean = crop(r[[1]][[1]], mask)
+    rescaled.mean = mask(rescaled.mean, mask)
+    rescaled.sd = crop(r[[1]][[2]], mask)
+    rescaled.sd = mask(rescaled.sd, mask)
   }
   
   meanV = values(rescaled.mean, mat = FALSE)
@@ -133,10 +133,10 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
       rescaled.mean = r[[i]][[1]]
       rescaled.sd = r[[i]][[2]]
     } else{
-      rescaled.mean = crop(r[[i]][[1]], vect(mask))
-      rescaled.mean = mask(rescaled.mean, vect(mask))
-      rescaled.sd = crop(r[[i]][[2]], vect(mask))
-      rescaled.sd = mask(rescaled.sd, vect(mask))
+      rescaled.mean = crop(r[[i]][[1]], mask)
+      rescaled.mean = mask(rescaled.mean, mask)
+      rescaled.sd = crop(r[[i]][[2]], mask)
+      rescaled.sd = mask(rescaled.sd, mask)
     }
     meanV = cbind(meanV, values(rescaled.mean, mat = FALSE))
     errorV = cbind(errorV, values(rescaled.sd, mat = FALSE))

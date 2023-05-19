@@ -54,7 +54,11 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
   if(!is.null(mask)) {
     if(inherits(mask, "SpatialPolygons")){
       mask = vect(mask)
-    } else if(inherits(mask, "SpatVector")){
+    }
+    if(inherits(mask, "SpatVector")){
+      if(geomtype(mask) != "polygons"){
+        stop("mask geometry must be polygons")
+      }
       if(is.na(crs(mask))){
         stop("mask must have coordinate reference system")
       } else if(!identical(crs(knownOrig_sites), crs(mask))) {
@@ -62,8 +66,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
         message("mask was reprojected")
       }
       result_sites = knownOrig_sites[mask,]
-    }  
-    else {
+    } else {
       stop("mask should be SpatVector")
     }
 

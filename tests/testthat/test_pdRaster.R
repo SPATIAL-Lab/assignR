@@ -19,9 +19,9 @@ suppressWarnings({
   un3 = data.frame(id, d2H, "Sr" = 0.710)
   
   mask_noCRS = naMap
-  proj4string(mask_noCRS) = CRS("")
+  crs(mask_noCRS) = ""
   
-  mask_diffProj = spTransform(naMap, "+init=epsg:28992")
+  mask_diffProj = project(naMap, "+init=epsg:28992")
   
   un_hasNA = un
   un_hasNA[1,2] = NA
