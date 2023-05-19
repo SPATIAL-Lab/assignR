@@ -19,7 +19,7 @@ wDist(pdR, sites, maxpts = 1e5)
   SpatRaster of n probability density maps, e.g., as produced by \code{pdRaster}.
   }
   \item{sites}{
-  SpatialPoints* object containing the collection locations for the n samples represented in \code{pdR}.
+  SpatVector object containing the collection locations for the n samples represented in \code{pdR}.
   }
   \item{maxpts}{
   numeric. Maximum number of grid cells at which to calculate bearing and distance.
@@ -47,13 +47,6 @@ density. Weighted kernel density for the bearing between source and collection l
 }
 
 \examples{
-library(sp)
-library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
-
 # load hydrogen isotope data for human hair in North America
 d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
 
