@@ -32,7 +32,7 @@ integer or integer vector. Dataset_ID(s) for data to be extracted. See \code{\li
 character string or string vector. Animal age code for data to be extracted. 
 }
   \item{mask}{
-SpatialPolygons or SpatialPolygonsDataFrame. Constrains the geographic area from which data are extracted. If not provided, global.
+SpatVector. Polygon layer used to constrain the geographic area from which data are extracted. If not provided, global.
 }
   \item{ref_scale}{
 character string. Text identifier for reference scale to which all isotope values will be transformed. See \code{\link[assignR]{stds}}. Use \dQuote{NULL} to obtain untransformed values on the originally reported scale.}
@@ -47,7 +47,7 @@ logical. Plot results in R.
 \value{
 Returns an object of class \dQuote{subOrigData}, formatted for use in \code{\link{calRaster}} or \code{\link{QA}} functions.
   \item{data}{
-SpatialPointsDataFrame including one feature for each selected sample. data.frame fields are described in \code{\link{knownOrig}} feature \emph{samples}.}
+SpatVector including one point feature for each selected sample. Data fields are described in \code{\link{knownOrig}} feature \emph{samples}.}
   \item{sources}{
 data.frame. Information for all data sources for the selected samples. Fields are described in \code{\link{knownOrig}} feature \emph{sources} 
   }

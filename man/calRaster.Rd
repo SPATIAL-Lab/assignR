@@ -17,13 +17,13 @@ calRaster(known, isoscape, mask = NULL, interpMethod = 2, NA.value = NA,
 
 \arguments{
   \item{known}{
-subOrigData or SpatialPointsDataFrame. Known-origin tissue isotope data from the subOrigData function or provided by user. User-provided data must be formatted as a subOrigData object (see \code{\link[assignR]{subOrigData}}) or a SpatialPointsDataFrame in which the first data field contains the measured tissue isotope value and the second the 1 standard deviation uncertainty on that value.
+subOrigData or SpatVector. Known-origin tissue isotope data from the subOrigData function or provided by user. User-provided data must be formatted as a subOrigData object (see \code{\link[assignR]{subOrigData}}) or a SpatVector with point geometry in which the first data field contains the measured tissue isotope value and the second the 1 standard deviation uncertainty on that value.
 }
   \item{isoscape}{
 SpatRaster. Isoscape raster with two layers. The first one is the mean and the second is one standard deviation.
 }
   \item{mask}{
-SpatialPolygons or SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
+SpatVector. Polygon layer that constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
 }
   \item{interpMethod}{
 numeric. 1 or 2. Designate one of two methods for extracting values from \code{isoscape}. If 1, values for the cell in which a point falls are returned. If 2 the returned values are interpolated (bilinear interpolation) from the values of the four adjacent grid cells.
@@ -57,12 +57,7 @@ Returns an object of class \dQuote{rescale}.
 }
 
 \examples{
-library(sp)
 library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
 d = subOrigData(group = "Modern human", mask = naMap, niter = 100, genplot = FALSE)

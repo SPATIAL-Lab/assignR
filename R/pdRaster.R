@@ -309,15 +309,21 @@ check_mask = function(mask, r){
 
   if (!is.null(mask)) {
     if(inherits(mask, "SpatialPolygons")){
-      if (is.na(proj4string(mask))){
+      mask = vect(mask)
+    }
+    if(inherits(mask, "SpatVector")){
+      if(is.na(crs(mask))){
         stop("mask must have valid coordinate reference system")
       } 
-      if(proj4string(mask) != crs(r, proj = TRUE)){
-        mask = spTransform(mask, crs(r))
+      if(geomtype(mask) != "polygons"){
+        stop("mask geometry must be polygons")
+      }
+      if(!identical(crs(mask), crs(r))){
+        mask = project(mask, crs(r))
         message("mask was reprojected")
       }
     } else {
-      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
+      stop("mask should be SpatVector")
     }
   }
   

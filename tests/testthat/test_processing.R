@@ -3,7 +3,7 @@ d = suppressWarnings(subOrigData(taxon = "Homo sapiens", dataset = 10, mask = na
 
 test_that("suOrigData works",{
   expect_equal(class(d), "subOrigData")
-  expect_is(d$data, "SpatialPointsDataFrame")
+  expect_is(d$data, "SpatVector")
   expect_error(suppressWarnings(subOrigData(taxon = "Turdus philomelos", mask = naMap)))
   expect_error(subOrigData(taxon = "Turdus philomelos", marker = "d14C"))
   expect_warning(subOrigData(taxon = "Serin serin", 
@@ -22,27 +22,27 @@ test_that("suOrigData works",{
 d_hasNA = d
 d_hasNA$data$d2H[1] = NA
 d_diffProj = d
-d_diffProj$data = suppressWarnings(spTransform(d$data, "+init=epsg:28992"))
+d_diffProj$data = suppressWarnings(project(d$data, "+init=epsg:28992"))
 d_usr_bad = d$data
 d_usr_good = d_usr_bad
-d_usr_good@data = data.frame(d$data$d2H, d$data$d2H.sd)
+values(d_usr_good) = data.frame(d$data$d2H, d$data$d2H.sd)
 d_noCRS = d
-proj4string(d_noCRS$data) = CRS("")
+crs(d_noCRS$data) = ""
 
 d2h_lrNA_noCRS = d2h_lrNA
 crs(d2h_lrNA_noCRS) = NA
 
-mask_diffProj = suppressWarnings(spTransform(naMap, "+init=epsg:28992"))
+mask_diffProj = suppressWarnings(project(naMap, "+init=epsg:28992"))
 
 mask_noCRS = naMap
-proj4string(mask_noCRS) = CRS("")
+crs(mask_noCRS) = ""
 
 tempVals = values(d2h_lrNA)
 tempVals[is.nan(tempVals)] = 9999
 d2h_lrNA_with9999 = setValues(d2h_lrNA, tempVals)
 
 s1 = states[states$STATE_ABBR == "UT",]
-d2h_lrNA_na = mask(d2h_lrNA, vect(s1))
+d2h_lrNA_na = mask(d2h_lrNA, s1)
 
 r = suppressWarnings(calRaster(known = d, isoscape = d2h_lrNA_with9999, NA.value = 9999, 
                interpMethod = 1, genplot = FALSE, mask = naMap))

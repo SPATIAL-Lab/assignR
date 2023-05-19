@@ -25,8 +25,12 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check that known is valid and has defined, correct CRS
   if(!(inherits(known, c("subOrigData", "QAData", 
-                              "SpatialPointsDataFrame")))) {
-    stop("known must be a subOrigData or SpatialPointsDataFrame object")
+                         "SpatialPointsDataFrame",
+                         "SpatVector")))) {
+    stop("known must be a subOrigData or SpatVector object")
+  }
+  if(inherits(known, "SpatialPointsDataFrame")){
+    known = vect(known)
   }
   if(inherits(known, "subOrigData")){
     if(is.null(known$data) || is.null(known$marker)){
@@ -39,24 +43,24 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     }
     known = known$data
   }else{
-    if(ncol(known@data) < 2){
-      if(ncol(known@data) == 1){
+    if(ncol(known) < 2){
+      if(ncol(known) == 1){
         warning("use of known with 1 data column is depreciated; known 
               should include a data frame containing the measured 
               isotope values (col 1) and 1 sd uncertainty (col 2); 
               assuming equal uncertainty for all samples")
-        known@data[,2] = rep(0.0001, nrow(known@data))
+        known[,2] = rep(0.0001, nrow(known))
       } else{
         stop("known must include a data frame containing the measured 
               isotope values (col 1) and 1 sd uncertainty (col 2)")
       }
     }
-    if(any(!is.numeric(known@data[,1]), !is.numeric(known@data[,2]))){
-      stop("known must include a data frame containing the measured 
+    if(any(!is.numeric(values(known)[,1]), !is.numeric(values(known)[,2]))){
+      stop("known must include data containing the measured 
            isotope values (col 1) and 1 sd uncertainty (col 2)")
     }
     if(inherits(known, "QAData")){
-      class(known) = "SpatialPointsDataFrame"
+      class(known) = "SpatVector"
     } else{
       message("user-provided known; assuming measured isotope value and 1 sd
             uncertainty are contained in columns 1 and 2, respectively")
@@ -64,24 +68,24 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     col_m = 1
     col_sd = 2
   }
-  if(any(is.na(known@data[, col_m])) || 
-     any(is.nan(known@data[, col_m])) || 
-     any(is.null(known@data[, col_m]))){
+  if(any(is.na(values(known)[, col_m])) || 
+     any(is.nan(values(known)[, col_m])) || 
+     any(is.null(values(known)[, col_m]))){
     stop("Missing values detected in known values")
   }
-  if(any(is.na(known@data[, col_sd])) || 
-     any(is.nan(known@data[, col_sd])) || 
-     any(is.null(known@data[, col_sd]))){
+  if(any(is.na(values(known)[, col_sd])) || 
+     any(is.nan(values(known)[, col_sd])) || 
+     any(is.null(values(known)[, col_sd]))){
     stop("Missing values detected in known uncertainties")
   }
-  if(any(known@data[, col_sd] == 0)){
+  if(any(values(known)[, col_sd] == 0)){
     stop("zero values found in known uncertainties")
   }
-  if(is.na(proj4string(known))) {
+  if(is.na(crs(known))) {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != crs(isoscape, proj = TRUE)){
-    known = spTransform(known, crs(isoscape))
+  if(!identical(crs(known), crs(isoscape))){
+    known = project(known, crs(isoscape))
     message("known was reprojected")
   } 
 
@@ -109,7 +113,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   #extract with mask
   if(!is.null(mask)){
     known = known[mask,]
-    isoscape = crop(isoscape, vect(mask))
+    isoscape = crop(isoscape, mask)
   }
 
   #check and set isoscape NA value if necessary
@@ -126,15 +130,15 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   null.iso = NULL
 
   #populate the dependent variable values
-  tissue.iso = known@data[, col_m]
-  tissue.iso.sd = known@data[, col_sd]
+  tissue.iso = values(known)[, col_m]
+  tissue.iso.sd = values(known)[, col_sd]
   tissue.iso.wt = 1 / tissue.iso.sd^2
 
   #populate the independent variable values
   if (interpMethod == 1) {
-    isoscape.iso = extract(isoscape, vect(known), method = "simple")[,2:3]
+    isoscape.iso = extract(isoscape, known, method = "simple")[,2:3]
   } else {
-    isoscape.iso = extract(isoscape, vect(known), method = "bilinear")[,2:3]
+    isoscape.iso = extract(isoscape, known, method = "bilinear")[,2:3]
   }
   #protect against negative values from interpolation
   isoscape.iso[,2] = pmax(isoscape.iso[,2], 
@@ -145,7 +149,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     na = which(is.na(isoscape.iso[, 1]))
     wtxt = "NO isoscape values found at the following locations:\n"
     for(i in na){
-      wtxt = paste0(wtxt, known@coords[i, 1], ", ", known@coords[i, 2], "\n")
+      wtxt = paste0(wtxt, geom(known)[i, 3], ", ", geom(known)[i, 4], "\n")
     }
     if (ignore.NA) warning(wtxt)
     if (!ignore.NA) {
