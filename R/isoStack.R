@@ -25,14 +25,14 @@ isoStack = function(..., clean = TRUE){
     if(nlyr(r[[i]]) != 2){
       stop("each isoscape must include two layers: mean and 1 sd")
     }
-    if(is.na(crs(r[[i]]))) {
+    if(crs(r[[i]]) == "") {
       stop("each isoscape must have valid coordinate reference system")
     }
   }
 
   #projections
   for(i in 2:n){
-    if(crs(r[[i]]) != crs(r[[1]])){
+    if(!same.crs(r[[i]], r[[1]])){
       if(clean){
         r[[i]] = project(r[[i]], crs(r[[1]]))
       } else{

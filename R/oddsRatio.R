@@ -20,7 +20,7 @@ oddsRatio = function(pdR, inputP){
     if(crs(inputP) == ""){
       stop("inputP must have coord. ref.")
     }
-    if(!identical(crs(inputP), crs(pdR))){
+    if(!same.crs(inputP, pdR)){
       inputP = project(inputP, crs(pdR))
       message("inputP was reprojected")
     }
@@ -60,7 +60,7 @@ oddsRatio = function(pdR, inputP){
     if(crs(inputP) == ""){
       stop("inputP must have coord. ref.")
     }
-    if(!identical(crs(inputP), crs(pdR))){
+    if(!same.crs(inputP, pdR)){
       inputP = project(inputP, crs(pdR))
       message("inputP was reprojected")
     }

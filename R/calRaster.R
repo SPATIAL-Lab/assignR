@@ -84,7 +84,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   if(crs(known) == "") {
     stop("known must have valid coordinate reference system")
   } 
-  if(!identical(crs(known), crs(isoscape))){
+  if(!same.crs(known, isoscape)){
     known = project(known, crs(isoscape))
     message("known was reprojected")
   } 

@@ -273,8 +273,8 @@ check_prior = function(prior, r){
       if(crs(prior) == ""){
         stop("isoscape must have valid coordinate reference system")
       }
-      if(crs(prior) != crs(r[[1]])) {
-        prior = project(prior, crs = crs(r[[1]]))
+      if(!same.crs(prior, r[[1]])) {
+        prior = project(prior, crs(r[[1]]))
         message("prior was reprojected")
       }
       compareGeom(prior, r)
@@ -318,7 +318,7 @@ check_mask = function(mask, r){
       if(geomtype(mask) != "polygons"){
         stop("mask geometry must be polygons")
       }
-      if(!identical(crs(mask), crs(r))){
+      if(!same.crs(mask, r)){
         mask = project(mask, crs(r))
         message("mask was reprojected")
       }
