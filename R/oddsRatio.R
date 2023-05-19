@@ -1,24 +1,32 @@
 oddsRatio = function(pdR, inputP){
   
   if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick", "SpatRaster"))){
-    stop("input probability density map (pdR) should be a SpatRaster")
+    stop("pdR should be a SpatRaster")
   }
   if(!inherits(pdR, "SpatRaster")){
     warning("raster objects are depreciated, transition to package terra")
     pdR = rast(pdR)
   }
+  
+  if(!inherits(inputP, c("SpatialPoints", "SpatialPolygons", "SpatVector"))){
+    stop("inputP should be point or polygon SpatVector")
+  }
+  
+  if(!inherits(inputP, "SpatVector")){
+    inputP = vect(inputP)
+  }
 
-  if(inherits(inputP, "SpatialPoints")){
-    if(is.na(proj4string(inputP))){
+  if(geomtype(inputP) == "points"){
+    if(crs(inputP) == ""){
       stop("inputP must have coord. ref.")
     }
-    if(proj4string(inputP) != crs(pdR, proj = TRUE)){
-      inputP = spTransform(inputP, crs(pdR))
+    if(!identical(crs(inputP), crs(pdR))){
+      inputP = project(inputP, crs(pdR))
       message("inputP was reprojected")
     }
     
     n = length(inputP)
-    extrVals = extract(pdR, vect(inputP))[,-1]
+    extrVals = extract(pdR, inputP)[,-1]
     if(any(is.na(extrVals))){
       stop("one or more points have probability NA")
     }
@@ -45,31 +53,31 @@ oddsRatio = function(pdR, inputP){
     else{
       stop("input points (inputP) should be one or two points")
     }
-  }
-  
-  if(inherits(inputP, "SpatialPolygons")){
+  } else if(geomtype(inputP) == "polygons"){
     if(length(inputP) != 2){
       stop("input polygons (inputP) should be two polygons")
     }
-    if(is.na(proj4string(inputP))){
+    if(crs(inputP) == ""){
       stop("inputP must have coord. ref.")
     }
-    if(proj4string(inputP) != crs(pdR, proj = TRUE)){
-      inputP = spTransform(inputP, crs(pdR))
+    if(!identical(crs(inputP), crs(pdR))){
+      inputP = project(inputP, crs(pdR))
       message("inputP was reprojected")
     }
     
-    extrVals = extract(pdR, vect(inputP), "sum", na.rm = TRUE)
+    extrVals = extract(pdR, inputP, "sum", na.rm = TRUE)
     if(any(extrVals[, -1] == 0)){
       stop("No values in P1 and/or P2")
     }
     
     result1 = (extrVals[1, -1]/(1-extrVals[1, -1])) /
       (extrVals[2, -1]/(1-extrVals[2, -1]))
-    result2 = length(cells(crop(pdR, vect(inputP[1,])))) / 
-      length(cells(crop(pdR, vect(inputP[2,]))))
+    result2 = length(cells(crop(pdR, inputP[1,]))) / 
+      length(cells(crop(pdR, inputP[2,])))
     result = list(oddsRatio = result1, polygonCellRatio = result2)
     names(result) = c("P1/P2 odds ratio", "Ratio of numbers of cells in two polygons")
+  } else{
+    stop("inputP must be point or polygon SpatVector")
   }
 
   return(result)

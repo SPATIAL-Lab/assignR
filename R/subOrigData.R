@@ -51,38 +51,23 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
     stop("No samples match query")
   }
 
-  if(!is.null(mask)) {
-    if(inherits(mask, "SpatialPolygons")){
-      mask = vect(mask)
-    }
-    if(inherits(mask, "SpatVector")){
-      if(geomtype(mask) != "polygons"){
-        stop("mask geometry must be polygons")
-      }
-      if(is.na(crs(mask))){
-        stop("mask must have coordinate reference system")
-      } else if(!identical(crs(knownOrig_sites), crs(mask))) {
-        mask = project(mask, crs(knownOrig_sites))
-        message("mask was reprojected")
-      }
-      result_sites = knownOrig_sites[mask,]
-    } else {
-      stop("mask should be SpatVector")
-    }
+  mask = check_mask(mask, knownOrig_sites) 
+  if(!is.null(mask)){
+    result_sites = knownOrig_sites[mask,]
 
-    if(length(result_sites) > 0) {
+    if(length(result_sites) > 0){
       result = result[result$Site_ID %in% result_sites$Site_ID,]
       if(nrow(result) > 0) {
         result_sites = result_sites[result_sites$Site_ID %in% 
                                       result$Site_ID,]
-      } else {
+      } else{
         stop("No samples found in mask\n")
       }
-    } else {
+    } else{
       stop("No sites found in mask\n")
     }
     
-  } else {
+  } else{
     result_sites = knownOrig_sites[knownOrig_sites$Site_ID %in%
                                      result$Site_ID,]
   }

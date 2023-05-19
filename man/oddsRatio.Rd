@@ -19,17 +19,12 @@ oddsRatio(pdR, inputP)
 SpatRaster of probability density maps, e.g., as produced by \code{pdRaster}.
 }
   \item{inputP}{
-SpatialPoints* object of length 1 or 2 or SpatialPolygons* object of length 2
+SpatVector points object of length 1 or 2 or polygons object of length 2
 }
 }
 
 \examples{
-library(sp)
 library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
 
 # load hydrogen isotope data for human hair in North America
 d = subOrigData(group = "Modern human", mask = naMap, genplot = FALSE)
@@ -46,7 +41,6 @@ un = data.frame(id, d2H)
 pp = pdRaster(r, un, mask = naMap, genplot = FALSE)
 
 # SpatialPolygons for two regions of interest
-data("states")
 s1 = states[states$STATE_ABBR == "UT",]
 s2 = states[states$STATE_ABBR == "NM",]
 plot(naMap)
@@ -60,8 +54,7 @@ oddsRatio(pp, s12)
 # Create SpatialPoints for two points of interest
 p1 = c(-112, 40)
 p2 = c(-105, 33)
-p12 = SpatialPoints(coords = rbind(p1, p2), 
-  proj4string=CRS("+proj=longlat +datum=WGS84 +ellps=WGS84"))
+p12 = vect(rbind(p1, p2), crs = "WGS84")
 points(p12, pch = 21, bg = "light blue")
 
 # Get odds ratio for two points using SpatialPoints method

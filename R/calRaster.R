@@ -12,7 +12,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   } 
   
   if(inherits(isoscape, "SpatRaster")){
-    if(is.na(crs(isoscape))){
+    if(crs(isoscape) == ""){
       stop("isoscape must have valid coordinate reference system")
     }
     if(nlyr(isoscape) != 2) {
@@ -81,7 +81,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   if(any(values(known)[, col_sd] == 0)){
     stop("zero values found in known uncertainties")
   }
-  if(is.na(crs(known))) {
+  if(crs(known) == "") {
     stop("known must have valid coordinate reference system")
   } 
   if(!identical(crs(known), crs(isoscape))){

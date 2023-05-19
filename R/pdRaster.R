@@ -18,7 +18,7 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
   } 
   
   if(inherits(r, "SpatRaster")){
-    if(is.na(crs(r))){
+    if(crs(r) == ""){
       stop("r must have valid coordinate reference system")
     }
     if(nlyr(r) != 2) {
@@ -94,7 +94,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     }
     
     if(inherits(r[[i]], "SpatRaster")){
-      if(is.na(crs(r[[i]]))){
+      if(crs(r[[i]]) == ""){
         stop("isoscape must have valid coordinate reference system")
       }
       if(nlyr(r[[i]]) != 2) {
@@ -270,7 +270,7 @@ check_prior = function(prior, r){
     } 
     
     if(inherits(prior, "SpatRaster")){
-      if(is.na(crs(prior))){
+      if(crs(prior) == ""){
         stop("isoscape must have valid coordinate reference system")
       }
       if(crs(prior) != crs(r[[1]])) {
@@ -312,7 +312,7 @@ check_mask = function(mask, r){
       mask = vect(mask)
     }
     if(inherits(mask, "SpatVector")){
-      if(is.na(crs(mask))){
+      if(crs(mask) == ""){
         stop("mask must have valid coordinate reference system")
       } 
       if(geomtype(mask) != "polygons"){

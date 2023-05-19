@@ -30,7 +30,7 @@ d_noCRS = d
 crs(d_noCRS$data) = ""
 
 d2h_lrNA_noCRS = d2h_lrNA
-crs(d2h_lrNA_noCRS) = NA
+crs(d2h_lrNA_noCRS) = ""
 
 mask_diffProj = suppressWarnings(project(naMap, "+init=epsg:28992"))
 
@@ -109,23 +109,21 @@ o1 = suppressWarnings(oddsRatio(asn, s12))
 
 pp1 = c(-112,40)
 pp2 = c(-105,33)
-pp12 = SpatialPoints(coords = rbind(pp1,pp2), 
-                     proj4string=CRS("+proj=longlat +datum=WGS84 +ellps=WGS84"))
+pp12 = vect(rbind(pp1,pp2), crs = "WGS84")
 o2 = suppressWarnings(oddsRatio(asn, pp12))
 o3 = suppressWarnings(oddsRatio(asn, pp12[1]))
 o4 = suppressWarnings(oddsRatio(asn$A, pp12))
 o5 = suppressWarnings(oddsRatio(asn$A, s12))
 
-s12_diffProj = suppressWarnings(spTransform(s12, CRS("+init=epsg:28992")))
-pp12_diffProj = suppressWarnings(spTransform(pp12, CRS("+init=epsg:28992")))
+s12_diffProj = suppressWarnings(project(s12, "+init=epsg:28992"))
+pp12_diffProj = suppressWarnings(project(pp12, "+init=epsg:28992"))
 
 pp12_noCRS = pp12
-proj4string(pp12_noCRS) = CRS("")
+crs(pp12_noCRS) = ""
 s12_noCRS = s12
-proj4string(s12_noCRS) = CRS("")
+crs(s12_noCRS) = ""
 
-pp121 = SpatialPoints(coords = rbind(pp1, pp2, pp3 = pp1), 
-                      proj4string=CRS("+proj=longlat +datum=WGS84 +ellps=WGS84"))
+pp121 = vect(rbind(pp1, pp2, pp3 = pp1), crs = "WGS84")
 
 test_that("oddsRatio works",{
   expect_is(o1, "list")
