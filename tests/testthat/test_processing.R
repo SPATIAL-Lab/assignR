@@ -1,3 +1,5 @@
+library(assignR)
+
 d = suppressWarnings(subOrigData(taxon = "Homo sapiens", dataset = 10, mask = naMap,
                                  genplot = FALSE))
 

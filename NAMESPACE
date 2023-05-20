@@ -20,7 +20,7 @@ importFrom(sp, proj4string, spTransform, spplot, plot, identicalCRS, merge)
 importFrom(terra, rast, extract, values, setValues, nlyr, crop, mask, global,
            vect, writeRaster, compareGeom, project, lapp, ext, intersect,
            crs, "crs<-", cells, resample, as.points, distance, geom, plot,
-           geomtype, same.crs)
+           geomtype, same.crs, "values<-")
 importFrom(grDevices, dev.off, pdf, png, col2rgb, rgb)
 importFrom(graphics, abline, boxplot, legend, lines, par, text, title, 
            polygon)

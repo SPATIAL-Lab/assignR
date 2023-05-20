@@ -1,3 +1,5 @@
+library(assignR)
+
 suppressWarnings({
   d = subOrigData(group = "Modern human", mask = naMap)
   r = calRaster(known = d, isoscape = d2h_lrNA, mask = naMap, genplot = FALSE)

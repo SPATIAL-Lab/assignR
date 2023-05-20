@@ -1,3 +1,5 @@
+library(assignR)
+
 r1 = aggregate(sr_MI, 5)
 r2 = project(d2h_lrNA, r1)
 r3 = isoStack(r1, r2)
