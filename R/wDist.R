@@ -7,25 +7,27 @@ wDist = function(pdR, sites, maxpts = 1e5){
     warning("raster objects are depreciated, transition to package terra")
     pdR = rast(pdR)
   }
-  if(is.na(crs(pdR))){
+  if(crs(pdR) == ""){
     stop("pdR must have coord. ref.")
   }
   
-  if(inherits(sites, "SpatialPoints")){
-    if(length(sites) != nlyr(pdR)){
-      stop("sites and pdR have different lenghts; wDist requires one site per pdR layer")
-    }
-    if(is.na(proj4string(sites))){
-      stop("sites must have coord. ref.")
-    }
-    if(proj4string(sites) != crs(pdR, proj = TRUE)){
-      sites = spTransform(sites, crs(pdR))
-    }
-    sites = vect(sites)
-  } else{
-    stop("sites should be a SpatialPoints object")
+  if(!inherits(sites, c("SpatialPoints", "SpatVector"))){
+    stop("sites should be a SpatVector")
   }
-  
+  if(inherits(sites, "SpatialPoints")){
+    sites = vect(sites)
+  }
+
+  if(length(sites) != nlyr(pdR)){
+    stop("sites and pdR have different lenghts; wDist requires one site per pdR layer")
+  }
+  if(crs(sites) == ""){
+    stop("sites must have coord. ref.")
+  }
+  if(!same.crs(sites, pdR)){
+    sites = project(sites, crs(pdR))
+  }
+
   if(!is.numeric(maxpts)){
     stop("maxpts must be numeric")
   }
@@ -41,8 +43,8 @@ wDist = function(pdR, sites, maxpts = 1e5){
   }
   
   #for safety; using projected data works on most platforms
-  pdR = project(pdR, "+proj=longlat +ellps=WGS84")
-  sites = project(sites, "+proj=longlat +ellps=WGS84")
+  pdR = project(pdR, "WGS84")
+  sites = project(sites, "WGS84")
   
   for(i in seq_along(sites)){
     pdSP = as.points(pdR[[i]])
@@ -53,10 +55,9 @@ wDist = function(pdR, sites, maxpts = 1e5){
     }
     
     d = distance(pdSP, sites[i,])[,1]
-    ####gotta find an equivalent for terra
     b = bearing(geom(pdSP)[,c("x", "y")], 
                 geom(sites[i])[,c("x", "y")])
-    ####
+
     w = values(pdSP)[,1]
     d.dens = density(d, weights = w)
     b.dens = density(b, weights = w)    
