@@ -1,4 +1,4 @@
-\name{d2h_lrNA.tif}
+\name{d2h_lrNA}
 
 \alias{d2h_lrNA}
 
@@ -9,11 +9,15 @@ data: low resolution North American growing season H isoscape
 }
 
 \description{
-Interpolated growing season precipitation H isoscape from waterisotopes.org
+Interpolated growing season precipitation H isoscape from waterisotopes.org.
+}
+
+\usage{
+d2h_lrNA
 }
 
 \format{
-RasterBrick with two layers. The first layer is the mean prediction and the second is 1 standard deviation
+SpatRaster with two layers. The first layer is the mean prediction and the second is 1 standard deviation
 }
 
 \references{
@@ -27,7 +31,6 @@ IAEA/WMO (2018) Global Network of Isotopes in Precipitation. The GNIP Database. 
 \examples{
 library(terra)
 
-d2h_lrNA = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
 plot(d2h_lrNA)
 }
 

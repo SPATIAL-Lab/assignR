@@ -57,8 +57,6 @@ Returns an object of class \dQuote{rescale}.
 }
 
 \examples{
-library(terra)
-
 # load hydrogen isotope data for human hair in North America
 d = subOrigData(group = "Modern human", mask = naMap, niter = 100, genplot = FALSE)
 

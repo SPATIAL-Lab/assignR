@@ -34,13 +34,6 @@ Returns an object of class \dQuote{isoStack}, a list containing the isoscapes ob
 }
 
 \examples{
-library(terra)
-
-# load North America boundary and global isoscape
-data("naMap")
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
-sr_MI = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
-
-#stack them
+#stack H and Sr isoscapes
 h_s = isoStack(d2h_lrNA, sr_MI)
 }

@@ -12,7 +12,8 @@ data: database of H and O isotope data for tissues of known origin
 This dataset consists of hydrogen and oxygen isotope values and metadata for human hair, insect wings, and bird feathers of known geographic origin.
 }
 
-\usage{data("knownOrig")
+\usage{
+knownOrig
 }
 
 \format{
@@ -76,10 +77,14 @@ list.
 
 \examples{
 library(terra)
+
 class(knownOrig$sites)
 class(knownOrig$samples); class(knownOrig$sources)
+
 summary(knownOrig$samples)
+
 print(knownOrig$sources[, 1:2])
+
 plot(wrld_simpl, border = "grey")
 points(knownOrig$sites)
 }

@@ -2,7 +2,8 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
                        age_code = NULL, mask = NULL, ref_scale = "VSMOW_H",
                        niter = 5000, genplot = TRUE) {
   
-  #load data in funtion environ
+  #load data in function environment
+  knownOrig = knownOrig
   knownOrig_samples = knownOrig$samples
   knownOrig_sites = knownOrig$sites
   knownOrig_sources = knownOrig$sources

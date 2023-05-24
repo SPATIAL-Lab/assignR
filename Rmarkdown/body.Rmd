@@ -7,14 +7,12 @@ Let's load **assignR** and two other packages we'll need.
 ```{r load, message=FALSE, warning=FALSE, results="hide"}
 library(assignR)
 library(terra)
-library(sp)
 ```
 
 *****
 Now add some data from the package to your local environment. Load and plot the North America boundary mask.
 
 ```{r boundary}
-data("naMap")
 plot(naMap)
 ```
 
@@ -22,7 +20,6 @@ plot(naMap)
 Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution isoscapes of several different types can be downloaded using the `getIsoscapes` function (refer to the help page for details). 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
-d2h_lrNA = rast(system.file("extdata/d2h_lrNA.tif", package = "assignR"))
 plot(d2h_lrNA)
 ```
 
@@ -30,7 +27,6 @@ plot(d2h_lrNA)
 The package includes a database of H and O isotope data for known origin samples (`knownOrig.rda`), which consists of three features (`sites`, `samples`, and `sources`). Let's load it and have a look. First we'll get the names of the data fields available in the tables.
 
 ```{r knownOrig_names}
-data("knownOrig")
 names(knownOrig$sites)
 names(knownOrig$samples)
 names(knownOrig$sources)
@@ -39,7 +35,7 @@ names(knownOrig$sources)
 The `sites` feature is a spatial object that records the geographic location of all sites from which samples are available.
 
 ```{r knownOrig_sites, fig.width=5, fig.asp=0.8}
-plot(assignR:::wrld_simpl)
+plot(wrld_simpl)
 points(knownOrig$sites, col = "red")
 ```
 
@@ -143,7 +139,6 @@ In this case, we do not have any known-origin tissue samples to work with. Howev
 Let's look at the Sr isoscape and compare it with our butterfly H isoscape.
 
 ```{r srIso, fig.width=5, fig.asp=0.8, out.width='45%'}
-sr_MI = rast(system.file("extdata/sr_MI.tif", package = "assignR"))
 plot(sr_MI$weathered.mean)
 crs(sr_MI)
 crs(d2h_Dp$isoscape.rescale)
@@ -216,8 +211,8 @@ Comparisons can also be made using points. Let's create two points (one in each 
 ```{r oddsRatio2}
 pp1 = c(-112,40)
 pp2 = c(-105,33)
-pp12 = SpatialPoints(coords = rbind(pp1,pp2))
-proj4string(pp12) = proj4string(naMap)
+pp12 = vect(rbind(pp1,pp2))
+crs(pp12) = crs(naMap)
 oddsRatio(Ll_prob, pp12)
 ```
 

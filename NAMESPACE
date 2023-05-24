@@ -26,7 +26,7 @@ importFrom(graphics, abline, boxplot, legend, lines, par, text, title,
 importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var,
            density, weighted.mean)
 importFrom(utils, data, download.file, setTxtProgressBar, txtProgressBar, 
-           tail, unzip)
+           tail, unzip, read.csv)
 importFrom(mvnfast, dmvn)
 importFrom(rlang, cnd_muffle)
 importFrom(geosphere, bearing)

@@ -5,23 +5,23 @@
 \docType{data}
 
 \title{
-data: naMap
+data: North America boundary map
 }
 
 \description{
-Simplified North American boundaries polygon
+Simplified spatial polygon layer representing the boundary of North America.
 }
 
-\usage{data("naMap")
+\usage{
+naMap
 }
 
 \format{
-SpatialPolygonsDataFrame
+SpatVector
 }
 
 \examples{
-library(sp)
+library(terra)
 
-data("naMap")
 plot(naMap)
 }
