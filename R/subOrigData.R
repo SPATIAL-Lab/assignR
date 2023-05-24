@@ -90,11 +90,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
     trans_out = refTrans(result, marker, ref_scale, niter)
     result_data = merge(result_sites, trans_out$data, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
-    
-    ##Is this needed? Doesn't work on SpatVect
-    #row.names(result_data) = result_data$Sample_ID
-    ##
-    
+
     return_obj = list("data" = result_data, "sources" =
                         result_sources, "chains" = trans_out$chains,
                       "marker" = marker)
@@ -105,10 +101,6 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
   } else{
     result_data = merge(result_sites, result, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
-    
-    ##
-    #row.names(result_data) = result_data$Sample_ID
-    ##
     
     return_obj = list("data" = result_data, "sources" = result_sources,
                       "chains" = NULL, "marker" = marker)
@@ -123,10 +115,10 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
   if(genplot){
     if(is.null(mask)){
       plot(wrld_simpl, axes = TRUE)
-      plot(result_data, add = TRUE, col = "red", cex = 0.5)
+      points(result_data, col = "red", cex = 0.5)
     } else{
       plot(mask, axes = TRUE)
-      plot(result_data, add = TRUE, col = "red")
+      points(result_data, col = "red")
     }
   }
   

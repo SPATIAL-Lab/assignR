@@ -1,5 +1,3 @@
-library(assignR)
-
 d2h_crop = crop(d2h_lrNA, ext(-100, -60, 25, 45))
 d2h_proj = project(d2h_lrNA, "+proj=longlat +ellps=clrk66 
                    +datum=NAD27 +no_defs")

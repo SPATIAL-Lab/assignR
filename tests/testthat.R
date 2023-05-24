@@ -1,5 +1,4 @@
 library(testthat)
-library(terra)
-library(sp)
+library(assignR)
 
 test_check("assignR")

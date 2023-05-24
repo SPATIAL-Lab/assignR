@@ -49,7 +49,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     } 
     
     if(inherits(isoscape, "SpatRaster")){
-      if(is.na(crs(isoscape))) {
+      if(crs(isoscape) == "") {
         stop("isoscape must have valid coordinate reference system")
       }
       if(nlyr(isoscape) != 2){
@@ -63,7 +63,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   
   #check known for multi-isotope
   if(ni > 1){
-    #two options for ni>1, list of SODs, check and unpack each to spdf
+    #two options for ni>1, list of SODs, check and unpack each to SpatVector
     if(inherits(known, "list")){
       if(length(known) != ni){
         stop("length of known must equal length of isoStack")
@@ -110,14 +110,14 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     }
   }
   #SOD or SOD list will now be converted to this
-  if(inherits(known, "SpatialPointsDataFrame")){
+  if(inherits(known, "SpatVector")){
     known = withCallingHandlers(
       message = addm,
       warning = addw,
       if(ni > 1){
-        check_SPDF(known, isoscape[[1]], bySite, ni)
+        check_SV(known, isoscape[[1]], bySite, ni)
       } else{
-        check_SPDF(known, isoscape, bySite, ni)
+        check_SV(known, isoscape, bySite, ni)
       }
     )
   } else{
@@ -215,8 +215,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       if(ni > 1){
         rescales = list()
         for(j in 1:ni){
-          m_sub = m
-          m_sub@data = m_sub@data[,(j * 2 - 1):(j * 2)]
+          m_sub = m[,(j * 2 - 1):(j * 2)]
           class(m_sub) = "QAData"
           rescales[[j]] = withCallingHandlers(
             message = addm,
@@ -243,13 +242,11 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       message = addm,
       warning = addw,
       pdRaster(rescale, unknown = 
-                 data.frame(row.names(v@data), 
-                            v@data[,seq(1, ni*2-1, by=2)]), 
+                 cbind("ID" = seq_along(v), 
+                       values(v[,seq(1, ni*2-1, by=2)])), 
                prior = prior, genplot = FALSE)
     )
     
-    v = vect(v)
-
     # pd value for each validation sample or site
     pd_temp = double(nlyr(pd))
     for(j in seq_along(pd_temp)){
@@ -379,34 +376,34 @@ check_SOD = function(known, isoscape, bySite){
   }
   #find samples column
   col_sample = match("Sample_ID", names(known$data))
-  #pull out SPDF
+  #pull out SpatVector
   known = known$data
-  #simplify data slot
-  known@data = known@data[, c(col_m, col_sd, col_site, col_sample)]
+  #simplify data
+  known = known[, c(col_m, col_sd, col_site, col_sample)]
   #check projection
-  if(is.na(proj4string(known))) {
+  if(crs(known) == "") {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != crs(isoscape, proj = TRUE)){
-    known = spTransform(known, crs(isoscape))
+  if(!same.crs(known, isoscape)){
+    known = project(known, crs(isoscape))
     message("known was reprojected")
   } 
   
   return(known)
 }
 
-check_SPDF = function(known, isoscape, bySite, ni){
+check_SV = function(known, isoscape, bySite, ni){
   
   col_site = NULL
   
   #check for enough columns
-  if(ncol(known@data) < ni * 2){
-    if(ncol(known@data) == 1 & ni == 1){
+  if(ncol(known) < ni * 2){
+    if(ncol(known) == 1 & ni == 1){
       warning("use of known with 1 data column is depreciated; known 
             should include the measured 
             isotope values and 1 sd uncertainty for each
             isotope system; assuming equal uncertainty for all samples")
-      known@data[,2] = rep(0.0001, nrow(known@data))
+      known[,2] = rep(0.0001, nrow(known))
     } else{
       stop("known must include the measured 
             isotope values and 1 sd uncertainty for each sample")
@@ -415,43 +412,43 @@ check_SPDF = function(known, isoscape, bySite, ni){
   
   #check all data columns are numeric w/ no missing values
   for(i in 1:(ni*2)){
-    if(!is.numeric(known@data[,i])){
+    if(!is.numeric(values(known)[,i])){
       stop("non-numeric data in sample value fields of known")
     }
-    if(any(is.na(known@data[, i])) || 
-       any(is.nan(known@data[, i])) || 
-       any(is.null(known@data[, i]))){
+    if(any(is.na(values(known)[, i])) || 
+       any(is.nan(values(known)[, i])) || 
+       any(is.null(values(known)[, i]))){
       stop("Missing values detected in known sample value fields")
     }
   }
   
   #check that all SD values are greater than zero
   for(i in seq(2, ni*2, by = 2)){
-    if(any(!(known@data[, i] > 0))){
+    if(any(!(values(known)[, i] > 0))){
       stop("negative or zero values found in known uncertainties")
     }
   }
   
   #check for Site_ID column
   if(bySite){
-    col_site = match("Site_ID", names(known@data))
+    col_site = match("Site_ID", names(known))
     if(is.na(col_site)){
       stop("no Site_ID field in known; provide Site_IDs or use bySite = FALSE")
     }
   }
   
   if(!is.null(col_site)){
-    if(any(is.na(known@data[, col_site])) || 
-       any(is.nan(known@data[, col_site])) || 
-       any(is.null(known@data[, col_site]))){
+    if(any(is.na(values(known)[, col_site])) || 
+       any(is.nan(values(known)[, col_site])) || 
+       any(is.null(values(known)[, col_site]))){
       stop("Missing values detected in sites field")
     }
   }
-  if(is.na(proj4string(known))) {
+  if(crs(known) == "") {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != crs(isoscape, proj = TRUE)){
-    known = spTransform(known, crs(isoscape))
+  if(!same.crs(known, isoscape)){
+    known = project(known, crs(isoscape))
     message("known was reprojected")
   } 
   if(nrow(known) < 10){

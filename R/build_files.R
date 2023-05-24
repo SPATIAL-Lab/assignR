@@ -22,13 +22,13 @@ internal_files = function(){
   internal_files()
   
   #cleanup removes terra pointers from package environment at end of session 
-  clean = function(e){
-    detach("package:assignR", unload = TRUE, character.only = TRUE)
-  }
-  e = as.environment("package:assignR")
-  g = function(){
-    reg.finalizer(e, clean, onexit = TRUE)
-  }
-  g()
+#  clean = function(e){
+#   detach("package:assignR", unload = TRUE, character.only = TRUE)
+#  }
+#  e = as.environment("package:assignR")
+#  g = function(){
+#    reg.finalizer(e, clean, onexit = TRUE)
+#  }
+#  g()
 }
 

@@ -1,5 +1,3 @@
-library(assignR)
-
 id = letters[1:5]
 set.seed(123)
 d2H = rnorm(5, -110, 8)
