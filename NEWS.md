@@ -1,7 +1,8 @@
 # assignR news
 
 ## assignR 2.2.3.9000
-* 
+* Transitioned spatial dependencies to terra package. All functions will still accept raster and sp objects for backward compatibility, but users are encouraged to move their workflows to terra.
+* Instituted versioning of the knownOrig database.
 
 ## assignR 2.2.3
 * Bug fixes

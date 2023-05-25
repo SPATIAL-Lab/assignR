@@ -68,7 +68,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       if(length(known) != ni){
         stop("length of known must equal length of isoStack")
       }
-      #convert each SOD into SPDF
+      #convert each SOD into SpatVector
       for(i in 1:ni){
         known[[i]] = withCallingHandlers(
           message = addm,
@@ -80,7 +80,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       k.spdf = known[[1]]
       kmlen = length(known[[1]])
       for(i in 2:ni){
-        k.spdf = merge(k.spdf, known[[i]]@data, by = "Sample_ID", 
+        k.spdf = merge(k.spdf, known[[i]], by = "Sample_ID", 
                        all.x = FALSE)
         if(bySite){
           if(!all(k.spdf$Site_ID.x == k.spdf$Site_ID.y)){
@@ -90,7 +90,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
           names(k.spdf)[names(k.spdf) == "Site_ID.y"] = "Site_ID"
         }
         #move Sample_IDs to last column
-        k.spdf@data = cbind(k.spdf@data[,-1], k.spdf@data[1])
+        k.spdf = cbind(k.spdf[,-1], k.spdf[1])
         kmlen = max(kmlen, length(known[[i]]))
       }
       if(length(k.spdf) != kmlen){
@@ -109,6 +109,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       )       
     }
   }
+  
   #SOD or SOD list will now be converted to this
   if(inherits(known, "SpatVector")){
     known = withCallingHandlers(

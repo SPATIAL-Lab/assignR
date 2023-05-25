@@ -15,6 +15,9 @@ internal_files = function(){
                          samples = read.csv(system.file("extdata/knownOrig_samples.csv", package = "assignR")), 
                          sources = read.csv(system.file("extdata/knownOrig_sources.csv", package = "assignR"))),
          pos = "package:assignR")
+  
+  message(paste0("knownOrig database version ", kov$version, ", ",
+                 kov$nSamples, " samples from ", kov$nSites, " sites."))
 }
 
 .onAttach = function(libname, pkgname){
