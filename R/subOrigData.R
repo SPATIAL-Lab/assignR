@@ -115,6 +115,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
   
   if(genplot){
     if(is.null(mask)){
+      wrld_simpl = wrld_simpl
       plot(wrld_simpl, axes = TRUE)
       points(result_data, col = "red", cex = 0.5)
     } else{

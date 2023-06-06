@@ -346,8 +346,7 @@ write_out = function(outDir, genplot, n, result, data){
       pp = plot(result)
       print(pp)
     } else {
-      pp = plot(result, main=paste("Probability Density Surface for", 
-                                   data[, 1]))
+      pp = plot(result, main = data[, 1])
       print(pp)
     }
   }

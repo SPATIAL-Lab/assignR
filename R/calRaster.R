@@ -147,7 +147,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   #warn if some known sites have NA isoscape values
   if (any(is.na(isoscape.iso[, 1]))) {
     na = which(is.na(isoscape.iso[, 1]))
-    wtxt = "NO isoscape values found at the following locations:\n"
+    wtxt = "No isoscape values found at the following locations:\n"
     for(i in na){
       wtxt = paste0(wtxt, geom(known)[i, 3], ", ", geom(known)[i, 4], "\n")
     }

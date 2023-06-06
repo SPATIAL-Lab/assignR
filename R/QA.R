@@ -140,19 +140,6 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     stop("valiTime must be an integer greater than 1")
   }
 
-  #check valiStation
-  if(bySite){
-    if(valiStation > (length(unique(known$Site_ID)) - 3)){
-      stop("for bySite = TRUE valiStation must be 3 or more smaller 
-        than the number of unique sites in known")
-    }
-  } else{
-    if(valiStation > (nrow(known) - 3)){
-      stop("for bySite = FALSE valiStation must be 3 or more smaller 
-        than the number of samples in known")
-    }
-  }
-  
   #check by
   if(!(as.integer(by) == by) || by < 1 || by > 25){
     stop("by must be an integer between 1 and 25")
@@ -171,6 +158,39 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   }
   if(setSeed){
     set.seed(100)
+  }
+  
+  #check and apply mask
+  mask = check_mask(mask, isoscape)
+  if(!is.null(mask)){
+    isoscape = mask(isoscape, mask)
+    isoscape = crop(isoscape, mask)
+  }
+  
+  #remove samples that fall off isoscape
+  kbad = is.na(apply(extract(isoscape, known, ID = FALSE), 1, sum))
+  if(any(kbad)){
+    wtxt = paste("No isoscape values found at the following", sum(kbad), "locations:\n")
+    for(i in seq_along(kbad)){
+      if(kbad[i]){
+        wtxt = paste0(wtxt, geom(known)[i, 3], ", ", geom(known)[i, 4], "\n")
+      }
+    }
+    warning(wtxt)
+    known = known[!kbad]
+  }
+  
+  #check valiStation
+  if(bySite){
+    if(valiStation > (length(unique(known$Site_ID)) - 3)){
+      stop("for bySite = TRUE valiStation must be 3 or more smaller 
+        than the number of unique sites in known")
+    }
+  } else{
+    if(valiStation > (nrow(known) - 3)){
+      stop("for bySite = FALSE valiStation must be 3 or more smaller 
+        than the number of samples in known")
+    }
   }
   
   if(bySite){
@@ -202,6 +222,9 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   
   # create progress bar
   pb = txtProgressBar(min = 0, max = valiTime, style = 3)
+
+  # total area
+  Tarea = min(global(isoscape, "notNA"))
   
   for (i in seq_len(valiTime)){
     if(bySite){
@@ -221,7 +244,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
           rescales[[j]] = withCallingHandlers(
             message = addm,
             warning = addw,
-            calRaster(m_sub, isoscape[[j]], mask, genplot = FALSE, 
+            calRaster(m_sub, isoscape[[j]], genplot = FALSE, 
                       verboseLM = FALSE)[[1]]
           )
         }
@@ -231,7 +254,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
         rescale = withCallingHandlers(
           message = addm,
           warning = addw,
-          calRaster(m, isoscape, mask, genplot = FALSE, 
+          calRaster(m, isoscape, genplot = FALSE, 
                     verboseLM = FALSE)
         )
       } 
@@ -249,10 +272,8 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
     )
     
     # pd value for each validation sample or site
-    pd_temp = double(nlyr(pd))
-    for(j in seq_along(pd_temp)){
-      pd_temp[j] = extract(pd[[j]], v[j], factors = FALSE)[,2]
-    }
+    pd_temp = diag(extract(pd, v, ID = FALSE, raw = TRUE))
+    
     if(bySite){
       for(j in seq(valiStation)){
         pd_v[i, j] = mean(pd_temp[v$Site_ID == val_stations[i, j]])
@@ -261,73 +282,41 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
       pd_v[i,] = pd_temp
     }
 
-    # total area
-    Tarea = length(na.omit(pd[[1]][]))
-
     # spatial precision and accuracy by checking top percentage by cumulative prob.
     precision[[i]] = matrix(0, length(xx), valiStation)
+
     for(j in seq_along(xx)){
-      qtl = qtlRaster(pd, threshold = (xx[j]-1)/100, 
-                                thresholdType = "prob", 
+      qtl = qtlRaster(pd, threshold = (xx[j]-1)/100, thresholdType = "prob", 
                                genplot = FALSE)
-      rv_temp = double(nlyr(qtl))
-      pre_temp = double(nlyr(qtl))
-      for(k in seq_len(nlyr(qtl))){
-        rv_temp[k] = extract(qtl[[k]], v[k], 
-                             factors = FALSE)[, 2]
-        pre_temp[k] = sum(na.omit(qtl[[k]][]))/Tarea
-      }
+      rv_temp = diag(extract(qtl, v, ID = FALSE, raw = TRUE))
+      pre_temp = global(qtl, "sum", na.rm = TRUE) / Tarea
       if(bySite){
         rv_sm = double(valiStation)
         for(k in seq(valiStation)){
-          rv_sm[k] = mean(rv_temp[v$Site_ID == val_stations[i, k]], 
-                          na.rm = TRUE)
+          rv_sm[k] = mean(rv_temp[v$Site_ID == val_stations[i, k]])
           precision[[i]][j, k] = mean(pre_temp[v$Site_ID == 
-                                                 val_stations[i, k]])
+                                                 val_stations[i, k], 1])
         }
-        if(any(!is.na(rv_sm))){
-          prption_byProb[i, j] = mean(rv_sm, na.rm = TRUE)
-        } else{
-          prption_byProb[i, j] = NA
-        }
+        prption_byProb[i, j] = mean(rv_sm)
       } else{
-        if(any(!is.na(rv_temp))){
-          prption_byProb[i, j] = sum(rv_temp, na.rm = TRUE) /
-            sum(!is.na(rv_temp))
-        } else{
-          prption_byProb[i, j] = NA
-        }
-        precision[[i]][j,] = pre_temp
+        prption_byProb[i, j] = mean(rv_temp)
+        precision[[i]][j,] = pre_temp[,]
       }
     }
 
     # sensitivity by checking top percentage by cumulative area
     for(j in seq_along(xx)){
-      qtl = qtlRaster(pd, threshold = (xx[j]-1)/100, 
-                                thresholdType = "area", 
-                               genplot = FALSE)
-      rv_temp = double(nlyr(qtl))
-      for(k in seq_along(rv_temp)){
-        rv_temp[k] = extract(qtl[[k]], v[k], factors = FALSE)[, 2]
-      }
+      qtl = qtlRaster(pd, threshold = (xx[j]-1)/100, thresholdType = "area",
+                      genplot = FALSE)
+      rv_temp = diag(extract(qtl, v, ID = FALSE, raw = TRUE))
       if(bySite){
         rv_sm = double(valiStation)
         for(k in seq(valiStation)){
-          rv_sm[k] = mean(rv_temp[v$Site_ID == val_stations[i, k]], 
-                          na.rm = TRUE)
+          rv_sm[k] = mean(rv_temp[v$Site_ID == val_stations[i, k]])
         }
-        if(any(!is.na(rv_sm))){
-          prption_byArea[i, j] = mean(rv_sm, na.rm = TRUE)
-        } else{
-          prption_byArea[i, j] = NA
-        }
+        prption_byArea[i, j] = mean(rv_sm)
       } else{
-        if(any(!is.na(rv_temp))){
-          prption_byArea[i, j] = sum(rv_temp, na.rm = TRUE) /
-            sum(!is.na(rv_temp))
-        } else{
-          prption_byArea[i, j] = NA
-        }
+        prption_byArea[i, j] = mean(rv_temp)
       }
     }
    
@@ -343,7 +332,7 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   cat("\n")
   message(mstack)
   
-  random_prob_density=1/length(cells(isoscape[[1]]))
+  random_prob_density = 1 / Tarea
 
   result = list(name, val_stations, pd_v, prption_byArea, 
                 prption_byProb, precision, random_prob_density, by)
