@@ -16,7 +16,7 @@ internal_files = function(){
                          sources = read.csv(system.file("extdata/knownOrig_sources.csv", package = "assignR"))),
          pos = "package:assignR")
   
-  message(paste0("knownOrig database version ", kov$version, ", ",
+  packageStartupMessage(paste0("knownOrig database version ", kov$version, ", ",
                  kov$nSamples, " samples from ", kov$nSites, " sites."))
 }
 

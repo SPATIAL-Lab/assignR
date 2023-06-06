@@ -31,7 +31,7 @@ subOrigData, list of subOrigData, or SpatVector. Known-origin tissue isotope dat
   \item{by}{integer. Threshold increment to use in evaluating assignment performance. Must be between 1 and 25.}
   \item{prior}{SpatRaster. Optional layer with prior probabilities, which has the same projection, resolution and extent as \code{isoscape}.
 }
-  \item{mask}{SpatVector. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
+  \item{mask}{SpatVector. Constrains the area of the analysis. If this is not provided, the entire area of \code{isoscape} is used.
 }
   \item{setSeed}{logical. Do you want to \code{set.seed()} when you randomly draw validation stations? \dQuote{TRUE} gives the same sequence of random draws each time the function is called.
 }

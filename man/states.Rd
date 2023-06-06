@@ -9,7 +9,7 @@ data: outline of US states
 }
 
 \description{
-Outline map fo the of lower 48 U.S. states.
+Outline map of the of lower 48 U.S. states.
 }
 
 \usage{

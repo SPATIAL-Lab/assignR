@@ -29,7 +29,7 @@ wDist(pdR, sites, maxpts = 1e5)
 \details{
 \code{pdR} and \code{sites} must be of equal length and corresponding order. Names in the output object are taken from the names of the layers in \code{pdR}.
 
-Distances and bearings are calculated on the WGS84 geoid using functions from the \pkg{terra} and \pkg{geosphere} package. These calculations can take a long time for large rasters. If \code{maxpts} is less than the number of grid cells in each \code{pdR} layer, calculations are caried out for \code{maxpts} randomly selected cells.
+Distances and bearings are calculated on the WGS84 geoid using functions from the \pkg{terra} and \pkg{geosphere} package. These calculations can take a long time for large rasters. If \code{maxpts} is less than the number of grid cells in each \code{pdR} layer, calculations are carried out for \code{maxpts} randomly selected cells.
 
 Bearing values correspond to the initial bearing from source to collection location, and are reported on a scale of -180 to +180 degrees. The statistical metrics are rectified so that values for distributions spanning due south are reported correctly. Both weighted bearing and distance distributions are often multimodal, and it is recommended to review the distribution densities to assess the representativeness of the statistics (e.g., using \code{\link{plot.wDist}}). 
 }

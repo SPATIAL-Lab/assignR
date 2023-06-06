@@ -16,17 +16,17 @@ library(assignR)
 
 **Datasets**
 
-*d2h_lrNA.rda* - Low-resolution, North American crop of growing season d2H isoscape, used in examples.
+*d2h_lrNA* - Low-resolution, North American crop of growing season d2H isoscape, used in examples.
 
-*sr_MI.rda* - Low-resolution crop of locally-weathered Sr isoscape, used in examples.
+*sr_MI* - Low-resolution crop of locally-weathered Sr isoscape, used in examples.
 
-*knownOrig.rda*	- Hydrogen and oxygen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information (currently 4218 samples)
+*knownOrig*	- Hydrogen and oxygen isotope values of known-origin samples including human hair, insect chitin and bird feathers, with location information.
 
-*stds.rda* - Information on reference scales used to report data from different labs, useful for converting between scales
+*stds* - Information on reference scales used to report data from different labs, useful for converting between scales
 
-*naMap.rda* - North America outline
+*naMap* - North America outline
 
-*states.rda* - 48 contiguous United States
+*states* - 48 contiguous United States
 
 **Functions**
 
