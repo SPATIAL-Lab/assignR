@@ -1,5 +1,5 @@
 getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
-
+  
   dpath.pre = "https://wateriso.utah.edu/waterisotopes/media/ArcGrids/"
   
   if(!is.numeric(timeout)){
@@ -7,11 +7,11 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
   }
   
   if(!(isoType %in% names(GIconfig))){
-   stop("isoType invalid")
+    stop("isoType invalid")
   }
   
   giconfig = GIconfig[[match(isoType, names(GIconfig))]]
-
+  
   wd = getwd()
   setwd(tempdir())
   ot = getOption("timeout")
@@ -39,7 +39,7 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
     options(timeout = ot)
     message(paste("Download failed with status/message: \n", dfs))
   }
-
+  
   if(!file.exists(giconfig$dpath.post)){
     dfs = dlf(paste0(dpath.pre, giconfig$dpath.post), giconfig$dpath.post)
     if(!is.numeric(dfs)){
@@ -63,7 +63,7 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
     }
     rs = list()
     for(i in 1:length(lnames)){
-      rs[[i]] = raster(lnames[i])
+      rs[[i]] = rast(lnames[i])
     }  
     names(rs) = onames
     return(rs)
@@ -83,18 +83,17 @@ getIsoscapes = function(isoType = "GlobalPrecipGS", timeout = 1200){
   switch(giconfig$eType,
          { #1
            if(length(rs) > 1){
-             out = stack(rs)
+             out = rast(rs)
            } else{
              out = rs
            }
          },
          { #2
-           out = stack(rs)
+           out = rast(rs)
          })
   
   message(paste0("Refer to ", tempdir(), "\\metadata.txt for 
   documentation and citation information"))
-
+  
   return(out)
 }
-

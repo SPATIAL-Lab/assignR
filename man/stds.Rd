@@ -79,7 +79,7 @@ Magozzi, S. et al. (in press) Calibration chain transformation to improve the co
 }
 
 \examples{
-library(raster)
+library(graphics)
 data("stds")
 
 print(stds$hstds[, 1:5])
