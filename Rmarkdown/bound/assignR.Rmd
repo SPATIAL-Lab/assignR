@@ -24,7 +24,7 @@ install_github("SPATIAL-Lab/assignR@*release")
 We will introduce the basic functionality of **assignR** using data bundled with the package. We'll review how to access data for known-origin biological samples and environmental models, use these to fit and apply functions estimating the probability of sample origin across a study region, and summarize these results to answer research and conservation questions. We'll also demonstrate a quality analysis tool useful in study design, method comparison, and uncertainty analysis.
 
 *****
-Let's load **assignR** and two other packages we'll need. 
+Let's load **assignR** and another package we'll need. 
 
 ```{r load, message=FALSE, warning=FALSE, results="hide"}
 library(assignR)
@@ -32,14 +32,14 @@ library(terra)
 ```
 
 *****
-Now add some data from the package to your local environment. Load and plot the North America boundary mask.
+Now use data from the package to plot a simplified North America boundary mask.
 
 ```{r boundary}
 plot(naMap)
 ```
 
 *****
-Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a RasterBrick with two layers, the mean prediction and a standard deviation of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution isoscapes of several different types can be downloaded using the `getIsoscapes` function (refer to the help page for details). 
+Let's do the same for a growing season precipitation H isoscape for North America. Notice this is a spatial raster (SpatRaster) with two layers, the mean prediction and a standard error of the prediction. The layers are from [waterisotopes.org](https://wateriso.utah.edu/waterisotopes/), and their resolution has been reduced to speed up processing in these examples. Full-resolution isoscapes of several different types can be downloaded using the `getIsoscapes` function (refer to the help page for details). 
 
 ```{r isoscape, fig.width=7, fig.asp=0.45}
 plot(d2h_lrNA)
@@ -56,7 +56,7 @@ names(knownOrig$sources)
 
 The `sites` feature is a spatial object that records the geographic location of all sites from which samples are available.
 
-```{r knownOrig_sites, fig.width=5, fig.asp=0.8}
+```{r knownOrig_sites, fig.width=6, fig.asp=0.6}
 plot(wrld_simpl)
 points(knownOrig$sites, col = "red")
 ```
@@ -102,7 +102,7 @@ For a real application you would want to explore the database to find measuremen
 
 We need to start by assessing how the environmental (precipitation) isoscape values correlate with the sample values. `calRaster` fits a linear model relating the precipitation isoscape values to sample values, and applies it to produce a calibrated, sample-type specific isoscape.
 
-```{r calRaster, fig.width=5, fig.asp=0.8, out.width='90%'}
+```{r calRaster, fig.width=6, fig.asp=0.8, out.width='90%'}
 d2h_Ll = calRaster(known = Ll_d, isoscape = d2h_lrNA, mask = naMap)
 ```
 
@@ -131,7 +131,7 @@ Notice that both the d2H values and the uncertainties have been updated to refle
 *****
 Now we will produce posterior probability density maps for the unknown samples. For reference on the Bayesian inversion method see [Wunder, 2010](https://doi.org/10.1007/978-90-481-3354-3_12)
 
-```{r pdRaster, fig.width=5, fig.asp=0.8, out.width='95%'}
+```{r pdRaster, fig.width=6, fig.asp=0.6, out.width='95%'}
 Ll_prob = pdRaster(d2h_Ll, Ll_un)
 ```
 
@@ -162,16 +162,15 @@ Let's look at the Sr isoscape and compare it with our butterfly H isoscape.
 
 ```{r srIso, fig.width=5, fig.asp=0.8, out.width='45%'}
 plot(sr_MI$weathered.mean)
-crs(sr_MI)
-crs(d2h_Dp$isoscape.rescale)
+crs(sr_MI, describe = TRUE)
+crs(d2h_Dp$isoscape.rescale, describe = TRUE)
 ```
 
 Notice that the we have two different spatial data objects, one for Sr and one for d2H, and that they have different extents and projections. In order to conduct a multi-isotope analysis, we'll first combine these into a single object using the `isoStack` function. In addition to combining the objects, this function resolves differences in their projection, resolution, and extent. It's always a good idea to check that the properties of the isoStack components are consistent with your expectations.
 
 ```{r isoStack}
 Dp_multi = isoStack(d2h_Dp, sr_MI)
-lapply(Dp_multi, crs)
-lapply(Dp_multi, ext)
+lapply(Dp_multi, crs, describe = TRUE)
 ```
 
 *****
@@ -184,7 +183,7 @@ Dp_unk = data.frame("ID" = c("A", "B"), "d2H" = c(-86, -96), "Sr" = c(0.7089, 0.
 *****
 We are ready to make our probability maps. First let's see how our posterior probabilities would look if we only used the hydrogen isotope data.
 
-```{r Dp_Honly, fig.width=5, fig.asp=1.6, out.width='90%'}
+```{r Dp_Honly, fig.width=5, fig.asp=0.6, out.width='85%'}
 Dp_pd_Honly = pdRaster(Dp_multi[[1]], Dp_unk[,-3])
 ```
 
@@ -193,7 +192,7 @@ We see pretty clear distinctions between the two samples, driven by a strong SW-
 *****
 What if we add the Sr information to the analysis? The syntax for running `pdRaster` is the same, but now we provide our isoStack object in place of the single isoscape. The function will use the spatial covariance of the isoscape values to approximate the error covariance for the two (or more) markers and return posterior probabilities based on the multivariate normal probability density function evaluated at each grid cell.
 
-```{r Dp_multi, fig.width=5, fig.asp=1.6, out.width='90%'}
+```{r Dp_multi, fig.width=5, fig.asp=0.6, out.width='85%'}
 Dp_pd_multi = pdRaster(Dp_multi, Dp_unk)
 ```
 
@@ -207,10 +206,9 @@ Many of the functions in **assignR** are designed to help you analyze and draw i
 
 The `oddsRatio` tool compares the posterior probabilities for two different locations or regions. This might be useful in answering real-world questions...for example "is this sample more likely from France or Spain?", or "how likely is this hypothesized location relative to other possibilities?". 
 
-Let's compare probabilities for two spatial areas - the states of Utah and New Mexico. First we'll load the SpatialPolygons and plot them.
+Let's compare probabilities for two spatial areas - the states of Utah and New Mexico. First we'll extract the state boundaries from package data and plot them.
 
 ```{r polygons}
-data("states")
 s1 = states[states$STATE_ABBR == "UT",]
 s2 = states[states$STATE_ABBR == "NM",]
 plot(naMap)
@@ -251,9 +249,9 @@ Let's do a weighted distance analysis for our first two unknown origin loggerhea
 ```{r wDist1, fig.width=5, fig.asp=0.8, out.width='45%'}
 # View the data
 plot(Ll_prob[[1]], main = names(Ll_prob)[1])
-points(pp12[1])
+points(pp12[1], cex = 2)
 plot(Ll_prob[[2]], main = names(Ll_prob)[2])
-points(pp12[2])
+points(pp12[2], cex = 2)
 ```
 
 Now let's run the analysis and use the functions `c` and `plot` to view the summary statistics and distributions returned by `wDist`.

@@ -24,7 +24,7 @@ importFrom(grDevices, dev.off, pdf, png, col2rgb, rgb)
 importFrom(graphics, abline, boxplot, legend, lines, par, text, title, 
            polygon)
 importFrom(stats, coef, cov, cor, dnorm, lm, median, na.omit, rnorm, sd, var,
-           density, weighted.mean)
+           density, weighted.mean, quantile)
 importFrom(utils, data, download.file, setTxtProgressBar, txtProgressBar, 
            tail, unzip, read.csv)
 importFrom(mvnfast, dmvn)

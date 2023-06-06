@@ -244,7 +244,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #plot the output rasters
   if (genplot == TRUE) {
-    print(plot(isoscape.rescale, main = c("Rescaled mean", "Rescaled sd")))
+    print(plot(isoscape.rescale, mar = c(2, 2, 2, 4),
+               main = c("Rescaled mean", "Rescaled sd")))
   }
 
   #pdf output
@@ -257,7 +258,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     abline(lmResult)
     text(xl, yl, equation(lmResult), pos=2)
     
-    print(plot(isoscape.rescale, main = c("Rescaled mean", "Rescaled sd")))
+    print(plot(isoscape.rescale, mar = c(2, 2, 2, 4),
+               main = c("Rescaled mean", "Rescaled sd")))
     dev.off()
   }
 

@@ -343,10 +343,10 @@ write_out = function(outDir, genplot, n, result, data){
   
   if (genplot == TRUE){
     if (n == 1){
-      pp = plot(result)
+      pp = plot(result, mar = c(2, 2, 1, 5))
       print(pp)
     } else {
-      pp = plot(result, main = data[, 1])
+      pp = plot(result, mar = c(2, 2, 2, 5), main = data[, 1])
       print(pp)
     }
   }

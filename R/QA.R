@@ -161,14 +161,27 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   }
   
   #check and apply mask
-  mask = check_mask(mask, isoscape)
   if(!is.null(mask)){
-    isoscape = mask(isoscape, mask)
-    isoscape = crop(isoscape, mask)
+    if(ni > 1){
+      mask = check_mask(mask, isoscape[[1]])
+      for(i in seq_len(ni)){
+        isoscape[[i]] = mask(isoscape[[i]], mask)
+        isoscape[[i]] = crop(isoscape[[i]], mask)
+      }
+    } else{
+      mask = check_mask(mask, isoscape)
+      isoscape = mask(isoscape, mask)
+      isoscape = crop(isoscape, mask)
+    }
   }
   
   #remove samples that fall off isoscape
-  kbad = is.na(apply(extract(isoscape, known, ID = FALSE), 1, sum))
+  if(ni > 1){
+    kbad = is.na(apply(extract(isoscape[[i]], known, ID = FALSE),
+                       1, sum))
+  } else{
+    kbad = is.na(apply(extract(isoscape, known, ID = FALSE), 1, sum))
+  }
   if(any(kbad)){
     wtxt = paste("No isoscape values found at the following", sum(kbad), "locations:\n")
     for(i in seq_along(kbad)){
@@ -224,7 +237,11 @@ QA = function(known, isoscape, bySite = TRUE, valiStation = 1,
   pb = txtProgressBar(min = 0, max = valiTime, style = 3)
 
   # total area
-  Tarea = min(global(isoscape, "notNA"))
+  if(ni > 1){
+    Tarea = min(global(isoscape[[1]], "notNA"))
+  } else{
+    Tarea = min(global(isoscape, "notNA"))
+  }
   
   for (i in seq_len(valiTime)){
     if(bySite){
