@@ -12,13 +12,14 @@ data: database of H and O isotope data for tissues of known origin
 This dataset consists of hydrogen and oxygen isotope values and metadata for human hair, insect wings, and bird feathers of known geographic origin.
 }
 
-\usage{data("knownOrig")
+\usage{
+knownOrig
 }
 
 \format{
 list.
 \describe{
-\item{sites}{SpatialPointsDataFrame with 5 fields. WGS84 unprojected geometry.
+\item{sites}{SpatVector with 5 fields. WGS84 unprojected geometry.
   \describe{
     \item{[, 1]}{Site_ID: Unique ID}
     \item{[, 2]}{Site_name: Site name or descriptor}
@@ -75,14 +76,17 @@ list.
 }
 
 \examples{
-library(sp)
-data("knownOrig")
+library(terra)
+
 class(knownOrig$sites)
 class(knownOrig$samples); class(knownOrig$sources)
+
 summary(knownOrig$samples)
+
 print(knownOrig$sources[, 1:2])
-plot(assignR:::wrld_simpl, border = "grey")
-plot(knownOrig$sites, add = TRUE)
+
+plot(wrld_simpl, border = "grey")
+points(knownOrig$sites)
 }
 
 \keyword{datasets}

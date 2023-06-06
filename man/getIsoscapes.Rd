@@ -49,6 +49,7 @@ RasterStack containing the requested isoscape layers.
 }
 
 \examples{
-\dontrun{iso = getIsoscapes("CaribSr")
+\dontrun{
+iso = getIsoscapes("CaribSr")
 }
 }

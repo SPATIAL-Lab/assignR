@@ -5,23 +5,23 @@
 \docType{data}
 
 \title{
-data: states
+data: outline of US states
 }
 
 \description{
-Spatial Polygon Data Frame of lower 48 U.S. states
+Outline map fo the of lower 48 U.S. states.
 }
 
-\usage{data("states")
+\usage{
+states
 }
 
 \format{
-SpatialPolygonsDataFrame
+SpatVector
 }
 
 \examples{
-library(sp)
+library(terra)
 
-data("states")
 plot(states)
 }

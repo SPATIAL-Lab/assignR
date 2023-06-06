@@ -1,7 +1,12 @@
-qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, outDir = NULL){
-  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick"))){
-    stop("input probability density map (pdR) should be one of the following 
-         classes: RasterLayer, RasterStack or RasterBrick")
+qtlRaster = function(pdR, threshold, thresholdType = "area", 
+                     genplot = TRUE, outDir = NULL){
+  
+  if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick", "SpatRaster"))){
+    stop("input probability density map (pdR) should be a SpatRaster")
+  }
+  if(!inherits(pdR, "SpatRaster")){
+    warning("raster objects are depreciated, transition to package terra")
+    pdR = rast(pdR)
   }
   if(!inherits(threshold, "numeric")){
     stop("threshold must be a number between 0 and 1 ")
@@ -16,8 +21,9 @@ qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, out
     stop("thresholdType must be 'area' or 'prob'. See help page for 
          further information")
   }
-  if(!inherits(genplot, "logical")){
-    stop("genplot must be logical (T/F)")
+  if(!inherits(genplot, "logical")) {
+    message("genplot should be logical (T or F), using default = T")
+    genplot = TRUE
   }
   if(!is.null(outDir)){
     if(!inherits(outDir, "character")){
@@ -30,22 +36,24 @@ qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, out
   }
   
   result = pdR
-  n = nlayers(result)  
+  n = nlyr(result)  
+  
   if(thresholdType == "prob"){
-    for(i in seq_len(n)){
-      if(threshold == 0){
-        cut = 1
-      } else if(threshold == 1){
-        cut = 0
-      } else{
-        pdR.values = na.omit(getValues(pdR[[i]]))
-        pdR.values = sort(pdR.values)
-        k = length(pdR.values)
+    if(threshold == 0){
+      cut = rep(1, n)
+    } else if(threshold == 1){
+      cut = rep(0, n)
+    } else{
+      cut = double(n)
+      pdR.values = values(pdR, na.rm = TRUE)
+      for(i in seq_len(n)){
+        pdR.value = sort(pdR.values[,i])
+        k = length(pdR.value)
         left = 1
-        right =  k
+        right = k
         while((right-left) > 2){
-          start = round((left+right)/2)
-          total = sum(pdR.values[start:k])
+          start = round(mean(c(left, right)))
+          total = sum(pdR.value[start:k])
           if(total > threshold){
             left = start
           }
@@ -53,34 +61,23 @@ qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, out
             right = start
           }
         }
-        cut = pdR.values[start]        
-      }
-      if(n == 1){
-        result = pdR[[i]] > cut
-      }else{
-        result[[i]] = pdR[[i]] > cut
+        cut[i] = pdR.value[start]
       }
     }
+    result = pdR > cut
     title1 = "probability"
   }
   
   if(thresholdType == "area"){
-    for(i in seq_len(n)){
-      if(threshold == 0){
-        cut = 1
-      } else if(threshold == 1){
-        cut = 0
-      } else{
-        pdR.values = na.omit(getValues(pdR[[i]]))
-        k = length(pdR.values)
-        cut = sort(pdR.values)[round((1-threshold)*k)]
-      }
-      if(n == 1){
-        result = pdR[[i]] > cut
-      }else{
-        result[[i]] = pdR[[i]]>cut
-      }
+    if(threshold == 0){
+      cut = rep(1, n)
+    } else if(threshold == 1){
+      cut = rep(0, n)
+    } else{
+      pdR.values = values(pdR, na.rm = TRUE)
+      cut = apply(pdR.values, 2, quantile, probs = 1 - threshold)
     }
+    result = pdR > cut
     title1 = "area"
   }
   
@@ -88,10 +85,10 @@ qtlRaster = function(pdR, threshold, thresholdType = "area", genplot = TRUE, out
   tls = character(n)
   if(n > 1){
     for(i in seq_len(n)){
-      tls[i] = paste0("Top ", threshold*100, "% quantile by ", title1, " for ", names(result)[i])
+      tls[i] = paste0("Top ", threshold*100, "% by ", title1, " for ", names(result)[i])
     }
   } else{
-    tls = paste0("Top ", threshold*100, "% quantile by ", title1)
+    tls = paste0("Top ", threshold*100, "% by ", title1)
   }
   
   if(genplot){

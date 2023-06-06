@@ -12,11 +12,12 @@ data: low resolution locally weathered Sr isoscape for Michigan
 Modeled 87Sr/86Sr value of the local rock weathering flux, obtained from waterisotopes.org and aggregated to 10 km resolution.
 }
 
-\usage{data("sr_MI")
+\usage{
+sr_MI
 }
 
 \format{
-RasterBrick with two layers. The first layer is the mean prediction and the second is 1 standard deviation (here estimated as 1 percent of the modeled mean)
+SpatRaster with two layers. The first layer is the mean prediction and the second is 1 standard deviation (here estimated as 1 percent of the modeled mean)
 }
 
 \references{
@@ -24,9 +25,8 @@ Bataille, C. P. and Bowen, G. J. (2012) Mapping 87Sr/86Sr variations in bedrock 
 }
 
 \examples{
-library(raster)
+library(terra)
 
-data("sr_MI")
 plot(sr_MI)
 }
 

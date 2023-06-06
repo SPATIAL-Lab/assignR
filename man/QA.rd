@@ -18,9 +18,9 @@ QA(known, isoscape, bySite = TRUE, valiStation = 1, valiTime = 50,
 
 \arguments{
   \item{known}{
-subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue isotope data from the \code{subOrigData} function or provided by user. User-provided data must be formatted as subOrigData objects (see \code{\link{subOrigData}}) or a SpatialPointsDataFrame (see Details).
+subOrigData, list of subOrigData, or SpatVector. Known-origin tissue isotope data from the \code{subOrigData} function or provided by user. User-provided data must be formatted as subOrigData objects (see \code{\link{subOrigData}}) or a SpatVector (see Details).
 }
-  \item{isoscape}{RasterStack or RasterBrick with two layers or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
+  \item{isoscape}{SpatRaster with two layers or \code{\link{isoStack}} object. For user-generated raster objects, the first layer must be the isoscape (mean prediction) and the second the isoscape prediction uncertainty (1 standard deviation).
 }
   \item{bySite}{logical. Resample known by site (TRUE) or by sample (FALSE)?}
   \item{valiStation}{numeric. How many sites or samples from known are withheld for validation? Must be two or more smaller than the length of \code{known}.
@@ -29,9 +29,9 @@ subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue
 }
   \item{recal}{logical. Recalibrate the isoscape(s) using the known-origin data? If FALSE, \code{isoscape} should be a calibrated product appropriate to the samples, and a single iteration is run for each sample in \code{known}; parameters \code{bySite}, \code{valiStation}, and \code{valiTime} are ignored.}
   \item{by}{integer. Threshold increment to use in evaluating assignment performance. Must be between 1 and 25.}
-  \item{prior}{raster. Optional raster layer with prior probabilities, which has the same projection, resolution and extent as \code{isoscape}.
+  \item{prior}{SpatRaster. Optional layer with prior probabilities, which has the same projection, resolution and extent as \code{isoscape}.
 }
-  \item{mask}{SpatialPolygonsDataFrame. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
+  \item{mask}{SpatVector. Constrains the area of the output rasters. If this is not provided, the entire area of \code{isoscape} is returned.
 }
   \item{setSeed}{logical. Do you want to \code{set.seed()} when you randomly draw validation stations? \dQuote{TRUE} gives the same sequence of random draws each time the function is called.
 }
@@ -40,7 +40,7 @@ subOrigData, list of subOrigData, or SpatialPointsDataFrame. Known-origin tissue
 }
 
 \details{
-If \code{known} is a user-provided SpatialPointsDataFrame, the first field in \code{@data} must include the measured value for the first (or only) isotope marker and the second the one standard deviation uncertainty on that value. Subsequent fields must include the same information for all other isotope markers included in the analysis, and these markers must appear in the same order as in \code{isoscape}. A user-provided SpatialPointsDataFrame must include a field named \dQuote{Site_ID} containing unique values for each sampling site to support the \dQuote{bySite} option, otherwise use \code{bySite = FALSE}.
+If \code{known} is a user-provided SpatVector, the first data field must include the measured value for the first (or only) isotope marker and the second the one standard deviation uncertainty on that value. Subsequent fields must include the same information for all other isotope markers included in the analysis, and these markers must appear in the same order as in \code{isoscape}. A user-provided SpatVector must include a field named \dQuote{Site_ID} containing unique values for each sampling site to support the \dQuote{bySite} option, otherwise use \code{bySite = FALSE}.
 }
 
 \value{
@@ -75,11 +75,6 @@ Vander Zanden, H. B. et al. (2014) Contrasting assignment of migratory organisms
 }
 
 \examples{
-# load data
-data("naMap") # North America 
-data("d2h_lrNA") # precipitation hydrogen isoscape for North America
-data("knownOrig") # hydrogen isotopes of known-origin samples
-
 # extract some known-origin data
 d1 = subOrigData(taxon = "Buteo lagopus")
 

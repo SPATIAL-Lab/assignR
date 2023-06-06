@@ -1,17 +1,10 @@
 options(stringsAsFactors = FALSE)
 library(openxlsx)
-library(sp)
 library(devtools)
-library(raster)
+library(terra)
 library(assignR)
 
-#WGS84 projection
-p = CRS("+proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs")
-
 #----
-
-#World outline map
-load("data-raw/wrld_simpl.rda")
 
 #Download configuration data
 map_ln = c("d2h_MA.tif", "d2h_se_MA.tif", 
@@ -131,11 +124,14 @@ GIconfig = list(
                "CaribSr_Riv.tif"),
     onames = c("sr_rock", "sr_weath", "sr_riv"),
     eType = 1
+  ),
+  "GlobalSr" = list(
+    dpath.post = "GlobalSr.zip",
+    lnames = c("GlobalSr.tif", "GlobalSr_se.tif"),
+    onames = c("sr_bio", "sr_bio_se"),
+    eType = 2
   )
 )
-
-#Save internal
-use_data(wrld_simpl, GIconfig, internal = TRUE, overwrite = TRUE)
 
 #adjacency matrix for H
 ham = read.xlsx("data-raw/ham.xlsx", rowNames = TRUE)
@@ -181,31 +177,48 @@ all(ss %in% ostds$Calibration)
 all(knownOrig_samples$Site_ID %in% sites$Site_ID)
 all(knownOrig_samples$Dataset_ID %in% knownOrig_sources$Dataset_ID)
 
-#Convert to SPDF
-knownOrig_sites = SpatialPointsDataFrame(sites[,2:3], 
-                                         data = sites[,c(1,4:ncol(sites))],
-                                         proj4string = p)
+#Convert to SpatVector
+knownOrig_sites = vect(sites, geom = c("Longitude", "Latitude"), crs = "WGS84")
 
-#update to include WKT representation; requires rgdal >=1.5-17
-knownOrig_sites = rebuild_CRS(knownOrig_sites)
-
-#Group data objects
-knownOrig = list(sites = knownOrig_sites, samples = knownOrig_samples, 
-                 sources = knownOrig_sources)
+#Write knownOrig parts
+writeVector(knownOrig_sites, "inst/extdata/knownOrig_sites.shp", 
+            overwrite = TRUE)
+write.csv(knownOrig_samples, "inst/extdata/knownOrig_samples.csv", 
+          row.names = FALSE)
+write.csv(knownOrig_sources, "inst/extdata/knownOrig_sources.csv", 
+          row.names = FALSE)
 
 stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
-  
+
+#knownOrig info
+kov = list("version" = "0.1")
+kov$nSamples = nrow(knownOrig_samples)
+kov$nSites = length(knownOrig_sites)
+
+#Save internal
+use_data(GIconfig, kov, internal = TRUE, overwrite = TRUE)
+
+#Save external
+use_data(stds, overwrite = TRUE)
+
 #Prepare MI strontium isoscape
 sr = getIsoscapes("USSr")
 sr = sr$sr_weath
-srun = setValues(sr, getValues(sr) * 0.01)
-sr = brick(sr, srun)
-states.proj = spTransform(states, crs(sr))
+srun = setValues(sr, values(sr) * 0.01)
+sr = c(sr, srun)
+states.proj = project(states, crs(sr))
 mi = states.proj[states.proj$STATE_NAME == "Michigan",]
 sr_MI = mask(sr, mi)
 sr_MI = crop(sr_MI, mi)
 names(sr_MI) = c("weathered.mean", "weathered.sd")
 sr_MI = aggregate(sr_MI, 10)
+writeRaster(sr_MI, "inst/extdata/sr_MI.tif", overwrite = TRUE)
 
-#Write it all to /data/
-use_data(knownOrig, stds, sr_MI, overwrite = TRUE)
+#Prepare lrNA H isoscape
+pcp = getIsoscapes()
+pcp = c(pcp$d2h, pcp$d2h.se)
+pcp = mask(pcp, naMap)
+pcp = crop(pcp, naMap)
+d2h_lrNA = aggregate(pcp, 48, na.rm = TRUE)
+crs(d2h_lrNA) = crs("WGS84")
+writeRaster(d2h_lrNA, "inst/extdata/d2h_lrNA.tif", overwrite = TRUE)

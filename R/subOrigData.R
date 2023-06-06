@@ -1,9 +1,8 @@
-subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL, 
-                        age_code = NULL, mask = NULL, ref_scale = "VSMOW_H",
-                       niter = 5000) {
+subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NULL,
+                       age_code = NULL, mask = NULL, ref_scale = "VSMOW_H",
+                       niter = 5000, genplot = TRUE) {
   
-  #load data in funtion environ
-  data("knownOrig", envir = environment())
+  #load data in function environment
   knownOrig = knownOrig
   knownOrig_samples = knownOrig$samples
   knownOrig_sites = knownOrig$sites
@@ -53,32 +52,23 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
     stop("No samples match query")
   }
 
-  if(!is.null(mask)) {
-    if(inherits(mask, "SpatialPolygons")){
-      if(is.na(proj4string(mask))){
-        stop("mask must have coordinate reference system")
-      } else if(!identicalCRS(knownOrig_sites, mask)) {
-        mask = spTransform(mask, proj4string(knownOrig_sites))
-        message("mask was reprojected")
-      }
-      result_sites = knownOrig_sites[mask,]
-    } else {
-      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
-    }
+  mask = check_mask(mask, knownOrig_sites) 
+  if(!is.null(mask)){
+    result_sites = knownOrig_sites[mask,]
 
-    if(length(result_sites) > 0) {
+    if(length(result_sites) > 0){
       result = result[result$Site_ID %in% result_sites$Site_ID,]
       if(nrow(result) > 0) {
         result_sites = result_sites[result_sites$Site_ID %in% 
                                       result$Site_ID,]
-      } else {
+      } else{
         stop("No samples found in mask\n")
       }
-    } else {
+    } else{
       stop("No sites found in mask\n")
     }
     
-  } else {
+  } else{
     result_sites = knownOrig_sites[knownOrig_sites$Site_ID %in%
                                      result$Site_ID,]
   }
@@ -101,7 +91,7 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
     trans_out = refTrans(result, marker, ref_scale, niter)
     result_data = merge(result_sites, trans_out$data, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
-    row.names(result_data) = result_data$Sample_ID
+
     return_obj = list("data" = result_data, "sources" =
                         result_sources, "chains" = trans_out$chains,
                       "marker" = marker)
@@ -112,18 +102,26 @@ subOrigData = function(marker = "d2H", taxon = NULL, group = NULL, dataset = NUL
   } else{
     result_data = merge(result_sites, result, by = "Site_ID", 
                         all.x = FALSE, duplicateGeoms = TRUE)
-    row.names(result_data) = result_data$Sample_ID
+    
     return_obj = list("data" = result_data, "sources" = result_sources,
                       "chains" = NULL, "marker" = marker)
     class(return_obj) = "subOrigData"
   }
   
-  if(is.null(mask)){
-    plot(wrld_simpl, axes = TRUE)
-    plot(result_data, add = TRUE, col = "red", cex = 0.5)
-  } else{
-    plot(mask, axes = TRUE)
-    plot(result_data, add = TRUE, col = "red")
+  if(!inherits(genplot, "logical")) {
+    message("genplot should be logical (T or F), using default = T")
+    genplot = TRUE
+  }
+  
+  if(genplot){
+    if(is.null(mask)){
+      wrld_simpl = wrld_simpl
+      plot(wrld_simpl, axes = TRUE)
+      points(result_data, col = "red", cex = 0.5)
+    } else{
+      plot(mask, axes = TRUE)
+      points(result_data, col = "red")
+    }
   }
   
   return(return_obj)

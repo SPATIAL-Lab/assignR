@@ -2,23 +2,35 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
                       NA.value = NA, ignore.NA = TRUE, genplot = TRUE, 
                       outDir = NULL, verboseLM = TRUE){
 
+  
   #check that isoscape is valid and has defined CRS
+  ##legacy raster
   if(inherits(isoscape, c("RasterStack", "RasterBrick"))) {
-    if(is.na(proj4string(isoscape))) {
+    warning("raster objects are depreciated, transition to package terra")
+    isoscape = rast(isoscape)
+    ##legacy raster
+  } 
+  
+  if(inherits(isoscape, "SpatRaster")){
+    if(crs(isoscape) == ""){
       stop("isoscape must have valid coordinate reference system")
     }
-    if(nlayers(isoscape) != 2) {
-      stop("isoscape should be RasterStack or RasterBrick with two layers 
+    if(nlyr(isoscape) != 2) {
+      stop("isoscape should be a SpatRaster with two layers 
          (mean and standard deviation)")
     }
   } else {
-    stop("isoscape should be a RasterStack or RasterBrick")
+    stop("isoscape should be a SpatRaster")
   }
 
   #check that known is valid and has defined, correct CRS
   if(!(inherits(known, c("subOrigData", "QAData", 
-                              "SpatialPointsDataFrame")))) {
-    stop("known must be a subOrigData or SpatialPointsDataFrame object")
+                         "SpatialPointsDataFrame",
+                         "SpatVector")))) {
+    stop("known must be a subOrigData or SpatVector object")
+  }
+  if(inherits(known, "SpatialPointsDataFrame")){
+    known = vect(known)
   }
   if(inherits(known, "subOrigData")){
     if(is.null(known$data) || is.null(known$marker)){
@@ -31,73 +43,62 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     }
     known = known$data
   }else{
-    if(ncol(known@data) < 2){
-      if(ncol(known@data) == 1){
+    if(inherits(known, "QAData")){
+      class(known) = "SpatVector"
+    } else{
+      message("user-provided known; assuming measured isotope value and 1 sd
+            uncertainty are contained in columns 1 and 2, respectively")
+    }
+    if(ncol(known) < 2){
+      if(ncol(known) == 1){
         warning("use of known with 1 data column is depreciated; known 
               should include a data frame containing the measured 
               isotope values (col 1) and 1 sd uncertainty (col 2); 
               assuming equal uncertainty for all samples")
-        known@data[,2] = rep(0.0001, nrow(known@data))
+        known[,2] = rep(0.0001, nrow(known))
       } else{
         stop("known must include a data frame containing the measured 
               isotope values (col 1) and 1 sd uncertainty (col 2)")
       }
     }
-    if(any(!is.numeric(known@data[,1]), !is.numeric(known@data[,2]))){
-      stop("known must include a data frame containing the measured 
+    if(any(!is.numeric(values(known)[,1]), !is.numeric(values(known)[,2]))){
+      stop("known must include data containing the measured 
            isotope values (col 1) and 1 sd uncertainty (col 2)")
-    }
-    if(inherits(known, "QAData")){
-      class(known) = "SpatialPointsDataFrame"
-    } else{
-      message("user-provided known; assuming measured isotope value and 1 sd
-            uncertainty are contained in columns 1 and 2, respectively")
     }
     col_m = 1
     col_sd = 2
   }
-  if(any(is.na(known@data[, col_m])) || 
-     any(is.nan(known@data[, col_m])) || 
-     any(is.null(known@data[, col_m]))){
+  if(any(is.na(values(known)[, col_m])) || 
+     any(is.nan(values(known)[, col_m])) || 
+     any(is.null(values(known)[, col_m]))){
     stop("Missing values detected in known values")
   }
-  if(any(is.na(known@data[, col_sd])) || 
-     any(is.nan(known@data[, col_sd])) || 
-     any(is.null(known@data[, col_sd]))){
+  if(any(is.na(values(known)[, col_sd])) || 
+     any(is.nan(values(known)[, col_sd])) || 
+     any(is.null(values(known)[, col_sd]))){
     stop("Missing values detected in known uncertainties")
   }
-  if(any(known@data[, col_sd] == 0)){
+  if(any(values(known)[, col_sd] == 0)){
     stop("zero values found in known uncertainties")
   }
-  if(is.na(proj4string(known))) {
+  if(crs(known) == "") {
     stop("known must have valid coordinate reference system")
   } 
-  if(proj4string(known) != proj4string(isoscape)){
-    known = spTransform(known, crs(isoscape))
+  if(!same.crs(known, isoscape)){
+    known = project(known, crs(isoscape))
     message("known was reprojected")
   } 
 
   #check that mask is valid and has defined, correct CRS
-  if(!is.null(mask)) {
-    if(inherits(mask, c("SpatialPolygonsDataFrame", "SpatialPolygons"))){
-      if(is.na(proj4string(mask))) {
-        stop("mask must have valid coordinate reference system")
-      }
-      if(proj4string(mask) != proj4string(isoscape)){
-        mask = spTransform(mask, crs(isoscape))
-        message("mask was reprojected")
-      }
-    } else {
-      stop("mask should be SpatialPolygons or SpatialPolygonsDataFrame")
-    }
-  }
+  mask = check_mask(mask, isoscape)
 
   #check that other inputs are valid
   if(!interpMethod %in% c(1,2)){
     stop("interpMethod should be 1 or 2")
   }
   if(!inherits(genplot, "logical")) {
-    stop("genplot should be logical (T or F)")
+    message("genplot should be logical (T or F), using default = T")
+    genplot = TRUE
   }
   if(!is.null(outDir)){
     if(!inherits(outDir, "character")){
@@ -117,7 +118,7 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #check and set isoscape NA value if necessary
   if(!is.na(NA.value)) {
-    tempVals = getValues(isoscape)
+    tempVals = values(isoscape)
     tempVals[tempVals == NA.value] = NA
     isoscape = setValues(isoscape, tempVals)
   }
@@ -129,27 +130,26 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   null.iso = NULL
 
   #populate the dependent variable values
-  tissue.iso = known@data[, col_m]
-  tissue.iso.sd = known@data[, col_sd]
+  tissue.iso = values(known)[, col_m]
+  tissue.iso.sd = values(known)[, col_sd]
   tissue.iso.wt = 1 / tissue.iso.sd^2
 
   #populate the independent variable values
   if (interpMethod == 1) {
-    isoscape.iso = extract(isoscape, known,
-                                    method = "simple")
+    isoscape.iso = extract(isoscape, known, method = "simple")[,2:3]
   } else {
-    isoscape.iso = extract(isoscape, known,
-                                    method = "bilinear")
+    isoscape.iso = extract(isoscape, known, method = "bilinear")[,2:3]
   }
   #protect against negative values from interpolation
-  isoscape.iso[,2] = pmax(isoscape.iso[,2], cellStats(isoscape[[2]], min))
+  isoscape.iso[,2] = pmax(isoscape.iso[,2], 
+                          global(isoscape, min, na.rm = TRUE)[2, 1])
 
   #warn if some known sites have NA isoscape values
   if (any(is.na(isoscape.iso[, 1]))) {
     na = which(is.na(isoscape.iso[, 1]))
-    wtxt = "NO isoscape values found at the following locations:\n"
+    wtxt = "No isoscape values found at the following locations:\n"
     for(i in na){
-      wtxt = paste0(wtxt, known@coords[i, 1], ", ", known@coords[i, 2], "\n")
+      wtxt = paste0(wtxt, geom(known)[i, 3], ", ", geom(known)[i, 4], "\n")
     }
     if (ignore.NA) warning(wtxt)
     if (!ignore.NA) {
@@ -231,10 +231,10 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   
   #combine uncertainties of isoscape and rescaling function
   #rescaling variance is frac of model variance uncorrelated w/ isoscape error
-  sd = sqrt(isoscape[[2]]^2 + var(lmResult$residuals) * (1-ti.corr))
+  rescale.sd = sqrt(isoscape[[2]]^2 + var(lmResult$residuals) * (1-ti.corr))
   
   #stack the output rasters and apply names
-  isoscape.rescale = stack(isoscape.rescale, sd)
+  isoscape.rescale = c(isoscape.rescale, rescale.sd)
   names(isoscape.rescale) = c("mean", "sd")
 
   #crop output if required
@@ -244,10 +244,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
 
   #plot the output rasters
   if (genplot == TRUE) {
-    print(spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
-                 main = "Rescaled mean"))
-    print(spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
-                 main = "Rescaled sd"))
+    print(plot(isoscape.rescale, mar = c(2, 2, 2, 4),
+               main = c("Rescaled mean", "Rescaled sd")))
   }
 
   #pdf output
@@ -260,10 +258,8 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
     abline(lmResult)
     text(xl, yl, equation(lmResult), pos=2)
     
-    print(spplot(isoscape.rescale$mean, scales = list(draw = TRUE),
-                 main = "Rescaled mean"))
-    print(spplot(isoscape.rescale$sd, scales = list(draw = TRUE),
-                 main = "Rescaled sd"))
+    print(plot(isoscape.rescale, mar = c(2, 2, 2, 4),
+               main = c("Rescaled mean", "Rescaled sd")))
     dev.off()
   }
 
