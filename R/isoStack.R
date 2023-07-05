@@ -44,13 +44,13 @@ isoStack = function(..., clean = TRUE){
   #check other properties
   res.flag = FALSE
   ext.flag = FALSE
-  res.max = r[[1]]@ptr$res
+  res.max = res(r[[1]])
   ext.min = ext(r[[1]])
   for(i in 2:n){
-    if(!identical(r[[i]]@ptr$res, r[[1]]@ptr$res)) res.flag = TRUE
+    if(!identical(res(r[[i]]), res(r[[1]]))) res.flag = TRUE
     if(!identical(ext(r[[i]]), ext(r[[1]]))) ext.flag = TRUE
     
-    res.max = pmin(res.max, r[[i]]@ptr$res)
+    res.max = pmin(res.max, res(r[[i]]))
     ext.min = intersect(ext.min, ext(r[[i]]))
   }
   
