@@ -41,6 +41,7 @@ jobs:
         run: |
           find /usr/local/bin -type l -ilname '*/Library/Frameworks/Python.framework/*' -delete
           brew update
+          brew upgrade
           brew install --overwrite gdal
       - name: Linux setup
         if: runner.os == 'Linux'
