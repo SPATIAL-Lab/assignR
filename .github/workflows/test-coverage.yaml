@@ -37,8 +37,6 @@ jobs:
       - name: Install gdal
         run: |
           find /usr/local/bin -type l -ilname '*/Library/Frameworks/Python.framework/*' -delete
-          brew update
-          brew upgrade --ignore-pinned
           brew install gdal
       - name: Install dependencies
         run: |
