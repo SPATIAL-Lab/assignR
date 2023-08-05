@@ -16,6 +16,8 @@ jobs:
       matrix:
         config:
           - {os: macOS-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: windows-latest,   arch: x64,   r: 'devel'}
           
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +38,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           find /usr/local/bin -type l -ilname '*/Library/Frameworks/Python.framework/*' -delete
-          brew install --overwrite gdal
+          brew install gdal
           
       - name: Linux setup
         if: runner.os == 'Linux'
@@ -46,10 +48,7 @@ jobs:
           
       - name: Install dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          cache-version: 2
-          extra-packages: any::rcmdcheck
-          
+
       - name: Check
         if: matrix.config.r != 'devel'
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
