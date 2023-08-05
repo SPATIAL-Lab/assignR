@@ -48,6 +48,8 @@ jobs:
           
       - name: Install dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
 
       - name: Check
         if: matrix.config.r != 'devel'
