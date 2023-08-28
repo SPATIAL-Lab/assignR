@@ -111,6 +111,38 @@ GIconfig = list(
                "d18o_sd"),
     eType = 2
   ),
+  "USGround" = list(
+    dpath.post = "USGw.zip",
+    lnames = c("d2h_1-10m.tif", "d2h_sd_1-10m.tif", 
+               "d2h_10-25m.tif", "d2h_sd_10-25m.tif", 
+               "d2h_25-50m.tif", "d2h_sd_25-50m.tif", 
+               "d2h_50-100m.tif", "d2h_sd_50-100m.tif", 
+               "d2h_100-200m.tif", "d2h_sd_100-200m.tif", 
+               "d2h_200-500m.tif", "d2h_sd_200-500m.tif", 
+               "d2h_500+m.tif", "d2h_sd_500+m.tif",
+               "d18o_1-10m.tif", "d18o_sd_1-10m.tif", 
+               "d18o_10-25m.tif", "d18o_sd_10-25m.tif", 
+               "d18o_25-50m.tif", "d18o_sd_25-50m.tif", 
+               "d18o_50-100m.tif", "d18o_sd_50-100m.tif", 
+               "d18o_100-200m.tif", "d18o_sd_100-200m.tif", 
+               "d18o_200-500m.tif", "d18o_sd_200-500m.tif", 
+               "d18o_500+m.tif", "d18o_sd_500+m.tif"),
+    onames = c("d2h_1-10m", "d2h_sd_1-10m", 
+               "d2h_10-25m", "d2h_sd_10-25m",
+               "d2h_25-50m", "d2h_sd_25-50m",
+               "d2h_50-100m", "d2h_sd_50-100m",
+               "d2h_100-200m", "d2h_sd_100-200m",
+               "d2h_200-500m", "d2h_sd_200-500m",
+               "d2h_500+m", "d2h_sd_500+m",
+               "d18o_1-10m", "d18o_sd_1-10m", 
+               "d18o_10-25m", "d18o_sd_10-25m",
+               "d18o_25-50m", "d18o_sd_25-50m",
+               "d18o_50-100m", "d18o_sd_50-100m",
+               "d18o_100-200m", "d18o_sd_100-200m",
+               "d18o_200-500m", "d18o_sd_200-500m",
+               "d18o_500+m", "d18o_sd_500+m"),
+    eType = 2
+  ), 
   "USSr" = list(
     dpath.post = "USSr.zip",
     lnames = c("USSr_Rock.tif", "USSr_Weath.tif", 
@@ -142,7 +174,7 @@ isSymmetric(ham)
 #adjacency matrix for O
 oam = read.xlsx("data-raw/oam.xlsx", rowNames = TRUE)
 oam = as.matrix(oam)
-#Verify matrix xymmetry
+#Verify matrix symmetry
 isSymmetric(oam)
 
 #Standards definitions files

@@ -13,13 +13,11 @@ dmp = capture_output({
                                     mask = states[states$STATE_ABBR == "MI",],
                                     ref_scale = NULL, genplot = FALSE))
   
-  qa1 = suppressWarnings(QA(d1, r1, valiStation = 1, valiTime = 2, by = 25, 
+  qa1 = suppressWarnings(QA(d1, r1, valiTime = 2, by = 25, 
                             name = "Sr", bySite = FALSE))
-  qa2 = suppressWarnings(QA(d2, r3, valiStation = 1, 
-                            valiTime = 2, by = 25, 
+  qa2 = suppressWarnings(QA(d2, r3, valiTime = 2, by = 25, 
                             name = "Multi", setSeed = F))
-  qa3 = suppressWarnings(QA(d3, r2, valiStation = 1, 
-                            valiTime = 2, by = 25, 
+  qa3 = suppressWarnings(QA(d3, r2, valiTime = 2, by = 25, 
                             name = "SOD", setSeed = F))
 })
 

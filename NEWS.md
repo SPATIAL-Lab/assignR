@@ -1,8 +1,13 @@
 # assignR news
 
+## assignR 2.3.0.9000
+* Updates and fixes in the knownOrig database (v 0.2)
+* Added download of global bioavailable Sr and USA groundwater H and O isotopes in getIsoscapes
+* Bug fixes
+
 ## assignR 2.3.0
 * Transitioned spatial dependencies to terra package; all functions still accept raster and sp objects for backward compatibility, but users are encouraged to move their workflows to terra
-* Instituted versioning of the knownOrig database
+* Instituted versioning of the knownOrig database (v 0.1)
 * Performance improvements for large QA jobs
 * Bug fixes
 

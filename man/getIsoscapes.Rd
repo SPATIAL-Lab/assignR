@@ -35,6 +35,8 @@ Accepted \code{isoType} values are:
 \item{"USPrecipALL"}{High-resolution contiguous USA mean-annual and monthly precipitation H and O isotope values}
 \item{"USSurf"}{High-resolution contiguous USA surface water H and O isotope values}
 \item{"USTap"}{High-resolution contiguous USA surface water H and O isotope values}
+\item{"USGround"}{Contiguous USA groundwater H and O isotope values in 7 depth intervals}
+\item{"GlobalSr"}{High-resolution bioavailable Sr isotope ratios for the global land surface}
 \item{"USSr"}{High-resolution contiguous USA Sr isotope ratios}
 \item{"CaribSr"}{High-resolution Sr isotope ratios for the circum-Caribbean region}
 }
