@@ -1,6 +1,6 @@
 # assignR news
 
-## assignR 2.3.0.9000
+## assignR 2.4.0
 * Updates and fixes in the knownOrig database (v 0.2)
 * Added download of global bioavailable Sr and USA groundwater H and O isotopes in getIsoscapes
 * Bug fixes
