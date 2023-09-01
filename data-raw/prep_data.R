@@ -1,4 +1,3 @@
-options(stringsAsFactors = FALSE)
 library(openxlsx)
 library(devtools)
 library(terra)
@@ -190,11 +189,11 @@ all(row.names(ham) %in% hstds$Calibration)
 all(row.names(oam) %in% ostds$Calibration)
 
 #Known origin data table
-knownOrig_sources = read.xlsx("data-raw/knownOrigNew.xlsx", 
+knownOrig_sources = read.xlsx("data-raw/knownOrig0_2.xlsx", 
                               sheet = "knownOrig_sources")
-sites = read.xlsx("data-raw/knownOrigNew.xlsx", 
+sites = read.xlsx("data-raw/knownOrig0_2.xlsx", 
                               sheet = "knownOrig_sites")
-knownOrig_samples = read.xlsx("data-raw/knownOrigNew.xlsx", 
+knownOrig_samples = read.xlsx("data-raw/knownOrig0_2.xlsx", 
                               sheet = "knownOrig_samples")
 
 #check standard scale names
@@ -223,7 +222,7 @@ write.csv(knownOrig_sources, "inst/extdata/knownOrig_sources.csv",
 stds = list(hstds = hstds, ostds = ostds, ham = ham, oam = oam)
 
 #knownOrig info
-kov = list("version" = "0.1")
+kov = list("version" = "0.2")
 kov$nSamples = nrow(knownOrig_samples)
 kov$nSites = length(knownOrig_sites)
 
