@@ -70,7 +70,7 @@ pdRaster.default = function(r, unknown, prior = NULL, mask = NULL,
     }
     if(!is.null(outDir)){
       filename = paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
-      writeRaster(assign.norm, filename = filename, format = "GTiff", overwrite = TRUE)
+      writeRaster(assign.norm, filename = filename, filetype = "GTiff", overwrite = TRUE)
     }
   }
   names(result) = data[,1]
@@ -191,7 +191,7 @@ pdRaster.isoStack = function(r, unknown, prior = NULL, mask = NULL,
     }
     if(!is.null(outDir)){
       filename = paste0(outDir, "/", indv.id, "_like", ".tif", sep = "")
-      writeRaster(assign.norm, filename = filename, format = "GTiff", overwrite = TRUE)
+      writeRaster(assign.norm, filename = filename, filetype = "GTiff", overwrite = TRUE)
     }
   }
   names(result) = data[,1]
