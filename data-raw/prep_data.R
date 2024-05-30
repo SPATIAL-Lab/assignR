@@ -11,8 +11,7 @@ map_ln = c("d2h_MA.tif", "d2h_se_MA.tif",
 
 map_on = c("d2h_MA", "d2h_se_MA", "d18o_MA", "d18o_se_MA")
 
-mop_ln = c("d2h_MA.tif", "d2h_se_MA.tif",
-           "d2h_01.tif", "d2h_se_01.tif", 
+mop_ln = c("d2h_01.tif", "d2h_se_01.tif", 
            "d2h_02.tif", "d2h_se_02.tif",
            "d2h_03.tif", "d2h_se_03.tif",
            "d2h_04.tif", "d2h_se_04.tif",
@@ -24,7 +23,6 @@ mop_ln = c("d2h_MA.tif", "d2h_se_MA.tif",
            "d2h_10.tif", "d2h_se_10.tif",
            "d2h_11.tif", "d2h_se_11.tif",
            "d2h_12.tif", "d2h_se_12.tif",
-           "d18o_MA.tif", "d18o_se_MA.tif",
            "d18o_01.tif", "d18o_se_01.tif",
            "d18o_02.tif", "d18o_se_02.tif",
            "d18o_03.tif", "d18o_se_03.tif",

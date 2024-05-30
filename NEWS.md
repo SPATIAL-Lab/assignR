@@ -1,5 +1,10 @@
 # assignR news
 
+## assignR 2.4.0.9000
+* Single site can be provided in wDist and will be recycled with a message
+* wDist allows specification of bandwidth for kernel density estimation
+* Bug fixes
+
 ## assignR 2.4.0
 * Updates and fixes in the knownOrig database (v 0.2)
 * Added download of global bioavailable Sr and USA groundwater H and O isotopes in getIsoscapes

@@ -1,4 +1,4 @@
-wDist = function(pdR, sites, maxpts = 1e5){
+wDist = function(pdR, sites, maxpts = 1e5, bw = "sj"){
   
   if(!inherits(pdR, c("RasterLayer", "RasterStack", "RasterBrick", "SpatRaster"))){
     stop("input probability density map (pdR) should be a SpatRaster")
@@ -18,6 +18,14 @@ wDist = function(pdR, sites, maxpts = 1e5){
     sites = vect(sites)
   }
 
+  if(length(sites) == 1 & nlyr(pdR) > 1){
+    s = sites
+    for(i in 2:nlyr(pdR)){
+      s = rbind(s, sites)
+    }
+    sites = s
+    message("Single location in sites will be recycled")
+  }
   if(length(sites) != nlyr(pdR)){
     stop("sites and pdR have different lenghts; wDist requires one site per pdR layer")
   }
@@ -59,8 +67,8 @@ wDist = function(pdR, sites, maxpts = 1e5){
                 geom(sites[i])[,c("x", "y")])
 
     w = values(pdSP)[,1]
-    d.dens = density(d, weights = w)
-    b.dens = density(b, weights = w)    
+    d.dens = density(d, weights = w, bw = bw, warnWbw = FALSE)
+    b.dens = density(b, weights = w, bw = bw, warnWbw = FALSE)    
     
     #record weighted mean of distance distribution
     s = weighted.mean(d, w)
@@ -75,13 +83,13 @@ wDist = function(pdR, sites, maxpts = 1e5){
     qts = sapply(c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95), p, w = dw[, 2])
     s = c(s, dw[qts, 1])
     
-    bw = cbind(b, w)
+    bxw = cbind(b, w)
 
     #find minimum weight value in bearing data to establish 'break'
     bbins = seq(-180, 170, by = 10)
     mp = 1
     for(j in bbins){
-      pbin = sum(bw[bw[,1] >= j & bw[,1] < j + 10, 2])
+      pbin = sum(bxw[bxw[,1] >= j & bxw[,1] < j + 10, 2])
       if(pbin < mp){
         mp = pbin
         mpb = j
@@ -89,23 +97,23 @@ wDist = function(pdR, sites, maxpts = 1e5){
     }
     
     #re-reference bearing data to break
-    bw[, 1] = bw[, 1] - mpb
-    for(j in seq_along(bw[,1])){
-      if(bw[j, 1] < 0){
-        bw[j, 1] = bw[j, 1] + 360
+    bxw[, 1] = bxw[, 1] - mpb
+    for(j in seq_along(bxw[,1])){
+      if(bxw[j, 1] < 0){
+        bxw[j, 1] = bxw[j, 1] + 360
       }
     }
     
     #weighted mean, re-referenced
-    s = c(s, weighted.mean(bw[, 1], bw[, 2]))
+    s = c(s, weighted.mean(bxw[, 1], bxw[, 2]))
     
     #find and record quantiles within weighted bearing distribution
-    bw = bw[order(bw[, 1]),]
-    for(j in 2:nrow(bw)){
-      bw[j, 2] = bw[j, 2] + bw[j-1, 2]
+    bxw = bxw[order(bxw[, 1]),]
+    for(j in 2:nrow(bxw)){
+      bxw[j, 2] = bxw[j, 2] + bxw[j-1, 2]
     }
-    qts = sapply(c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95), p, w = bw[, 2])
-    s = c(s, bw[qts, 1])
+    qts = sapply(c(0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95), p, w = bxw[, 2])
+    s = c(s, bxw[qts, 1])
     
     #rectify bearings
     s[9:16] = s[9:16] + mpb
