@@ -2,6 +2,7 @@
 
 ## assignR 2.4.1.9000
 * Bug fixes and enhanced error checking
+* Requires R >= 4.0
 
 ## assignR 2.4.1
 * Single site can be provided in wDist and will be recycled with a message
