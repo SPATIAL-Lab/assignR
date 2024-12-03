@@ -29,6 +29,7 @@ dmp = capture_output({
   d_usr_bad = d$data
   d_usr_good = d_usr_bad
   values(d_usr_good) = data.frame(d$data$d2H, d$data$d2H.sd)
+  d_usr_2row = d_usr_good[1:2, ]
   d_noCRS = d
   crs(d_noCRS$data) = ""
   
@@ -67,6 +68,7 @@ test_that("calRaster works",{
     expect_error(calRaster(known = d, isoscape = d2h_lrNA_noCRS))
     expect_error(calRaster(known = d, isoscape = d2h_lrNA$mean))
     expect_error(calRaster(known = d_usr_bad, isoscape = d2h_lrNA))
+    expect_error(calRaster(known = d_usr_2row, isoscape = d2h_lrNA))
     expect_error(calRaster(known = d, isoscape = d2h_lrNA, mask = mask_noCRS))
     expect_error(calRaster(known = d, isoscape = d2h_lrNA, mask = d))
     expect_error(calRaster(known = d_noCRS, isoscape = d2h_lrNA))

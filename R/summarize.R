@@ -19,7 +19,7 @@ jointP = function(pdR){
   result = result / global(result, sum, na.rm = TRUE)[1, 1]
   names(result) = "Joint_Probability"
   p = options("scipen")
-  on.exit(options(scipen = p))
+  on.exit(options(p))
   options(scipen = -2)
   plot(result)
   title("Joint Probability")

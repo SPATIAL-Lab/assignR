@@ -1,7 +1,7 @@
-v2.4.1 bug fixes and minor enhancements.
+v2.4.1.9000 bug fixes and minor enhancements.
 
 # Test environments
-* local Windows 11 x64; R 4.4.0
+* local Windows 11 x64; R 4.4.2
 * Ubuntu 22.04.4 (on GitHub Actions); R 4.4.0
 * Mac OS 14.5 (on GitHub Actions); R 4.4.0
 * Ubuntu 22.04.4 (on GitHub Actions); R 3.6.3

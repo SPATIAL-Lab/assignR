@@ -84,6 +84,9 @@ calRaster = function (known, isoscape, mask = NULL, interpMethod = 2,
   if(crs(known) == "") {
     stop("known must have valid coordinate reference system")
   } 
+  if(nrow(unique(crds(known))) < 3){
+    stop("isoscape rescaling requires data from at least 3 locations")
+  }
   if(!same.crs(known, isoscape)){
     known = project(known, crs(isoscape))
     message("known was reprojected")
