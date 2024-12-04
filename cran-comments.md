@@ -1,4 +1,4 @@
-v2.4.2 fixes bug triggered in R dev.
+v2.4.3 fixes bug triggered in R dev.
 
 # Resubmission
 This is a resubmission in which I have added an Authors@R description field.
