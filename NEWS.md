@@ -1,6 +1,6 @@
 # assignR news
 
-## assignR 2.4.1.9000
+## assignR 2.4.2
 * Bug fixes and enhanced error checking
 * Requires R >= 4.0
 

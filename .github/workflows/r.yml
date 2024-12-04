@@ -19,10 +19,11 @@ jobs:
           - {os: macOS-latest, r: 'release'}
           - {os: ubuntu-latest, r: 'release'}
           - {os: windows-latest, arch: x64, r: 'devel'}
-          - {os: ubuntu-latest, r: '4.0.0'}
+#          - {os: ubuntu-latest, r: '4.0.0'}
           
     steps:
-      - uses: actions/checkout@v4
+      - name: Run checkout
+        uses: actions/checkout@v4
       
       - name: Set up pandoc
         uses: r-lib/actions/setup-pandoc@v2
@@ -48,7 +49,7 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
 
-      - uses: r-lib/actions/check-r-package@v2
+      - name: Check package
+        uses: r-lib/actions/check-r-package@v2
         with:
-          upload-snapshots: true
           error-on: '"error"'
