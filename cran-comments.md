@@ -1,4 +1,7 @@
-v2.4.2 bug fixes and minor enhancements.
+v2.4.2 fixes bug triggered in R dev.
+
+# Resubmission
+This is a resubmission in which I have added an Authors@R description field.
 
 # Test environments
 * local Windows 11 x64; R 4.4.2
