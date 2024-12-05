@@ -1,7 +1,7 @@
 Package: assignR
 Type: Package
 Title: Infer Geographic Origin from Isotopic Data
-Version: 2.4.3
+Version: 2.4.3.9000
 Authors@R: c(person(given = "Chao",
                     family = "Ma",
                     role = "aut"),
